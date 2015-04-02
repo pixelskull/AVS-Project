@@ -1,0 +1,32 @@
+\begin{appendices}
+% \adjustmtc 
+\renewcommand{\appendixname}{ANHANG}
+\renewcommand{\appendixtocname}{\appendixname} 
+\addappheadtotoc 
+
+% \begin{mtchideinmaintoc}[0]   %  [-1] Den folgenden Inhalt nicht im großen Inhaltsverzeichnis zeigen, [0] ab Chapter im großen Inhaltsverzeichnis anzeigen
+
+\part*{Anhang}
+
+% \input{chapter/referenzen}
+etete
+% \end{mtchideinmaintoc}
+
+\chapter*{Quelltext}
+
+Beispiel für einen Quelltext-Auszug:
+
+\texttt{Klasse.cs:}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+private void Click(object sender, EventArgs e)
+{
+    int check;
+        
+    check = CentralController.Instance.LogMeIn(
+        this.txtUsername.Text, this.txtPassword.Text);
+    
+    [...]	
+}
+\end{lstlisting}
+
+\end{appendices}
