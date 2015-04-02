@@ -17,6 +17,33 @@ DerivedData
 *.ipa
 *.xcuserstate
 
+#LaTeX-Gitignore
+*.aux
+*.glo
+*.idx
+*.log
+*.toc
+*.ist
+*.acn
+*.acr
+*.alg
+*.bbl
+*.blg
+*.dvi
+*.glg
+*.gls
+*.ilg
+*.ind
+*.lof
+*.lot
+*.maf
+*.mtc
+*.mtc1
+*.out
+*.synctex.gz
+Doku_AVS.pdf
+.texpadtmp
+
 # CocoaPods
 #
 # We recommend against adding the Pods directory to your .gitignore. However
