@@ -1,0 +1,24 @@
+\chapter{Vorbedingungen}
+
+\section{Theoretische Überlegungen}
+Wir werden das PublishSubscribe-Paradigma benutzen. Die Slaves werden sich somit beim Master \enquote{subscriben}, um die zu berechnenden Hashes zu erhalten.
+
+\subsection{Pseudocode des Masters}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+erzeuge aus PW(variable Stellen) HASH mit SHA1
+vergiss das PW
+erzeuge STACK mit moeglichen Passworten
+	waehrend HASH_generiert !HASH
+		sende an WORKER naechsten Eintrag im STACK
+		warte auf Rueckmeldung durch WORKER
+    		setze Stackeintrag auf generiert (durch 
+    		zurueckgegebene ID)
+    		vergleiche HASH_generiert mit HASH
+	END waehrend
+gebe gefundenes PW und den zugehoerigen HASH aus
+END
+\end{lstlisting}
+
+
+
+
