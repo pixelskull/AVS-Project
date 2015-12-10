@@ -2,15 +2,13 @@
 Das Projekt wird im Rahmen des Moduls \enquote{Architektur verteilter Systeme} im Masterstudiengang Computer Science, Fachrichtung Software Engineering, durchgeführt.  Das Ziel ist die Implementierung einer verteilten Architektur. Die notwendige Hardware wird von der Hochschule zur Verfügung gestellt, welche detailliert in Kapitel \ref{technischeVoraussetzungen} beschrieben wird.
 Die Entwicklung der Software ist Kernbestandteil dieses Projekts. 
 \section{Ziel des Projekts}
-Zu Beginn des Projektes wurde ein Problem gesucht, dass auf Basis einer einer verteilten Architektur gelöst oder berechnet werden kann. Das Projekt-Team legte sich fest, dass das Problem aus der Domäne der \emph{IT-Sicherheit} stammen soll. 
-%Definition verteilte Architektur
-Definition eines \emph{verteilten Systems}:
+Zu Beginn des Projektes wurde ein Problem gesucht, dass auf Basis einer einer verteilten Architektur gelöst oder berechnet werden kann. Das Projekt-Team legte sich fest, dass das Problem aus der Domäne der \emph{IT-Sicherheit} stammen soll. Aufgrund des hohen Rechenaufwands entschied das Projektteam sich zu einem BruteForce-Angriff. Konkret bedeutet dies, dass durch Ausprobieren aller möglichen Kombinationen versucht wird ein Passwort zu entschlüsseln. Das zu entschlüsselnde Passwort wird zu Beginn eingegeben und in Form eines Hashes hinterlegt. Der Hash stellt die Zielbedingung für die geplante Anwendung dar. Nun soll die verteilte Architektur die möglichen Passworte bzw. deren Hashes berechnen. Sobald ein berechneter Hash mit dem Zielhash übereinstimmt, ist das vorgegebene Passwort entschlüsselt. Weitere Details dazu werden in Kapitel \ref{ideeBruteForce} erläutert. \\
+
+Das geplante Projekt soll außerdem den allgemeinen Ansprüchen an ein verteiltes System genügen. Eine mögliche Definition eines \emph{verteilten Systems} lautet wie folgt:
 \begin{quotation}
 	\textit{\enquote{Ein verteiltes System ist eine Ansammlung unabhängiger Computer, die den Benutzern wie ein einzelnes kohärentes System erscheinen.}} \citep{tanenbaum}
 \end{quotation}
-
-
-\section{Geplantes Vorgehen}
+%Beschreibung der allgemeinen Ansprüche an verteiltes System
 
 \section{Technische Voraussetzungen}
 \label{technischeVoraussetzungen}
