@@ -1,6 +1,14 @@
 \chapter{Entwicklung des Brute Force-Angriffs}
 \label{ideeBruteForce}
+In diesem Kapitel wird die Konzeption des geplanten Brute Force-Angriffs beschrieben. Auf Basis der beschriebenen Konzeption soll im Anschluss die Implementation des verteilten Angriffs erfolgen können. 
 
-\section{Konzeption des Brute Force-Angriffs}
+\section{Arbeitsweise des Algorithmus}
 
-\section{Generischer Algorithmus}
+\section{Softwarebasis}
+Da Rechner des Unternehmens Apple eingesetzt werden, sind die Programmiersprachen \emph{Objective C} oder \emph{Swift} effizient einsetzbar, da Apple diese vorrangig unterstützt. Das eingesetzte Betriebssystem Mac OS X %TODO welche Version? 
+und die native Entwicklungsumgebung Xcode%TODO welche Version? 
+weisen eine hohe Kompatibilität zu den genannten Programmiersprachen auf. \\
+Da die Programmiersprache \emph{Swift} seit Version 2.0 quelloffen angeboten wird\footnote{\url{https://github.com/apple/swift}} und zudem die aktuellere der beiden genannten Sprachen ist, möchte das Projektteam primär auf Swift zurückgreifen. Da aktuell der Einsatz von Objective C noch Bestandteil von Swift ist, werden beide genannten Programmiersprachen zum Einsatz kommen. \\
+
+Zur Versionierung des Programmcodes und zum vereinfachtem dezentralen Entwickeln wird die Programmcode-Plattform \url{www.github.com} eingesetzt. Die Plattform ermöglicht ein flexibles und kollaboratives Arbeiten am Projekt sowie der Dokumentation. \\
+
