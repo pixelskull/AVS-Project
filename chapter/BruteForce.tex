@@ -7,7 +7,7 @@ In diesem Kapitel wird die Konzeption des Brute Force-Angriffs beschrieben. Auf 
 \label{Voraussetzungen}
 Im folgenden werden die Betriebsmittel beschrieben, die diesem Projekt zugrunde liegen.
 
-\section{Architektur}
+\subsection{Architektur}
 %Wie genau soll die Architektur aussehen? Message-Paradigma?
 %TODO mit Team besprechen
 
@@ -28,7 +28,60 @@ Als alternativer Dependency-Manager hätte sich das Werkzeug \emph{CocoaPods}\fo
 
 \section{Planung des Algorithmus}
 \label{ideeBruteForce}
-Basis für dieses Projekt ist ein Angriff auf 
+Grundlegend ist das Ziel des Projektes das Entschlüsseln eines vorgegebenen Passwortes. Das zu entschlüsselnde Passwort wird vor der Berechnung vom Benutzer eingetragen. Das eingetragene Passwort wird dann durch eine Hashfunktion geleitet. Der entstandene Hash wird gespeichert und dient als Zielbedingung der folgenden Berechnung. \\
+Nun beginnt der eigentliche Angriff. Der steuernde Rechner wird nun alle möglichen Passwörter in einem Array ablegen. Das Muster der möglichen Passwörter soll wie folgt aufgebaut werden: 
+\newpage
 
-%Testen welche Hash-Funktion
-%Erst feste Länge, später Variable für Länge, noch später ohne Angabe Länge?
+\texttt{Muster der zu berechnenden Passwörter:}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+	Array passwordsUPPER = 
+		[A*****,
+	 	B*****,
+	 	C*****,
+	 	D*****,
+	 	...
+	]
+	
+	
+	Array passwordsLOWER = 
+		[a*****,
+	 	b*****,
+	 	c*****,
+	 	d*****,
+		...
+	]
+	
+	
+
+	Array passwordsNUM = 
+		[1*****,
+	 	2*****,
+	 	3*****,
+	 	4*****,
+		...
+	]
+\end{lstlisting}
+\newpage
+
+Die exemplarische Darstellung soll die Aufteilung der Aufgaben verdeutlichen. Die hier dargestellte feste Länge der Passwörter auf 6 Zeichen dient als Proof Of Concept. Wenn dieses Proof of Concept erfolgreich umgesetzt werden kann, wird in der nächsten Iteration eine variable Passwortlänge ermöglicht. Im ersten Schritt soll die Passwortlänge noch ermittelt werden, bevor die Berechnung der möglichen Passwortkombinationen beginnt. Dadurch wird die Berechnung der Aufgabenverteilung vereinfacht. Wenn auch dieser Meilenstein erfolgreich implementiert werden kann, soll in der nächsten Iteration die Berechnung ohne bekannte Passwortlänge durchgeführt werden. Dies bedeutet implizit, dass die Berechnungsdauer durch die gewachsene Anzahl an möglichen Passwortkombinationen stark ansteigt. Dadurch dann die Robustheit der konzipierten verteilten Architektur geprüft werden. \\
+
+Das Befüllen des Arrays mit den Passwort-Mustern wird dynamisch durch eine Schleife geschehen. Die Schleife wird in Abhängigkeit angepasst, je nachdem, ob die Passwortlänge bekannt oder nicht bekannt ist. \\
+Die Rechner innerhalb der verteilten Architektur (Worker) holen sich nun \enquote{ihre} Aufgaben aus dem Array und beginnen mit der Berechnung. Die Worker berechnen nun, in Abhängigkeit der vorher bezogenen Aufgabe, alle möglichen Passworte und die zugehörigen Hashes. Die berechneten Hashes werden nun mit dem hinterlegten Hash des zu entschlüsselnden Passwortes verglichen. Sind berechneter Hash und Zielhash gleich, gilt das Passwort als entschlüsselt. \\
+
+\texttt{Pseudoalgorithmus der Passwortberechnung:}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+	func calculateHashes([u******])
+	{
+		while(![u******].isempty);
+			calculateNextPassword([u******]);
+			calculateHash(calculatedPassword);
+						
+			if(compareHashWithTargetHash
+			(calculatedHash)==true)
+				print("Password encrypted")
+	}
+\end{lstlisting}
+
+Dieser stark gekürzte Pseudoalgorithmus verdeutlicht die geplante Vorgehensweise bei der Passwortentschlüsselung. \\
+%TODO welche HashFunktion nutzen wir?
+
