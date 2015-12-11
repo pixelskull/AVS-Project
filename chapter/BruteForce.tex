@@ -1,14 +1,34 @@
-\chapter{Entwicklung des Brute Force-Angriffs}
-\label{ideeBruteForce}
-In diesem Kapitel wird die Konzeption des geplanten Brute Force-Angriffs beschrieben. Auf Basis der beschriebenen Konzeption soll im Anschluss die Implementation des verteilten Angriffs erfolgen können. 
+\chapter{Entwicklung der verteilten Architektur}
+\label{vorueberlegungen}
+In diesem Kapitel wird die Konzeption des Brute Force-Angriffs beschrieben. Auf Basis der beschriebenen Konzeption soll im Anschluss die Implementation erfolgen können. 
 
-\section{Arbeitsweise des Algorithmus}
 
-\section{Softwarebasis}
+\section{Technische Voraussetzungen}
+\label{Voraussetzungen}
+Im folgenden werden die Betriebsmittel beschrieben, die diesem Projekt zugrunde liegen.
+
+\section{Architektur}
+%Wie genau soll die Architektur aussehen? Message-Paradigma?
+%TODO mit Team besprechen
+
+\subsection{Softwarebasis}
 Da Rechner des Unternehmens Apple eingesetzt werden, sind die Programmiersprachen \emph{Objective C} oder \emph{Swift} effizient einsetzbar, da Apple diese vorrangig unterstützt. Das eingesetzte Betriebssystem Mac OS X %TODO welche Version? 
 und die native Entwicklungsumgebung Xcode%TODO welche Version? 
 weisen eine hohe Kompatibilität zu den genannten Programmiersprachen auf. \\
 Da die Programmiersprache \emph{Swift} seit Version 2.0 quelloffen angeboten wird\footnote{\url{https://github.com/apple/swift}} und zudem die aktuellere der beiden genannten Sprachen ist, möchte das Projektteam primär auf Swift zurückgreifen. Da aktuell der Einsatz von Objective C noch Bestandteil von Swift ist, werden beide genannten Programmiersprachen zum Einsatz kommen. \\
 
-Zur Versionierung des Programmcodes und zum vereinfachtem dezentralen Entwickeln wird die Programmcode-Plattform \url{www.github.com} eingesetzt. Die Plattform ermöglicht ein flexibles und kollaboratives Arbeiten am Projekt sowie der Dokumentation. \\
+Zur Versionierung des Programmcodes und zum vereinfachtem dezentralen Entwickeln wird die Programmcode-Plattform \url{www.github.com} eingesetzt. Die auf dem Versionsverwaltungs-System \emph{Git} basierende Plattform ermöglicht ein flexibles und kollaboratives Arbeiten am Projekt sowie der Dokumentation. \\
 
+Damit im Projekt weitere Frameworks mit wenig Aufwand eingesetzt werden können, hat das Projektteam sich entschieden \emph{Carthage}\footnote{\url{https://github.com/Carthage/Carthage}} einzusetzen. Carthage ist ein \enquote{einfacher, dezentraler Dependency-Manager} und wird quelloffen zur Verfügung gestellt. Durch die Auflösung von Abhängigkeiten, beispielsweise von bestimmten Frameworks, wird das asynchrone und dezentrale Entwickeln weiter optimiert. \\
+Als alternativer Dependency-Manager hätte sich das Werkzeug \emph{CocoaPods}\footnote{\url{https://github.com/CocoaPods/CocoaPods}} angeboten. Einer der großen Unterschiede in der Arbeitsweise der beiden Werkzeuge liegt in der Verwaltung der Dependencies. Während CocoaPods auf eine zentrale Verwaltung setzt, werden die Abhängigkeiten bei Carthage dezentral verwaltet. Durch die dezentrale Verwaltung wird unser Primärziel, das effektive kollaborative Arbeiten, besser abgedeckt. Zudem wird Carthage nicht so tief in das Entwicklungsprojekt in der Entwicklungsumgebung Xcode verwurzelt, als es bei CocoaPods der Fall wäre. Dadurch entsteht eine weniger starke Abhängigkeit von dem Werkzeug. Aus den genannten Gründen entschied das Projektteam sich gegen die Verwendung von CocoaPods. 
+
+\subsection{Hardwarebasis}
+%Wie sieht Hardware aus? Wie Netz? Zeit. Programmiersprache usw.
+%TODO Input von Pascal
+
+\section{Planung des Algorithmus}
+\label{ideeBruteForce}
+Basis für dieses Projekt ist ein Angriff auf 
+
+%Testen welche Hash-Funktion
+%Erst feste Länge, später Variable für Länge, noch später ohne Angabe Länge?
