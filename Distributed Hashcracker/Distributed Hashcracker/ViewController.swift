@@ -10,6 +10,11 @@ import Cocoa
 
 class ViewController: NSViewController {
 
+    @IBOutlet weak var isManager: NSButton!
+    
+    @IBAction func StartButtonPressed(sender: NSButton) {}
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
