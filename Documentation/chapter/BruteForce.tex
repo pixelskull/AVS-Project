@@ -3,120 +3,16 @@
 In diesem Kapitel wird die Konzeption des Brute Force-Angriffs beschrieben. Auf Basis der beschriebenen Konzeption soll im Anschluss die Implementation erfolgen können. 
 
 
-\section{Technische Voraussetzungen}
-\label{Voraussetzungen}
-Im folgenden werden die Betriebsmittel beschrieben, die diesem Projekt zugrunde liegen.
 
-\subsection{Architektur}
+\section{Architektur}
 %Wie genau soll die Architektur aussehen? Message-Paradigma?
 %TODO mit Team besprechen
-
-\subsection{Hardwarebasis}
-Das verteilte System wird auf einem Mac-Cluster implementiert, das von der Hochschule zur Verfügung gestellt wird. Es kann auf 10 Rechner zugegriffen werden, die mit \emph{pip02} bis \emph{pip11} gekennzeichnet sind. Auf allen Rechnern ist (Stand 18.12.2016) aktuellste Version des Betriebssystems El Capitain und der Enwicklungsumgebung Xcode installiert. Details zu den Softwareversionen sind in Kapitel \ref{softwarebasis} zu finden. \\
-In der folgenden Liste sind die Details zu den einzelnen Rechnern zu finden:
-
-\begin{itemize}
-	\item\textbf{pip02: Mac Pro (Anfang 2008)}
-	\item[] Seriennummer: CK8250EUXYL
-	\item[] Prozessor: 	2 x 2,8 GHz Quad-Core Intel Xeon 
-	\item[] RAM: 2 GB 800 MHz DDR2 FB-DIMM
-	\item[] Grafikkarte: 	NVIDIA GeForce 8800 GT (512MB)
-	\item[] OS 10.11.2 El Capitain
-	\item[] Xcode 7.2, Swift 2.1.1
-	\item[] 
-	\item\textbf{pip03: Mac Pro (Anfang 2008)}
-	\item[] Seriennummer: CK8250EUXYL
-	\item[] Prozessor: 	2 x 2,8 GHz Quad-Core Intel Xeon 
-	\item[] RAM: 2 GB 800 MHz DDR2 FB-DIMM
-	\item[] Grafikkarte: NVIDIA GeForce 8800 GT (512MB)
-	\item[] OS 10.11.2 El Capitain
-	\item[] Xcode 7.2, Swift 2.1.1
-	\item[] 
-	\item\textbf{pip04: Mac Pro (Anfang 2008) }
-	\item[]Seriennummer: CK8250EUXYL
-	\item[]Prozessor: 2 x 2,8 GHz Quad-Core Intel Xeon 
-	\item[]RAM: 2 GB 800 MHz DDR2 FB-DIMM
-	\item[]Grafikkarte: 	NVIDIA GeForce 8800 GT  (512MB)
-	\item[] OS 10.11.2 El Capitain
-	\item[] Xcode 7.2, Swift 2.1.1
-	\item[]
-	\item\textbf{pip05: Mac Pro (Anfang 2008)}
-	\item[]Seriennummer: CK8250EUXYL
-	\item[]Prozessor: 2 x 2,8 GHz Quad-Core Intel Xeon 
-	\item[]RAM: 2 GB 800 MHz DDR2 FB-DIMM
-	\item[]Grafikkarte: 	NVIDIA GeForce 8800 GT  (512MB)
-	\item[] OS 10.11.2 El Capitain
-	\item[] Xcode 7.2, Swift 2.1.1
-	\item[]
-	\item[] 
-	\item\textbf{pip06: Mac Pro (Anfang 2009)}
-	\item[] Seriennummer: CK92608B20H
-	\item[]Prozessor: 2 x 2,26 GHz Quad-Core Intel Xeon 
-	\item[]RAM: 6 GB 1066 MHz DDR3 ECC
-	\item[]Grafikkarte: 	NVIDIA GeForce GT 120 (512MB)
-	\item[] OS 10.11.2 El Capitain
-	\item[] Xcode 7.2, Swift 2.1.1
-	\item[]
-	\item[] 
-	\item\textbf{pip07: Mac Pro (Anfang 2009)}
-	\item[] Seriennummer: CK92608B20H
-	\item[]Prozessor: 2 x 2,26 GHz Quad-Core Intel Xeon 
-	\item[]RAM: 6 GB 1066 MHz DDR3 ECC
-	\item[]Grafikkarte: 	NVIDIA GeForce GT 120 (512MB)
-	\item[] OS 10.11.2 El Capitain
-	\item[] Xcode 7.2, Swift 2.1.1
-	\item[] 
-	\item pip08: Mac Pro (Anfang 2009)
-	\item[] Seriennummer: CK92608B20H
-	\item[] Prozessor: 2 x 2,26 GHz Quad-Core Intel Xeon 
-	\item[] RAM: 6 GB 1066 MHz DDR3 ECC
-	\item[] Grafikkarte: NVIDIA GeForce GT 120 (512MB)
-	\item[] OS 10.11.2 El Capitain
-	\item[] Xcode 7.2, Swift 2.1.1
-	\item\textbf{pip09: Mac Pro (Anfang 2009)}
-	\item[] Seriennummer: CK92608B20H
-	\item[] Prozessor: 2 x 2,26 GHz Quad-Core Intel Xeon 
-	\item[] RAM: 6 GB 1066 MHz DDR3 ECC
-	\item[] Grafikkarte: NVIDIA GeForce GT 120 (512MB)
-	\item[] OS 10.11.2 El Capitain
-	\item[] Xcode 7.2, Swift 2.1.1
-	\item[] 
-	\item\textbf{pip10: Mac Pro (Anfang 2009)}
-	\item[] Seriennummer: CK92608B20H
-	\item[] Prozessor: 2 x 2,26 GHz Quad-Core Intel Xeon 
-	\item[] RAM: 6 GB 1066 MHz DDR3 ECC
-	\item[] Grafikkarte: NVIDIA GeForce GT 120 (512MB)
-	\item[] OS 10.11.2 El Capitain
-	\item[] Xcode 7.2, Swift 2.1.1
-	\item[] 
-	\item\textbf{pip11: Mac Pro (Anfang 2009)}
-	\item[] Seriennummer: CK92608B20H
-	\item[] Prozessor: 2 x 2,26 GHz Quad-Core Intel Xeon 
-	\item[] RAM: 6 GB 1066 MHz DDR3 ECC
-	\item[] Grafikkarte: NVIDIA GeForce GT 120 (512MB)
-	\item[] OS 10.11.2 El Capitain
-	\item[] Xcode 7.2, Swift 2.1.1
-\end{itemize}
-
-Zur Netzverbindung wird ein Switch des Herstellers \emph{Netgear} eingesetzt. Die Modellbezeichnung lautet \emph{Netgear GS116}. Der Switch hat 16 Ports und unterstützt bis zu 1000 Megabit/s (Gigabit-LAN).
-
-\subsection{Softwarebasis}
-\label{softwarebasis}
-Da Rechner des Herstellers Apple eingesetzt werden, sind die Programmiersprachen \emph{Objective C} oder \emph{Swift} effizient einsetzbar, da Apple diese vorrangig unterstützt. Das eingesetzte Betriebssystem Mac OS X 10.11.2 (El Capitain) und die native Entwicklungsumgebung Xcode 7.2 weisen eine hohe Kompatibilität zu den genannten Programmiersprachen auf. \\
-Da die Programmiersprache \emph{Swift} seit Version 2.0 quelloffen angeboten wird\footnote{\url{https://github.com/apple/swift}} und zudem die aktuellere der beiden genannten Sprachen ist, möchte das Projektteam primär auf Swift zurückgreifen. Da aktuell der Einsatz von Objective C noch Bestandteil von Swift ist, werden beide genannten Programmiersprachen zum Einsatz kommen. \\
-
-Zur Versionierung des Programmcodes und zum vereinfachtem dezentralen Entwickeln wird die Programmcode-Plattform \url{www.github.com} eingesetzt. Die auf dem Versionsverwaltungs-System \emph{Git} basierende Plattform ermöglicht ein flexibles und kollaboratives Arbeiten am Projekt sowie der Dokumentation. \\
-
-Damit im Projekt weitere Frameworks mit wenig Aufwand eingesetzt werden können, hat das Projektteam sich entschieden \emph{Carthage}\footnote{\url{https://github.com/Carthage/Carthage}} einzusetzen. Carthage ist ein \enquote{einfacher, dezentraler Dependency-Manager} und wird quelloffen zur Verfügung gestellt. Durch die Auflösung von Abhängigkeiten, beispielsweise von bestimmten Frameworks, wird das asynchrone und dezentrale Entwickeln weiter optimiert. \\
-Als alternativer Dependency-Manager hätte sich das Werkzeug \emph{CocoaPods}\footnote{\url{https://github.com/CocoaPods/CocoaPods}} angeboten. Einer der großen Unterschiede in der Arbeitsweise der beiden Werkzeuge liegt in der Verwaltung der Dependencies. Während CocoaPods auf eine zentrale Verwaltung setzt, werden die Abhängigkeiten bei Carthage dezentral verwaltet. Durch die dezentrale Verwaltung wird unser Primärziel, das effektive kollaborative Arbeiten, besser abgedeckt. Zudem wird Carthage nicht so tief in das Entwicklungsprojekt in der Entwicklungsumgebung Xcode verwurzelt, als es bei CocoaPods der Fall wäre. Dadurch entsteht eine weniger starke Abhängigkeit von dem Werkzeug. Aus den genannten Gründen entschied das Projektteam sich gegen die Verwendung von CocoaPods. 
-
 
 
 \section{Planung des Algorithmus}
 \label{ideeBruteForce}
 Grundlegend ist das Ziel des Projektes das Entschlüsseln eines vorgegebenen Passwortes. Das zu entschlüsselnde Passwort wird vor der Berechnung vom Benutzer eingetragen. Das eingetragene Passwort wird dann durch eine Hashfunktion geleitet. Der entstandene Hash wird gespeichert und dient als Zielbedingung der folgenden Berechnung. \\
 Nun beginnt der eigentliche Angriff. Der steuernde Rechner wird nun alle möglichen Passwörter in einem Array ablegen. Das Muster der möglichen Passwörter soll wie folgt aufgebaut werden: 
-\newpage
 
 \texttt{Muster der zu berechnenden Passwörter:}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -147,7 +43,6 @@ Nun beginnt der eigentliche Angriff. Der steuernde Rechner wird nun alle möglic
 		...
 	]
 \end{lstlisting}
-\newpage
 
 Die exemplarische Darstellung soll die Aufteilung der Aufgaben verdeutlichen. Die hier dargestellte feste Länge der Passwörter auf 6 Zeichen dient als Proof Of Concept. Wenn dieses Proof of Concept erfolgreich umgesetzt werden kann, wird in der nächsten Iteration eine variable Passwortlänge ermöglicht. Im ersten Schritt soll die Passwortlänge noch ermittelt werden, bevor die Berechnung der möglichen Passwortkombinationen beginnt. Dadurch wird die Berechnung der Aufgabenverteilung vereinfacht. Wenn auch dieser Meilenstein erfolgreich implementiert werden kann, soll in der nächsten Iteration die Berechnung ohne bekannte Passwortlänge durchgeführt werden. Dies bedeutet implizit, dass die Berechnungsdauer durch die gewachsene Anzahl an möglichen Passwortkombinationen stark ansteigt. Dadurch dann die Robustheit der konzipierten verteilten Architektur geprüft werden. \\
 
