@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class ViewController: NSViewController {
+class SettingsViewController: NSViewController {
 
     @IBOutlet weak var isManager: NSButton!
     @IBOutlet var serverAdressField: NSTextField!

@@ -670,7 +670,7 @@
         <!--Setup-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController title="Setup" id="XfG-lQ-9wD" customClass="ViewController" customModule="Distributed_Hashcracker" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Setup" id="XfG-lQ-9wD" customClass="SettingsViewController" customModule="Distributed_Hashcracker" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -959,7 +959,7 @@
         <!--Log-->
         <scene sceneID="9QP-Xd-KRD">
             <objects>
-                <viewController title="Log" id="T81-t5-tBa" sceneMemberID="viewController">
+                <viewController title="Log" id="T81-t5-tBa" customClass="LogViewController" customModule="Distributed_Hashcracker" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="FSl-6d-JpC">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -982,6 +982,10 @@
                             <constraint firstAttribute="trailing" secondItem="vnf-YO-gEb" secondAttribute="trailing" constant="20" symbolic="YES" id="lJ0-hG-4Wv"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="LogTextField" destination="vnf-YO-gEb" id="i6d-Yp-17Z"/>
+                        <outlet property="logTextField" destination="vnf-YO-gEb" id="kiz-RW-ktA"/>
+                    </connections>
                 </viewController>
                 <customObject id="q1e-gv-SBK" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
