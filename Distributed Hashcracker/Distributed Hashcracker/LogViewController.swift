@@ -9,7 +9,6 @@
 import Cocoa
 
 class LogViewController: NSViewController {
-
     
     @IBOutlet var logTextField: NSTextField!
     

@@ -97,12 +97,11 @@
 		501E6E5F1C1703C70068A44B /* Distributed Hashcracker */ = {
 			isa = PBXGroup;
 			children = (
+				50ADD8501C28791100E8DC42 /* ViewController */,
 				501E6E601C1703C70068A44B /* AppDelegate.swift */,
-				501E6E621C1703C70068A44B /* SettingsViewController.swift */,
 				501E6E641C1703C70068A44B /* Assets.xcassets */,
 				501E6E661C1703C70068A44B /* Main.storyboard */,
 				501E6E691C1703C70068A44B /* Info.plist */,
-				50ADD84E1C28777E00E8DC42 /* LogViewController.swift */,
 			);
 			path = "Distributed Hashcracker";
 			sourceTree = "<group>";
@@ -123,6 +122,15 @@
 				501E6E7F1C1703C70068A44B /* Info.plist */,
 			);
 			path = "Distributed HashcrackerUITests";
+			sourceTree = "<group>";
+		};
+		50ADD8501C28791100E8DC42 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				501E6E621C1703C70068A44B /* SettingsViewController.swift */,
+				50ADD84E1C28777E00E8DC42 /* LogViewController.swift */,
+			);
+			name = ViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

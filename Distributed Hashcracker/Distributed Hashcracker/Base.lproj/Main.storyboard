@@ -864,9 +864,6 @@
                                                                         </items>
                                                                     </menu>
                                                                 </popUpButtonCell>
-                                                                <connections>
-                                                                    <action selector="isServerButtonPressed:" target="XfG-lQ-9wD" id="NXi-7I-tSe"/>
-                                                                </connections>
                                                             </popUpButton>
                                                         </subviews>
                                                         <visibilityPriorities>
