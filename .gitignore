@@ -46,6 +46,8 @@ Doku_AVS.pdf
 
 .DS_Store
 
+Carthage/
+
 # CocoaPods
 #
 # We recommend against adding the Pods directory to your .gitignore. However
