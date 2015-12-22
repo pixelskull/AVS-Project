@@ -41,7 +41,6 @@ DerivedData
 *.mtc1
 *.out
 *.synctex.gz
-Doku_AVS.pdf
 .texpadtmp
 
 .DS_Store
