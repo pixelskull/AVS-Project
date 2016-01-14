@@ -12,7 +12,8 @@ In diesem Kapitel wird die Konzeption des Brute Force-Angriffs beschrieben. Auf 
 \section{Planung des Algorithmus}
 \label{ideeBruteForce}
 Grundlegend ist das Ziel des Projektes das Entschlüsseln eines vorgegebenen Passwortes. Das zu entschlüsselnde Passwort wird vor der Berechnung vom Benutzer eingetragen. Das eingetragene Passwort wird dann durch eine Hashfunktion geleitet. Der entstandene Hash wird gespeichert und dient als Zielbedingung der folgenden Berechnung. \\
-Nun beginnt der eigentliche Angriff. Der steuernde Rechner wird nun alle möglichen Passwörter in einem Array ablegen. Das Muster der möglichen Passwörter soll wie folgt aufgebaut werden: 
+Nun beginnt der eigentliche Angriff. Zu Beginn wird eine sogenannte \enquote{Dictionary-Attack} vorgenommen. Dies bedeutet, dass ein Wörterbuch mit häufig genutzten Passwörtern als Basis des Angriffs genutzt wird. Durch die vorangestellte Attacke auf Basis von häufig benutzten Passwörtern wird die Wahrscheinlichkeit des effizienten Entschlüsseln des gesuchten Passworts erhöht. \\
+Bleibt die Dictionary-Attack erfolglos, werden alle möglichen Zeichenkombinationen untersucht. Der steuernde Rechner wird alle möglichen Passwörter in einem Array ablegen. Das Muster der möglichen Passwörter soll wie folgt aufgebaut werden: 
 
 \texttt{Muster der zu berechnenden Passwörter:}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -65,4 +66,5 @@ Die Rechner innerhalb der verteilten Architektur (Worker) holen sich nun \enquot
 
 Dieser stark gekürzte Pseudoalgorithmus verdeutlicht die geplante Vorgehensweise bei der Passwortentschlüsselung. \\
 %TODO welche HashFunktion nutzen wir?
+
 
