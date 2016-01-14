@@ -19,6 +19,9 @@ class SettingsViewController: NSViewController {
     @IBAction func isServerButtonPressed(sender: NSButton) {
         if sender.state == 1 {
             serverAdressField.stringValue = "127.0.0.1"
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "this Mac is now Server")
+            
             serverAdressField.enabled = false
         } else {
             serverAdressField.stringValue = ""
@@ -29,12 +32,13 @@ class SettingsViewController: NSViewController {
     }
     
     
-    @IBAction func StartButtonPressed(sender: NSButton) {}
+    @IBAction func StartButtonPressed(sender: NSButton) {
+        NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "this Mac is now Server")
+    }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
     }
 

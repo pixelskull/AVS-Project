@@ -14,8 +14,18 @@ class LogViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        logTextField.stringValue += "Application started"
-        // Do view setup here.
+        logTextField.stringValue += "Application started \n"
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateLogTextField:", name: "updateLog", object: nil)
+    }
+    
+    func updateLogTextField(notification:AnyObject?) {
+        guard let message = notification!.object else {
+            logTextField.stringValue += "unrecognized message send \n"
+            return
+        }
+        
+        logTextField.stringValue += "\(String(message!))\n"
     }
     
 }
