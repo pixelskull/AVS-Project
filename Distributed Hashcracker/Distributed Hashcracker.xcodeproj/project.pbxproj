@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		50091C541C47EB6D003AD5D5 /* Starscream.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		50091C551C47EB88003AD5D5 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; };
 		501E6E611C1703C70068A44B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E601C1703C70068A44B /* AppDelegate.swift */; };
 		501E6E631C1703C70068A44B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E621C1703C70068A44B /* SettingsViewController.swift */; };
 		501E6E651C1703C70068A44B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 501E6E641C1703C70068A44B /* Assets.xcassets */; };
@@ -33,7 +35,22 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		50091C4F1C47E5FA003AD5D5 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				50091C541C47EB6D003AD5D5 /* Starscream.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		50091C531C47EB6D003AD5D5 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
 		501E6E5D1C1703C70068A44B /* Distributed Hashcracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Distributed Hashcracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		501E6E601C1703C70068A44B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		501E6E621C1703C70068A44B /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -54,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50091C551C47EB88003AD5D5 /* Starscream.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,9 +92,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		50091C4E1C47E5E8003AD5D5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				50091C531C47EB6D003AD5D5 /* Starscream.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		501E6E541C1703C70068A44B = {
 			isa = PBXGroup;
 			children = (
+				50091C4E1C47E5E8003AD5D5 /* Frameworks */,
 				501E6E5F1C1703C70068A44B /* Distributed Hashcracker */,
 				501E6E711C1703C70068A44B /* Distributed HashcrackerTests */,
 				501E6E7C1C1703C70068A44B /* Distributed HashcrackerUITests */,
@@ -143,6 +170,7 @@
 				501E6E591C1703C70068A44B /* Sources */,
 				501E6E5A1C1703C70068A44B /* Frameworks */,
 				501E6E5B1C1703C70068A44B /* Resources */,
+				50091C4F1C47E5FA003AD5D5 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -397,6 +425,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Distributed Hashcracker/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "de.th-koeln.avs.Distributed-Hashcracker";
@@ -409,6 +441,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Distributed Hashcracker/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "de.th-koeln.avs.Distributed-Hashcracker";
