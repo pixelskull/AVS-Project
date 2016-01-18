@@ -857,7 +857,7 @@
                                                     <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="og8-6k-sub">
                                                         <rect key="frame" x="0.0" y="0.0" width="440" height="21"/>
                                                         <subviews>
-                                                            <textField horizontalHuggingPriority="200" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8zF-np-c6h">
+                                                            <textField horizontalHuggingPriority="200" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8zF-np-c6h">
                                                                 <rect key="frame" x="-2" y="4" width="347" height="17"/>
                                                                 <animations/>
                                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Hash Algorithm:" id="Edr-YR-mLb">
@@ -866,7 +866,7 @@
                                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                 </textFieldCell>
                                                             </textField>
-                                                            <popUpButton verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EC0-va-uYq">
+                                                            <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EC0-va-uYq">
                                                                 <rect key="frame" x="349" y="-3" width="94" height="26"/>
                                                                 <animations/>
                                                                 <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="znc-1W-iLt">
@@ -874,7 +874,7 @@
                                                                     <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" id="2Ke-um-pOX">
                                                                         <items>
-                                                                            <menuItem title="MD5" state="on" id="clq-Uc-6p9"/>
+                                                                            <menuItem title="MD5" id="clq-Uc-6p9"/>
                                                                             <menuItem title="SHA-128" id="9kA-SB-45J"/>
                                                                             <menuItem title="SHA-256" id="Wlq-Te-Mpu"/>
                                                                         </items>
