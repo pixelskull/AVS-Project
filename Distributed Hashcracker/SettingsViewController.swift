@@ -37,6 +37,8 @@ class SettingsViewController: NSViewController {
         
         var hashAlgorith: HashAlgorith?
         
+        NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
+        
         var hashedPassword: String = ""
         
         print(passwordField.stringValue)
@@ -62,8 +64,6 @@ class SettingsViewController: NSViewController {
         default: print("Password not successfully hashed"); break
             
         }
-        
-        NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
         
         NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Hash of the password: " + hashedPassword)
         
