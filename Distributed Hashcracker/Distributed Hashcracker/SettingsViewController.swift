@@ -22,19 +22,19 @@ class SettingsViewController: NSViewController {
     
     
     @IBAction func isServerButtonPressed(sender: NSButton) {
-        if sender.state == 1 {
+        if sender.state == NSOnState {
             serverAdressField.stringValue = "127.0.0.1"
             serverAdressField.enabled = false
+            passwordField.enabled = true 
             
             NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "this Mac is now Master")
         } else {
             serverAdressField.stringValue = ""
             serverAdressField.enabled = true
+            passwordField.enabled = false
             
             NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "this Mac is now Worker")
         }
-        
-        // TODO: Setup Server
     }
     
     
