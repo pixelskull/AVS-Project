@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		50091C541C47EB6D003AD5D5 /* Starscream.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50091C551C47EB88003AD5D5 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; };
+		50091C581C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */; };
 		501E6E611C1703C70068A44B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E601C1703C70068A44B /* AppDelegate.swift */; };
 		501E6E631C1703C70068A44B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E621C1703C70068A44B /* SettingsViewController.swift */; };
 		501E6E651C1703C70068A44B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 501E6E641C1703C70068A44B /* Assets.xcassets */; };
@@ -51,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		50091C531C47EB6D003AD5D5 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
+		50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketBackgroundOperation.swift; sourceTree = "<group>"; };
 		501E6E5D1C1703C70068A44B /* Distributed Hashcracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Distributed Hashcracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		501E6E601C1703C70068A44B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		501E6E621C1703C70068A44B /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -100,6 +102,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		50091C561C493790003AD5D5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		501E6E541C1703C70068A44B = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +134,7 @@
 		501E6E5F1C1703C70068A44B /* Distributed Hashcracker */ = {
 			isa = PBXGroup;
 			children = (
+				50091C561C493790003AD5D5 /* Model */,
 				50ADD8501C28791100E8DC42 /* ViewController */,
 				501E6E601C1703C70068A44B /* AppDelegate.swift */,
 				501E6E641C1703C70068A44B /* Assets.xcassets */,
@@ -293,6 +304,7 @@
 			files = (
 				50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */,
 				501E6E631C1703C70068A44B /* SettingsViewController.swift in Sources */,
+				50091C581C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift in Sources */,
 				501E6E611C1703C70068A44B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

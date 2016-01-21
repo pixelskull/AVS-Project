@@ -29,8 +29,9 @@ wsServer.on('request', function(req) {
     req.reject();
   }
 
-  var connection = req.accept('echo-protocol', req.origin);
+  var connection = req.accept('distributed_hashcracker_protocol', req.origin);
   console.log((new Date()) + 'connection accepted.');
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
             console.log('Received Message: ' + message.utf8Data);

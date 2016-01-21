@@ -18,6 +18,8 @@ class SettingsViewController: NSViewController {
     
     let socket = WebSocket(url: NSURL(string: "http://localhost:3000/")!)
     
+    let queue = NSOperationQueue()
+    
     
     @IBAction func isServerButtonPressed(sender: NSButton) {
         if sender.state == 1 {
@@ -37,33 +39,17 @@ class SettingsViewController: NSViewController {
     
     
     @IBAction func StartButtonPressed(sender: NSButton) {
+        if sender.state == NSOnState {
+            let backgroundOperation = WebSocketBackgroundOperation()
+            queue.addOperation(backgroundOperation)
+            //        backgroundOperation.threadPriority = 0
+            backgroundOperation.completionBlock = {
+                print("operation finished")
+            }
+        } else {
+            NSNotificationCenter.defaultCenter().postNotificationName("stopWebSocketOperation", object: nil)
+        }
         
-        let socket = WebSocket(url: NSURL(string: "ws://localhost:3000")!)
-        
-        socket.headers["Sec-WebSocket-Protocol"] = "echo-protocol"
-        
-        //websocketDidConnect
-        socket.onConnect = {
-            print("websocket is connected")
-        }
-        //websocketDidDisconnect
-        socket.onDisconnect = { (error: NSError?) in
-            print("websocket is disconnected: \(error?.localizedDescription)")
-        }
-        //websocketDidReceiveMessage
-        socket.onText = { (text: String) in
-            print("got some text: \(text)")
-        }
-        //websocketDidReceiveData
-        socket.onData = { (data: NSData) in
-            print("got some data: \(data.length)")
-        }
-        //you could do onPong as well.
-        socket.connect()
-        print("socketConnection")
-        if socket.isConnected {
-            socket.writeString("test Foo")
-        }
     }
     
     
