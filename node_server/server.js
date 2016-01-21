@@ -25,8 +25,8 @@ function originIsAllowed(origin) {
 
 wsServer.on('request', function(req) {
   if (!originIsAllowed(req.origin)) {
-    console.log('foooooo');
     req.reject();
+    console.log('connection rejected');
   }
 
   var connection = req.accept('distributed_hashcracker_protocol', req.origin);
