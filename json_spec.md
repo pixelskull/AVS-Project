@@ -11,22 +11,13 @@
 }
 ```
 
-## finished work
+## get work
 ```
 {
-  "status" : "finishedWork",
-  "value" : "#WORKER_ID"
+  "status" : "newWorkBlog",
+  "value" : "#NEW_HASH(ES)"
 }
 ```
-
-## finished work without hit
-```
-{
-  "status" : "finishedWorkWithoutHit",
-  "value" : "#WORKER_ID"
-}
-```
-
 
 # Messages to Master  
 
@@ -49,6 +40,22 @@
     "password" : "#PASSWORD"
     "time_needed" : "#TIME"
   }
+}
+```
+
+## finished work
+```
+{
+  "status" : "finishedWork",
+  "value" : "#WORKER_ID"
+}
+```
+
+## finished work without hit
+```
+{
+  "status" : "finishedWorkWithoutHit",
+  "value" : "#WORKER_ID"
 }
 ```
 
