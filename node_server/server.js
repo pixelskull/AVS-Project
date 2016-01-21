@@ -1,17 +1,45 @@
-var app = require('express')()
-var http = require('http').Server(app)
-var io = require('socket.io')(http)
+// var app = require('express')();
 
+var WebsocketServer = require('websocket').server;
+var http = require('http') //.Server(app);
+var conf = require('./config.json')
 
-app.get('/', function(req, res) {
-  res.send('<body><script src="/socket.io/socket.io.js"></script><script> var socket = io(); </script></body>')
+var server = http.createServer(function(req, res) {
+  console.log((new Date()) + ' recieved request for ' + req.url);
+  res.writeHead(404);
+  res.end();
 });
 
-
-io.on('connection', function(sockets){
-  console.log('a user connected')
+server.listen(conf.port, function() {
+  console.log((new Date()) + ' Server is listening on port ' + conf.port);
 });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000')
+wsServer = new WebsocketServer({
+  httpServer: server,
+  autoAcceptConnections: false
+});
+
+function originIsAllowed(origin) {
+  return true;
+}
+
+wsServer.on('request', function(req) {
+  if (!originIsAllowed(req.origin)) {
+    console.log('foooooo');
+    req.reject();
+  }
+
+  var connection = req.accept('distributed_hashcracker_protocol', req.origin);
+  console.log((new Date()) + 'connection accepted.');
+
+  connection.on('message', function(message) {
+    if (message.type === 'utf8') {
+            console.log('Received Message: ' + message.utf8Data);
+            connection.sendUTF(message.utf8Data);
+        }
+        else if (message.type === 'binary') {
+            console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
+            connection.sendBytes(message.binaryData);
+        }
+  });
 });
