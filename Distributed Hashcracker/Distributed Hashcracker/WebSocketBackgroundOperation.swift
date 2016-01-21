@@ -9,13 +9,16 @@ import Foundation
 import Starscream
 
 class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
+    
     let host: String = "localhost"
     let port: Int = 3000
-    var socket: WebSocket
+    let socket: WebSocket
     
     var run:Bool = true
     
     static let sharedInstance = WebSocketBackgroundOperation()
+    
+    let notificationCenter = NSNotificationCenter.defaultCenter()
     
     override init() {
         socket = WebSocket(url: NSURL(string: "ws://\(host):\(port)")!)
@@ -23,26 +26,23 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         
         super.init()
         socket.delegate = self
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "stop:", name: "stopWebSocketOperation", object: nil)
+        notificationCenter.addObserver(self,
+            selector: "stop:",
+            name: "stopWebSocketOperation",
+            object: nil)
     }
     
     override func main() {
         connect()
         while run {
-            socket.writeString("foo")
+            socket.writeString("dummy message")
             sleep(1)
         }
     }
     
+    func connect() { socket.connect() }
     
-    func connect() {
-        socket.connect()
-    }
-    
-    func websocketDidConnect(socket: WebSocket) {
-        print("websocket is connected")
-        socket.writePing(NSData())
-    }
+    func websocketDidConnect(socket: WebSocket) { print("websocket is connected") }
     
     func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
         print("websocket is disconnected: \(error?.localizedDescription)")
@@ -55,6 +55,7 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     func websocketDidReceiveMessage(socket: WebSocket, text: String) {
         print("got some text: \(text)")
     }
+    
     
     func stop(notification:NSNotification) {
         run = false

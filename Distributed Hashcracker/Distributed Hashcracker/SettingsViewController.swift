@@ -17,37 +17,43 @@ class SettingsViewController: NSViewController {
     @IBOutlet var hashAlgorithmSelected: NSPopUpButton!
     
     let socket = WebSocket(url: NSURL(string: "http://localhost:3000/")!)
+    let notificationCenter = NSNotificationCenter.defaultCenter()
     
     let queue = NSOperationQueue()
     
     
+    private func prepareMasterInterface() {
+        serverAdressField.stringValue = "127.0.0.1"
+        serverAdressField.enabled = false
+        passwordField.enabled = true
+        
+        NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "this Mac is now Master")
+    }
+    
+    private func prepareWorkerInterface() {
+        serverAdressField.stringValue = ""
+        serverAdressField.enabled = true
+        passwordField.enabled = false
+        
+        NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "this Mac is now Worker")
+    }
+    
+    private func startBackgroundOperation() {
+        let backgroundOperation = WebSocketBackgroundOperation()
+        queue.addOperation(backgroundOperation)
+        backgroundOperation.completionBlock = { print("operation finished") }
+    }
+    
     @IBAction func isServerButtonPressed(sender: NSButton) {
-        if sender.state == NSOnState {
-            serverAdressField.stringValue = "127.0.0.1"
-            serverAdressField.enabled = false
-            passwordField.enabled = true 
-            
-            NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "this Mac is now Master")
-        } else {
-            serverAdressField.stringValue = ""
-            serverAdressField.enabled = true
-            passwordField.enabled = false
-            
-            NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "this Mac is now Worker")
-        }
+        sender.state == NSOnState ? prepareMasterInterface() : prepareWorkerInterface()
     }
     
     
     @IBAction func StartButtonPressed(sender: NSButton) {
         if sender.state == NSOnState {
-            let backgroundOperation = WebSocketBackgroundOperation()
-            queue.addOperation(backgroundOperation)
-            //        backgroundOperation.threadPriority = 0
-            backgroundOperation.completionBlock = {
-                print("operation finished")
-            }
+            startBackgroundOperation()
         } else {
-            NSNotificationCenter.defaultCenter().postNotificationName("stopWebSocketOperation", object: nil)
+            notificationCenter.postNotificationName("stopWebSocketOperation", object: nil)
         }
         
     }
