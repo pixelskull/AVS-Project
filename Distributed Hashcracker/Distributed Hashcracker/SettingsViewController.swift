@@ -51,7 +51,44 @@ class SettingsViewController: NSViewController {
     
     @IBAction func StartButtonPressed(sender: NSButton) {
         if sender.state == NSOnState {
+            
+            var hashAlgorith: HashAlgorith?
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
+            
+            var hashedPassword: String = ""
+            
+            print(passwordField.stringValue)
+            print(hashAlgorithmSelected.titleOfSelectedItem!)
+            
+            switch hashAlgorithmSelected.titleOfSelectedItem!{
+            case "MD5":
+                hashAlgorith = HashMD5()
+                hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
+                print(hashedPassword)
+                //print(hashAlgorith.hash(string: passwordField.stringValue))
+                
+            case "SHA-128":
+                hashAlgorith = HashSHA()
+                hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
+                print(hashedPassword)
+                
+            case "SHA-256":
+                hashAlgorith = HashSHA256()
+                hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
+                print(hashedPassword)
+                
+            default:
+                hashedPassword = "Password not successfully hashed"
+                print("Password not successfully hashed");
+                break
+                
+            }
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Hash of the password: " + hashedPassword)
+            
             startBackgroundOperation()
+            
         } else {
             notificationCenter.postNotificationName("stopWebSocketOperation", object: nil)
         }
