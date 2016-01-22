@@ -27,7 +27,7 @@ class SettingsViewController: NSViewController {
         serverAdressField.enabled = false
         passwordField.enabled = true
         
-        NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "this Mac is now Master")
+        notificationCenter.postNotificationName("updateLog", object: "this Mac is now Master")
     }
     
     private func prepareWorkerInterface() {
@@ -35,7 +35,7 @@ class SettingsViewController: NSViewController {
         serverAdressField.enabled = true
         passwordField.enabled = false
         
-        NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "this Mac is now Worker")
+        notificationCenter.postNotificationName("updateLog", object: "this Mac is now Worker")
     }
     
     private func startBackgroundOperation() {
@@ -55,9 +55,7 @@ class SettingsViewController: NSViewController {
         } else {
             notificationCenter.postNotificationName("stopWebSocketOperation", object: nil)
         }
-        
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,7 +67,5 @@ class SettingsViewController: NSViewController {
         // Update the view, if already loaded.
         }
     }
-
-
 }
 

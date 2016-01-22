@@ -28,4 +28,7 @@ class LogViewController: NSViewController {
         logTextField.stringValue += "\(String(message!))\n"
     }
     
+    deinit {
+        notificationCenter.removeObserver(self)
+    }
 }

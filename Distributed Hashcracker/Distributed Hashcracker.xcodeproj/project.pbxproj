@@ -17,6 +17,8 @@
 		501E6E731C1703C70068A44B /* Distributed_HashcrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E721C1703C70068A44B /* Distributed_HashcrackerTests.swift */; };
 		501E6E7E1C1703C70068A44B /* Distributed_HashcrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E7D1C1703C70068A44B /* Distributed_HashcrackerUITests.swift */; };
 		50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ADD84E1C28777E00E8DC42 /* LogViewController.swift */; };
+		50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CE1D261C5129BD00A61514 /* MessageQueue.swift */; };
+		50CE1D291C524C2F00A61514 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CE1D281C524C2F00A61514 /* Message.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +68,8 @@
 		501E6E7D1C1703C70068A44B /* Distributed_HashcrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Distributed_HashcrackerUITests.swift; sourceTree = "<group>"; };
 		501E6E7F1C1703C70068A44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50ADD84E1C28777E00E8DC42 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
+		50CE1D261C5129BD00A61514 /* MessageQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageQueue.swift; sourceTree = "<group>"; };
+		50CE1D281C524C2F00A61514 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +110,8 @@
 			isa = PBXGroup;
 			children = (
 				50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */,
+				50CE1D261C5129BD00A61514 /* MessageQueue.swift */,
+				50CE1D281C524C2F00A61514 /* Message.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -304,6 +310,8 @@
 			files = (
 				50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */,
 				501E6E631C1703C70068A44B /* SettingsViewController.swift in Sources */,
+				50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */,
+				50CE1D291C524C2F00A61514 /* Message.swift in Sources */,
 				50091C581C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift in Sources */,
 				501E6E611C1703C70068A44B /* AppDelegate.swift in Sources */,
 			);

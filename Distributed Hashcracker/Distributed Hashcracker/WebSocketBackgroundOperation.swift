@@ -16,9 +16,8 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     
     var run:Bool = true
     
-    static let sharedInstance = WebSocketBackgroundOperation()
-    
     let notificationCenter = NSNotificationCenter.defaultCenter()
+    let messageQueue = MessageQueue.sharedInstance
     
     override init() {
         socket = WebSocket(url: NSURL(string: "ws://\(host):\(port)")!)
@@ -54,6 +53,7 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     
     func websocketDidReceiveMessage(socket: WebSocket, text: String) {
         print("got some text: \(text)")
+        messageQueue.put(ExtendedMessage(status: text, values: [text:text]))
     }
     
     
