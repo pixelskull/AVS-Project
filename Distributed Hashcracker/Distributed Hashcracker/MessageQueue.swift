@@ -15,7 +15,8 @@ class MessageQueue {
     
     static let sharedInstance = MessageQueue()
     
-    let semaphore = dispatch_semaphore_create(1)
+    var read_semaphore = dispatch_semaphore_create(1)
+    let write_semaphore = dispatch_semaphore_create(1)
     
     init() {
         notificationCenter.addObserver(self, selector: "put:", name: "putMessage", object: nil)
@@ -27,9 +28,9 @@ class MessageQueue {
      - parameter message: Message to append
     */
     func put(message:Message) {
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        dispatch_semaphore_wait(write_semaphore, DISPATCH_TIME_FOREVER)
         messages.append(message)
-        dispatch_semaphore_signal(semaphore)
+        dispatch_semaphore_signal(write_semaphore)
     }
     
     /**
@@ -39,9 +40,9 @@ class MessageQueue {
     */
     func get() -> Message? {
         guard let firstElement = messages.first else { return nil }
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
         messages = messages.dropFirst().map { $0 }
-        dispatch_semaphore_signal(semaphore)
+        dispatch_semaphore_signal(read_semaphore)
         return firstElement
     }
     

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C98B1A11C52893800E2641B /* CustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A01C52893800E2641B /* CustomObject.m */; };
-		4C98B1A41C52895700E2641B /* StrategyPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A31C52895700E2641B /* StrategyPattern.swift */; };
+		4C98B1A41C52895700E2641B /* HashStrategie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A31C52895700E2641B /* HashStrategie.swift */; };
 		50091C541C47EB6D003AD5D5 /* Starscream.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50091C551C47EB88003AD5D5 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; };
 		50091C581C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */; };
@@ -58,7 +58,7 @@
 		4C98B19F1C52893800E2641B /* Distributed Hashcracker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Distributed Hashcracker-Bridging-Header.h"; sourceTree = "<group>"; };
 		4C98B1A01C52893800E2641B /* CustomObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomObject.m; sourceTree = "<group>"; };
 		4C98B1A21C52894800E2641B /* CustomObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomObject.h; sourceTree = "<group>"; };
-		4C98B1A31C52895700E2641B /* StrategyPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrategyPattern.swift; sourceTree = "<group>"; };
+		4C98B1A31C52895700E2641B /* HashStrategie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HashStrategie.swift; sourceTree = "<group>"; };
 		50091C531C47EB6D003AD5D5 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
 		50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketBackgroundOperation.swift; sourceTree = "<group>"; };
 		501E6E5D1C1703C70068A44B /* Distributed Hashcracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Distributed Hashcracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +115,7 @@
 		50091C561C493790003AD5D5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				4C98B1A31C52895700E2641B /* HashStrategie.swift */,
 				50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */,
 				50CE1D261C5129BD00A61514 /* MessageQueue.swift */,
 				50CE1D281C524C2F00A61514 /* Message.swift */,
@@ -155,7 +156,6 @@
 				4C98B1A01C52893800E2641B /* CustomObject.m */,
 				4C98B19F1C52893800E2641B /* Distributed Hashcracker-Bridging-Header.h */,
 				4C98B1A21C52894800E2641B /* CustomObject.h */,
-				4C98B1A31C52895700E2641B /* StrategyPattern.swift */,
 			);
 			path = "Distributed Hashcracker";
 			sourceTree = "<group>";
@@ -319,7 +319,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */,
-				4C98B1A41C52895700E2641B /* StrategyPattern.swift in Sources */,
+				4C98B1A41C52895700E2641B /* HashStrategie.swift in Sources */,
 				501E6E631C1703C70068A44B /* SettingsViewController.swift in Sources */,
 				50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */,
 				50CE1D291C524C2F00A61514 /* Message.swift in Sources */,

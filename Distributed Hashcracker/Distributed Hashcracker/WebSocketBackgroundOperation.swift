@@ -33,10 +33,12 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     
     override func main() {
         connect()
-        while run {
+        runloop: while true {
+            if run == false { break runloop }
             socket.writeString("dummy message")
             sleep(1)
         }
+        run = true
     }
     
     func connect() { socket.connect() }
@@ -55,7 +57,6 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         print("got some text: \(text)")
         messageQueue.put(ExtendedMessage(status: text, values: [text:text]))
     }
-    
     
     func stop(notification:NSNotification) {
         run = false
