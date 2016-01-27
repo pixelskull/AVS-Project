@@ -6,11 +6,95 @@ In diesem Kapitel wird die Konzeption des Brute Force-Angriffs beschrieben. Auf 
 
 \section{Architektur}
 %Wie genau soll die Architektur aussehen? Message-Paradigma?
-%TODO mit Team besprechen
-\subsection{Nachrichtenstruktur}
-%TODO Json Zeug hier hin
 
-\section{Planung des Algorithmus}
+
+\subsection{Nachrichtenstruktur}
+Da unsere Implementation auf einer nachrichtenbasierten Kommunikation basieren wird, ist der Entwurf eigener Nachrichtenstrukturen notwendig. Die Nachrichtenstrukturen übertragen alle projektrelevanten Informationen zwischen den Mastern und den Workern. Zur Strukturierung fiel die Wahl auf das Nachrichtenaustauschformat \enquote{JavaScript Object Notation} oder kurz \emph{JSON}, da dieses Format sehr leichtgewichtig und einfach anpassbar ist. \\
+Nachfolgend werden die entwickelten Nachrichtenstrukturen und deren Inhalt detailliert beschrieben. Die Nachrichten werden in drei Kategorien unterteilt: Nachrichten zum Worker, Nachrichten zum Master und allgemeine Nachrichten.
+
+\subsubsection{Nachrichten zum Worker}
+Hier werden die Strukturen beschrieben, welche primär vom steuernden Rechner (Master) zu einem der Worker gesendet werden.\\
+
+\texttt{SetupAndConfig}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+{
+  "status" : "setupConfig",
+  "value" : {
+    "algorithm" : "#HASH_ID",
+    "target" : "#TARGET_HASH", 
+    "worker_id" : "#WORKER_ID"
+  }
+}
+\end{lstlisting}
+Ein im Cluster neu hinzugefügter Worker erhält seine Konfigurationsparameter, damit dieser mit dem Berechnen beginnen kann. 
+Der Wert \textbf{algorithm} übergibt die ID des Hash-Algorithmus, welcher in der aktuellen Passwortberechnung benutzt wird. \textbf{Target} übermittelt den Hash des Zielpasswortes. Anhand des Hashes kann ein Worker bestimmen, ob das Zielpasswort berechnet wurde. Die \textbf{workerID} ist eine vom Master vergebene, fortlaufende Nummer und dient der Identifizierung der Worker.\\
+
+\texttt{getWork}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+{
+	"status" : "newWorkBlog",
+  	"value" : "#NEW_HASH(ES)"
+}
+\end{lstlisting}
+Diese Nachricht übermittelt dem Worker eine Anzahl neuer Passwörter, von denen dieser die Hashes berechnen wird.
+
+
+\subsubsection{Nachrichten zum Master}
+Folgende Nachrichten werden primär von den Workern an die Master gesendet. \\
+
+\texttt{newClientRegistration}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+{
+  "status" : "newClientRegistration",
+  "value" : {
+    "worker" : "#WORKER_ID"
+  }
+}
+\end{lstlisting}
+Beschreibung hier.\\
+
+\texttt{hitTargetHash}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+{
+  "status" : "hitTargetHash",
+  "value" : {
+    "hash" : "#HASH_VALUE",
+    "password" : "#PASSWORD"
+    "time_needed" : "#TIME"
+  }
+}\end{lstlisting}
+Beschreibung hier.\\
+
+\texttt{finishedWork}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+{
+  "status" : "finishedWork",
+  "value" : "#WORKER_ID"
+}
+\end{lstlisting}
+Beschreibung hier.\\
+
+\subsubsection{Allgemeine Nachrichten}
+
+\texttt{pingRequest}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+{
+  "status" : "stillAlive",
+  "value" : ""
+}
+\end{lstlisting}
+Beschreibung hier.\\
+
+\texttt{Ping reply}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+{
+  "status" : "alive",
+  "value" : "true/false"
+}
+\end{lstlisting}
+Beschreibung hier.\\
+
+\section{Brute Force-Algorithmus}
 \label{ideeBruteForce}
 Grundlegend ist das Ziel des Projektes das Entschlüsseln eines vorgegebenen Passwortes. Das zu entschlüsselnde Passwort wird vor der Berechnung vom Benutzer eingetragen. Das eingetragene Passwort wird dann durch eine Hashfunktion geleitet. Der entstandene Hash wird gespeichert und dient als Zielbedingung der folgenden Berechnung. \\
 Nun beginnt der eigentliche Angriff. Zu Beginn wird eine sogenannte \enquote{Dictionary-Attack} vorgenommen. Dies bedeutet, dass ein Wörterbuch mit häufig genutzten Passwörtern als Basis des Angriffs genutzt wird. Durch die vorangestellte Attacke auf Basis von häufig benutzten Passwörtern wird die Wahrscheinlichkeit des effizienten Entschlüsseln des gesuchten Passworts erhöht. \\
