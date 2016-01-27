@@ -13,7 +13,7 @@ Da unsere Implementation auf einer nachrichtenbasierten Kommunikation basieren w
 Nachfolgend werden die entwickelten Nachrichtenstrukturen und deren Inhalt detailliert beschrieben. Die Nachrichten werden in drei Kategorien unterteilt: Nachrichten zum Worker, Nachrichten zum Master und allgemeine Nachrichten.
 
 \subsubsection{Nachrichten zum Worker}
-Hier werden die Strukturen beschrieben, welche primär vom steuernden Rechner (Master) zu einem der Worker gesendet werden.\\
+Hier werden die Strukturen beschrieben, welche vom steuernden Rechner (Master) zu einem der Worker gesendet werden.\\
 
 \texttt{SetupAndConfig}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -40,7 +40,7 @@ Diese Nachricht übermittelt dem Worker eine Anzahl neuer Passwörter, von denen
 
 
 \subsubsection{Nachrichten zum Master}
-Folgende Nachrichten werden primär von den Workern an die Master gesendet. \\
+Folgende Nachrichten werden von den Workern an die Master gesendet. \\
 
 \texttt{newClientRegistration}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -51,7 +51,7 @@ Folgende Nachrichten werden primär von den Workern an die Master gesendet. \\
   }
 }
 \end{lstlisting}
-Beschreibung hier.\\
+Der Worker beantragt eine ID, um sich im Cluster identifizieren zu können.\\
 
 \texttt{hitTargetHash}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -63,7 +63,7 @@ Beschreibung hier.\\
     "time_needed" : "#TIME"
   }
 }\end{lstlisting}
-Beschreibung hier.\\
+Diese Nachricht wird vom Worker versendet, wenn der berechnete Hash dem Zielhash entspricht und somit das Passwort berechnet wurde. Es werden der berechnete Hash und das zugehörige Passwort übertragen. Zudem wird die Zeit, die die Berechnung in Anspruch genommen hat, übertragen. Die Zeit kann für spätere Erweiterungen des Projekts genutzt werden, beispielsweise zum Vergleich verschiedener Hash-Algorithmen.\\
 
 \texttt{finishedWork}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -72,7 +72,7 @@ Beschreibung hier.\\
   "value" : "#WORKER_ID"
 }
 \end{lstlisting}
-Beschreibung hier.\\
+Mit dieser Nachricht teilt der Worker mit, dass alle möglichen Passworte des aktuellen Arbeitspakets berechnet worden sind. Falls bei der Berechnung der Zielhash bzw. das Zielpasswort berechnet worden ist, wird zusätzlich die Nachricht \enquote{finishedWork} versandt. Ansonsten erhält der Worker ein neues Arbeitspaket aus dem Nachrichtenstrom. \\
 
 \subsubsection{Allgemeine Nachrichten}
 
@@ -83,7 +83,7 @@ Beschreibung hier.\\
   "value" : ""
 }
 \end{lstlisting}
-Beschreibung hier.\\
+Zur Überprüfung der Verfügbarkeit wird die Nachricht \enquote{stillAlive} versendet. Analog zur Funktion \enquote{Ping} in konventionellen Netzwerken werden alle verfügbaren Rechner angesprochen.  \\
 
 \texttt{Ping reply}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -92,7 +92,7 @@ Beschreibung hier.\\
   "value" : "true/false"
 }
 \end{lstlisting}
-Beschreibung hier.\\
+Mit dieser Nachricht wird die Anfrage \enquote{stillAlive} beantwortet. Verfügbare Rechner zeigen mit Versenden dieser Nachricht an, dass sie noch verfügbar sind. Die Angabe erfolgt über einen Boolean-Wert.\\
 
 \section{Brute Force-Algorithmus}
 \label{ideeBruteForce}
