@@ -6,7 +6,8 @@
   "status" : "setupConfig",
   "value" : {
     "algorithm" : "#HASH_ID",
-    "target" : "#TARGET_HASH"
+    "target" : "#TARGET_HASH", 
+    "worker_id" : "#WORKER_ID"
   }
 }
 ```
@@ -51,7 +52,7 @@
 }
 ```
 
-## finished work without hit
+## finished work without hit (deprecated)
 ```
 {
   "status" : "finishedWorkWithoutHit",
