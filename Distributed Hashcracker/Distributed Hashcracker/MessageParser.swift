@@ -8,9 +8,33 @@
 
 import Foundation
 
+typealias JSONObject = [String:AnyObject]
+
 class MessageParser {
     
-    func createMessageFromJSON(jsonObject:[String:AnyObject]) -> Message? {
+    /**
+     creates MessageObject(conforms to Message-Protocol) version of JSON-String
+     - parameter jsonString: Stringversion of JSONObject
+     - returns: Message-Object (.Extended or .Basic)
+    */
+    func createMessageFromJSONString(jsonString:String) -> Message? {
+        if let jsonData = stringToJSONObject(jsonString) {
+            return createMessageFromJSON(jsonData)
+        } else {
+            return nil
+        }
+    }
+    
+    /**
+     creates String from MessageObject(conforms to Message-Protocol) 
+     - parameter message: Object that conforms to Message-Protocol
+     - returns: String if Message is valid JSON else nil
+    */
+    func createJSONStringFromMessage(message: Message) -> String? {
+        return createJSONString(message.jsonObject())
+    }
+
+    private func createMessageFromJSON(jsonObject:JSONObject) -> Message? {
         let messageType = findMessageTypeFromJSON(jsonObject)
         
         switch messageType {
@@ -23,10 +47,6 @@ class MessageParser {
                 return extended
             } else { return nil }
         }
-    }
-    
-    func createJSONStringFromMessage(message: Message) -> String? {
-        return createJSONString(message.jsonObject())
     }
     
     private func createJSONString(object:AnyObject, prettyPrinted:Bool = false) -> String? {
@@ -45,7 +65,7 @@ class MessageParser {
         return nil
     }
     
-    private func findMessageTypeFromJSON(json:[String:AnyObject]) -> MessageType {
+    private func findMessageTypeFromJSON(json:JSONObject) -> MessageType {
         switch json["status"] as! String {
         case String(MessagesHeader.newWorkBlog),
         String(MessagesHeader.finishedWork),
@@ -78,7 +98,7 @@ class MessageParser {
         }
     }
     
-    private func jsonObjectToBasicMessage(jsonObject:[String:AnyObject]) -> BasicMessage? {
+    private func jsonObjectToBasicMessage(jsonObject:JSONObject) -> BasicMessage? {
         let status = jsonObject["status"] as! String
         let value = jsonObject["value"] as! String
         
@@ -91,7 +111,7 @@ class MessageParser {
         }
     }
     
-    private func jsonObjectToExtendedMessage(jsonObject:[String:AnyObject]) -> ExtendedMessage? {
+    private func jsonObjectToExtendedMessage(jsonObject:JSONObject) -> ExtendedMessage? {
         let status = jsonObject["status"] as! String
         let valuesString = jsonObject["value"] as! String
         let values:[String:String]
@@ -117,6 +137,21 @@ class MessageParser {
     */
     private func stringToData(string:String) -> NSData {
         return string.dataUsingEncoding(NSUTF8StringEncoding)!
+    }
+    
+    /**
+     simple wrapper that transforms a String to JSONObject
+     
+     - parameter string: the String to transform
+     - returns: JSONObject version of given String
+     */
+    private func stringToJSONObject(string:String) -> JSONObject? {
+        if let jsonObject = try! NSJSONSerialization.JSONObjectWithData(stringToData(string),
+            options: NSJSONReadingOptions(rawValue: 0)) as? JSONObject {
+                return jsonObject
+        } else {
+            return nil
+        }
     }
     
     /**
