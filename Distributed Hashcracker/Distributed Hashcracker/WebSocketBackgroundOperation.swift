@@ -55,7 +55,6 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     
     func websocketDidReceiveMessage(socket: WebSocket, text: String) {
         print("got some text: \(text)")
-        messageQueue.put(ExtendedMessage(status: text, values: [text:text]))
     }
     
     func stop(notification:NSNotification) {

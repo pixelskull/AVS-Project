@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 typealias JSONObject = [String:AnyObject]
 
 class MessageParser {
@@ -131,7 +132,6 @@ class MessageParser {
     
     /**
      simple wrapper that transforms a String to NSData (inverse of dataToString())
-     
      - parameter string: the String to transform 
      - returns: NSData version of given String
     */
@@ -141,7 +141,6 @@ class MessageParser {
     
     /**
      simple wrapper that transforms a String to JSONObject
-     
      - parameter string: the String to transform
      - returns: JSONObject version of given String
      */
@@ -156,7 +155,6 @@ class MessageParser {
     
     /**
      simple wrapper that transforms NSData to String (inverse of stringToData())
-     
      - parameter data: data to convert to String 
      - returns: String version of given NSData
     */

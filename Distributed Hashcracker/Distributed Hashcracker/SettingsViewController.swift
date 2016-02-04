@@ -20,6 +20,7 @@ class SettingsViewController: NSViewController {
     let notificationCenter = NSNotificationCenter.defaultCenter()
     
     let queue = NSOperationQueue()
+    let task = NSTask()
     
     
     private func prepareMasterInterface() {
@@ -53,7 +54,6 @@ class SettingsViewController: NSViewController {
         if sender.state == NSOnState {
             
             var hashAlgorith: HashAlgorith?
-            
             NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
             
             var hashedPassword: String = ""
@@ -87,8 +87,15 @@ class SettingsViewController: NSViewController {
             
             NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Hash of the password: " + hashedPassword)
             
-            startBackgroundOperation()
+            if isManager.state == NSOnState {
+                let resourcePath = NSBundle.mainBundle().resourcePath!
+                task.arguments = [resourcePath+"/node_server/server.js"]
+                task.launchPath = "/usr/local/bin/node"
+                task.launch()
+                sleep(1)
+            }
             
+            startBackgroundOperation()
         } else {
             notificationCenter.postNotificationName("stopWebSocketOperation", object: nil)
         }
@@ -103,6 +110,10 @@ class SettingsViewController: NSViewController {
         didSet {
         // Update the view, if already loaded.
         }
+    }
+    
+    deinit {
+        task.terminate()
     }
 }
 

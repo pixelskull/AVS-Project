@@ -30,7 +30,6 @@ protocol Message {
     func jsonObject() -> [String:AnyObject]
 }
 
-
 class BasicMessage:Message {
     var status:MessagesHeader
     var type:MessageType = .Basic
