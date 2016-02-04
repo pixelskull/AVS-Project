@@ -27,6 +27,7 @@ class SettingsViewController: NSViewController {
         serverAdressField.stringValue = "127.0.0.1"
         serverAdressField.enabled = false
         passwordField.enabled = true
+        hashAlgorithmSelected.enabled = true
         
         notificationCenter.postNotificationName("updateLog", object: "this Mac is now Master")
     }
@@ -35,6 +36,7 @@ class SettingsViewController: NSViewController {
         serverAdressField.stringValue = ""
         serverAdressField.enabled = true
         passwordField.enabled = false
+        hashAlgorithmSelected.enabled = false
         
         notificationCenter.postNotificationName("updateLog", object: "this Mac is now Worker")
     }
@@ -103,7 +105,8 @@ class SettingsViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        passwordField.enabled = false
+        hashAlgorithmSelected.enabled = false
     }
 
     override var representedObject: AnyObject? {
