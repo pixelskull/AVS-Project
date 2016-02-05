@@ -16,6 +16,7 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     
     let notificationCenter = NSNotificationCenter.defaultCenter()
     let messageQueue = MessageQueue.sharedInstance
+    let jsonParser = MessageParser()
     
     init(host:String = "localhost", port:Int = 3000) {
         socket = WebSocket(url: NSURL(string: "ws://\(host):\(port)")!)
@@ -49,10 +50,17 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     
     func websocketDidReceiveData(socket: WebSocket, data: NSData) {
         print("got some data: \(data.length)")
+        let dataString = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
+        if let newMessage = jsonParser.createMessageFromJSONString(dataString) {
+            messageQueue.put(newMessage)
+        }
     }
     
     func websocketDidReceiveMessage(socket: WebSocket, text: String) {
         print("got some text: \(text)")
+        if let newMessage = jsonParser.createMessageFromJSONString(text) {
+            messageQueue.put(newMessage)
+        }
     }
     
     func stop(notification:NSNotification) {

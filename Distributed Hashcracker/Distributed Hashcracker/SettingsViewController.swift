@@ -16,28 +16,26 @@ class SettingsViewController: NSViewController {
     @IBOutlet var passwordField: NSTextField!
     @IBOutlet var hashAlgorithmSelected: NSPopUpButton!
     
-//    let socket = WebSocket(url: NSURL(string: "http://localhost:3000/")!)
     let notificationCenter = NSNotificationCenter.defaultCenter()
-    
     let queue = NSOperationQueue()
     let task = NSTask()
     
     private func prepareMasterInterface() {
+        serverAdressField.enabled = false
+        passwordField.enabled = true
+        hashAlgorithmSelected.enabled = true
         
-        if let hostName = NSHost.currentHost().name {
-            serverAdressField.stringValue = hostName
+        notificationCenter.postNotificationName("updateLog", object: "this Mac is now Master")
+        
+        let hostName = NSHost.currentHost().name
+        if hostName!.characters.count <= 40 {
+            serverAdressField.stringValue = hostName!
         } else {
             let validIPs = getValidIPs(NSHost.currentHost().addresses, show_ipV6: false)
             for ip in validIPs {
                 serverAdressField.stringValue += ip + ", "
             }
         }
-        
-        serverAdressField.enabled = false
-        passwordField.enabled = true
-        hashAlgorithmSelected.enabled = true
-        
-        notificationCenter.postNotificationName("updateLog", object: "this Mac is now Master")
     }
     
     private func prepareWorkerInterface() {
