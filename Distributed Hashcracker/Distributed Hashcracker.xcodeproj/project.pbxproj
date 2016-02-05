@@ -10,6 +10,7 @@
 		4C98B1A11C52893800E2641B /* CustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A01C52893800E2641B /* CustomObject.m */; };
 		4C98B1A41C52895700E2641B /* HashStrategie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A31C52895700E2641B /* HashStrategie.swift */; };
 		5005DEC51C625CA100D39F2C /* node_server in Resources */ = {isa = PBXBuildFile; fileRef = 5005DEC41C625CA100D39F2C /* node_server */; };
+		5005DEC71C63A3DF00D39F2C /* ServerAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */; };
 		50091C541C47EB6D003AD5D5 /* Starscream.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50091C551C47EB88003AD5D5 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; };
 		50091C581C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */; };
@@ -62,6 +63,7 @@
 		4C98B1A21C52894800E2641B /* CustomObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomObject.h; sourceTree = "<group>"; };
 		4C98B1A31C52895700E2641B /* HashStrategie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HashStrategie.swift; sourceTree = "<group>"; };
 		5005DEC41C625CA100D39F2C /* node_server */ = {isa = PBXFileReference; lastKnownFileType = folder; path = node_server; sourceTree = "<group>"; };
+		5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerAddress.swift; sourceTree = "<group>"; };
 		50091C531C47EB6D003AD5D5 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
 		50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketBackgroundOperation.swift; sourceTree = "<group>"; };
 		501E6E5D1C1703C70068A44B /* Distributed Hashcracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Distributed Hashcracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -124,6 +126,7 @@
 				50CE1D261C5129BD00A61514 /* MessageQueue.swift */,
 				50CE1D281C524C2F00A61514 /* Message.swift */,
 				5086D94A1C5FD680008F7464 /* MessageParser.swift */,
+				5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -334,6 +337,7 @@
 				50091C581C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift in Sources */,
 				4C98B1A11C52893800E2641B /* CustomObject.m in Sources */,
 				501E6E611C1703C70068A44B /* AppDelegate.swift in Sources */,
+				5005DEC71C63A3DF00D39F2C /* ServerAddress.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

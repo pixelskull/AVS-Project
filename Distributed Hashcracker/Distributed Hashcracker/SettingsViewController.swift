@@ -16,15 +16,23 @@ class SettingsViewController: NSViewController {
     @IBOutlet var passwordField: NSTextField!
     @IBOutlet var hashAlgorithmSelected: NSPopUpButton!
     
-    let socket = WebSocket(url: NSURL(string: "http://localhost:3000/")!)
+//    let socket = WebSocket(url: NSURL(string: "http://localhost:3000/")!)
     let notificationCenter = NSNotificationCenter.defaultCenter()
     
     let queue = NSOperationQueue()
     let task = NSTask()
     
-    
     private func prepareMasterInterface() {
-        serverAdressField.stringValue = "127.0.0.1"
+        
+        if let hostName = NSHost.currentHost().name {
+            serverAdressField.stringValue = hostName
+        } else {
+            let validIPs = getValidIPs(NSHost.currentHost().addresses, show_ipV6: false)
+            for ip in validIPs {
+                serverAdressField.stringValue += ip + ", "
+            }
+        }
+        
         serverAdressField.enabled = false
         passwordField.enabled = true
         hashAlgorithmSelected.enabled = true
@@ -42,7 +50,8 @@ class SettingsViewController: NSViewController {
     }
     
     private func startBackgroundOperation() {
-        let backgroundOperation = WebSocketBackgroundOperation()
+        let host = serverAdressField.stringValue
+        let backgroundOperation = WebSocketBackgroundOperation(host: host)
         queue.addOperation(backgroundOperation)
         backgroundOperation.completionBlock = { print("operation finished") }
     }
@@ -59,32 +68,19 @@ class SettingsViewController: NSViewController {
             NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
             
             var hashedPassword: String = ""
-            
-            print(passwordField.stringValue)
-            print(hashAlgorithmSelected.titleOfSelectedItem!)
-            
             switch hashAlgorithmSelected.titleOfSelectedItem!{
             case "MD5":
                 hashAlgorith = HashMD5()
                 hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
-                print(hashedPassword)
-                //print(hashAlgorith.hash(string: passwordField.stringValue))
-                
             case "SHA-128":
                 hashAlgorith = HashSHA()
                 hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
-                print(hashedPassword)
-                
             case "SHA-256":
                 hashAlgorith = HashSHA256()
                 hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
-                print(hashedPassword)
-                
             default:
                 hashedPassword = "Password not successfully hashed"
-                print("Password not successfully hashed");
                 break
-                
             }
             
             NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Hash of the password: " + hashedPassword)
@@ -96,12 +92,28 @@ class SettingsViewController: NSViewController {
                 task.launch()
                 sleep(1)
             }
-            
             startBackgroundOperation()
         } else {
             notificationCenter.postNotificationName("stopWebSocketOperation", object: nil)
         }
     }
+    
+    func getValidIPs(addresses:[String], show_ipV4:Bool = true, show_ipV6:Bool = true) -> [String] {
+        return addresses.filter({ address -> Bool in
+            let sAddress = ServerIP(address: address)
+            
+            if !sAddress.isLocalHost() {
+                if sAddress.isIPV4() && show_ipV4{
+                    return true
+                } else if sAddress.isIPV6() && show_ipV6 {
+                    return true
+                }
+            }
+            return false
+        })
+    }
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()

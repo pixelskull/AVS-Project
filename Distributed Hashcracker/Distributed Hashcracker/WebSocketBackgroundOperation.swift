@@ -9,21 +9,19 @@ import Foundation
 import Starscream
 
 class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
-    
-    let host: String = "localhost"
-    let port: Int = 3000
-    let socket: WebSocket
+
+    var socket: WebSocket
     
     var run:Bool = true
     
     let notificationCenter = NSNotificationCenter.defaultCenter()
     let messageQueue = MessageQueue.sharedInstance
     
-    override init() {
+    init(host:String = "localhost", port:Int = 3000) {
         socket = WebSocket(url: NSURL(string: "ws://\(host):\(port)")!)
-        socket.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
         
         super.init()
+        socket.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
         socket.delegate = self
         notificationCenter.addObserver(self,
             selector: "stop:",
