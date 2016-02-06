@@ -48,7 +48,14 @@ class SettingsViewController: NSViewController {
     }
     
     private func startBackgroundOperation() {
-        let host = serverAdressField.stringValue
+        let host:String
+        if serverAdressField.stringValue.containsString(",") {
+//            let firstIP = serverAdressField.stringValue.componentsSeparatedByString(",").first!
+            host = "127.0.0.1"
+        } else {
+            host = serverAdressField.stringValue
+        }
+        
         let backgroundOperation = WebSocketBackgroundOperation(host: host)
         queue.addOperation(backgroundOperation)
         backgroundOperation.completionBlock = { print("operation finished") }
