@@ -961,27 +961,44 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vnf-YO-gEb">
+                            <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ohJ-Me-0c8">
                                 <rect key="frame" x="20" y="20" width="440" height="260"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="260" id="Y9g-cz-Zad"/>
-                                </constraints>
-                                <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" id="RYC-WG-fNn">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
+                                <clipView key="contentView" id="nGi-V4-UIT">
+                                    <rect key="frame" x="1" y="1" width="438" height="258"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textView importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="NC8-uo-v5R">
+                                            <rect key="frame" x="0.0" y="0.0" width="438" height="258"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <size key="minSize" width="438" height="258"/>
+                                            <size key="maxSize" width="463" height="10000000"/>
+                                            <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <size key="minSize" width="438" height="258"/>
+                                            <size key="maxSize" width="463" height="10000000"/>
+                                        </textView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="Dwe-ne-k8g">
+                                    <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="3QI-hs-Eyj">
+                                    <rect key="frame" x="423" y="1" width="16" height="258"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="vnf-YO-gEb" firstAttribute="leading" secondItem="FSl-6d-JpC" secondAttribute="leading" constant="20" symbolic="YES" id="58Y-Sc-Qjv"/>
-                            <constraint firstItem="vnf-YO-gEb" firstAttribute="top" secondItem="FSl-6d-JpC" secondAttribute="top" constant="20" symbolic="YES" id="RK3-OU-oZK"/>
-                            <constraint firstAttribute="trailing" secondItem="vnf-YO-gEb" secondAttribute="trailing" constant="20" symbolic="YES" id="lJ0-hG-4Wv"/>
+                            <constraint firstItem="ohJ-Me-0c8" firstAttribute="top" secondItem="FSl-6d-JpC" secondAttribute="top" constant="20" id="EyZ-If-w8V"/>
+                            <constraint firstAttribute="bottom" secondItem="ohJ-Me-0c8" secondAttribute="bottom" constant="20" id="R7F-Zs-OIs"/>
+                            <constraint firstAttribute="trailing" secondItem="ohJ-Me-0c8" secondAttribute="trailing" constant="20" id="UHx-Vd-01q"/>
+                            <constraint firstItem="ohJ-Me-0c8" firstAttribute="leading" secondItem="FSl-6d-JpC" secondAttribute="leading" constant="20" id="Wd3-Y8-hze"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="LogTextField" destination="vnf-YO-gEb" id="i6d-Yp-17Z"/>
-                        <outlet property="logTextField" destination="vnf-YO-gEb" id="kiz-RW-ktA"/>
+                        <outlet property="logTextView" destination="NC8-uo-v5R" id="7Ye-U0-aPT"/>
                     </connections>
                 </viewController>
                 <customObject id="q1e-gv-SBK" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
