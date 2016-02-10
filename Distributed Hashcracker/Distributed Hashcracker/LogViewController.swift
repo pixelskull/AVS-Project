@@ -10,14 +10,14 @@ import Cocoa
 
 class LogViewController: NSViewController {
     
-//    @IBOutlet var logTextField: NSTextField!
     @IBOutlet var logTextView: NSTextView!
+   
     
     let notificationCenter = NSNotificationCenter.defaultCenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        logTextView.editable = false 
+        logTextView.editable = false
         logTextView.string = "Application started \n"
         notificationCenter.addObserver(self, selector: "updateLogTextField:", name: "updateLog", object: nil)
     }
