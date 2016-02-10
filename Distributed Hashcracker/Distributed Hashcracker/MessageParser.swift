@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 typealias JSONObject = [String:AnyObject]
 
 class MessageParser {

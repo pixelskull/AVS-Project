@@ -11,7 +11,7 @@ import Cocoa
 class MessageQueue {
 
     let notificationCenter = NSNotificationCenter.defaultCenter()
-    var messages:[Message] = [Message]()
+    var messages:[Message] = [Message]() 
     
     static let sharedInstance = MessageQueue()
     

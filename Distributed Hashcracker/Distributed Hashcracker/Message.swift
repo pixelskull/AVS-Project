@@ -27,7 +27,7 @@ protocol Message {
     var status:MessagesHeader { get set }
     var type:MessageType { get set }
     
-    func jsonObject() -> [String:AnyObject]
+    func jsonObject() -> JSONObject //[String:AnyObject]
 }
 
 class BasicMessage:Message {

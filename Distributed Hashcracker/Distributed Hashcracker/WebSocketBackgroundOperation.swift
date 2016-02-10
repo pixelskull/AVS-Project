@@ -34,6 +34,8 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         connect()
         runloop: while true {
             if run == false { break runloop }
+            
+            //Test send alive message
             let jsonString = jsonParser.createJSONStringFromMessage(BasicMessage(status: MessagesHeader.alive, value: "true"))
             socket.writeString(jsonString!)
             sleep(1)

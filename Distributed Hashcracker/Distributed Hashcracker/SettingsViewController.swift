@@ -57,7 +57,9 @@ class SettingsViewController: NSViewController {
         }
         
         let backgroundOperation = WebSocketBackgroundOperation(host: host)
+        let workerOperation = WorkerOperation()
         queue.addOperation(backgroundOperation)
+        queue.addOperation(workerOperation)
         backgroundOperation.completionBlock = { print("operation finished") }
     }
     
@@ -98,6 +100,8 @@ class SettingsViewController: NSViewController {
                 sleep(1)
             }
             startBackgroundOperation()
+            
+            
         } else {
             notificationCenter.postNotificationName("stopWebSocketOperation", object: nil)
         }
