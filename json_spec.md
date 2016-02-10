@@ -1,6 +1,6 @@
 # Messages to Worker
 
-## setup config (hash-algo and target)
+## setup config (hash-algo and target) (.Extended)
 ```
 {
   "status" : "setupConfig",
@@ -12,27 +12,25 @@
 }
 ```
 
-## get work
+## get work (.Extended)
 ```
 {
   "status" : "newWorkBlog",
-  "value" : "#NEW_HASH(ES)"
+  "value" : ["#NEW_HASHES"]
 }
 ```
 
 # Messages to Master  
 
-## new Client registration
+## new Client registration (.Basic)
 ```
 {
   "status" : "newClientRegistration",
-  "value" : {
-    "worker" : "#WORKER_ID"
-  }
+  "value" :  "#WORKER_ID"
 }
 ```
 
-## hit target hash
+## hit target hash (.Extended)
 ```
 {
   "status" : "hitTargetHash",
@@ -44,7 +42,7 @@
 }
 ```
 
-## finished work
+## finished work (.Basic)
 ```
 {
   "status" : "finishedWork",
@@ -52,18 +50,9 @@
 }
 ```
 
-## finished work without hit (deprecated)
-```
-{
-  "status" : "finishedWorkWithoutHit",
-  "value" : "#WORKER_ID"
-}
-```
-
-
 # Universal Messages
 
-## still alive
+## still alive (.Basic)
 ```
 {
   "status" : "stillAlive",
@@ -71,7 +60,7 @@
 }
 ```
 
-## reply alive
+## reply alive (.Basic)
 ```
 {
   "status" : "alive",
