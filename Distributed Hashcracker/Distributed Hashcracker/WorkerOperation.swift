@@ -7,8 +7,13 @@
 //
 
 import Foundation
+import Starscream
 
 class WorkerOperation:NSOperation {
+    
+    var webSocket:WebSocketBackgroundOperation
+    
+    var message: Message?
     
     var run:Bool = true
     
@@ -17,6 +22,8 @@ class WorkerOperation:NSOperation {
     let jsonParser = MessageParser()
     
     override init() {
+        
+        webSocket = WebSocketBackgroundOperation()
         
         super.init()
         
@@ -30,21 +37,23 @@ class WorkerOperation:NSOperation {
         runloop: while true {
             if run == false { break runloop }
             
-            let message = getMessageFromQueue()
+            message = getMessageFromQueue()
+            
+            print("WorkerOperation message from queue message type",message?.type)
             
             if message != nil{
                 
-                if message?.type == .Basic{
+                if message!.type == .Basic{
                     print("I'm a basic message")
-                    decideWhatToDoBasicMessage(message?.status)
+                    decideWhatToDoBasicMessage(message!)
                 }
-                else if message?.type == .Extended{
+                else if message!.type == .Extended{
                     print("I'm a extended message")
+                    decideWhatToDoExtendedMessage(message!)
                 }
                 else{
                     print("I'm not a message")
                 }
-                //decideWhatToDo(message!)
             }
 
             sleep(1)
@@ -56,72 +65,106 @@ class WorkerOperation:NSOperation {
         return messageQueue.get()
     }
 
-    func decideWhatToDoExtendedMessage(messageHeader: String){
+    func decideWhatToDoExtendedMessage(message: Message){
+        
+        let messageHeader = message.status
+        
         switch messageHeader {
             
-        case "setupConfig":
+        case MessagesHeader.setupConfig:
             setupConfig()
-        case "newWorkBlog":
+        case MessagesHeader.newWorkBlog:
             newWorkBlog()
-        case "hitTargetHash":
+        case MessagesHeader.hitTargetHash:
             hitTargetHash()
         default:
-            print("No matching basic header");
-            break
+            print("No matching extended header")
+            
         }
 
     }
     
-    func decideWhatToDoBasicMessage(messageHeader: String){
-        switch messageHeader {
+    func decideWhatToDoBasicMessage(message: Message){
         
-        case "newClientRegistration":
+        let messageHeader = message.status
+        
+        switch messageHeader {
+    
+        case MessagesHeader.newClientRegistration:
             newClientRegistration()
-        case "hitTargetHash":
-            hitTargetHash()
-        case "finishedWork":
+        case MessagesHeader.finishedWork:
             finishedWork()
-        case "stillAlive":
+        case MessagesHeader.stillAlive:
             stillAlive()
-        case "alive":
+        case MessagesHeader.alive:
             alive()
         default:
-            print("No matching basic header");
-            break
+            print("No matching basic header")
+            
         }
 
     }
     
     func newClientRegistration(){
-        
-    }
-    
-    func hitTargetHash(){
-        
+        print("newClientRegistration")
     }
     
     func finishedWork(){
-        
+        print("finishedWork")
     }
     
     func stillAlive(){
+        print("stillAlive")
+        
+        let messageObject = message?.jsonObject()
+        
+        let messageValue:String = messageObject!["value"] as! String
+        
+        print("stillAlive message value: " + messageValue)
         
     }
     
     func alive(){
-    
+        print("alive")
+        let jsonStringStillAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: MessagesHeader.stillAlive, value: "true"))
+        webSocket.socket.writeString(jsonStringStillAlive!)
     }
     
     func setupConfig(){
+        print("setupConfig")
         
+        let messageObject = message?.jsonObject()
+        
+        for (key, value) in (messageObject)! {
+            print("Dictionary key \(key) -  Dictionary value \(value)")
+        }
+
     }
     
     func newWorkBlog(){
+        print("newWorkBlog")
+        
+        let messageObject = message?.jsonObject()
+        
+        for (key, value) in (messageObject)! {
+            print("Dictionary key \(key) -  Dictionary value \(value)")
+        }
         
     }
     
     func hitTargetHash(){
+        print("hitTargetHash")
         
+        let messageObject = message?.jsonObject()
+        
+        for (key, value) in (messageObject)! {
+            print("Dictionary key \(key) -  Dictionary value \(value)")
+        }
+
+    }
+    
+    func stop(notification:NSNotification) {
+        run = false
     }
     
 }

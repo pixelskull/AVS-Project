@@ -61,6 +61,7 @@ class SettingsViewController: NSViewController {
         queue.addOperation(backgroundOperation)
         queue.addOperation(workerOperation)
         backgroundOperation.completionBlock = { print("operation finished") }
+        workerOperation.completionBlock = {print("worker operation finished")}
     }
     
     @IBAction func isServerButtonPressed(sender: NSButton) {
