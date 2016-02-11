@@ -1,0 +1,9 @@
+{
+  "name" : "AVS-Socket-Server",
+  "version" : "0.1.0",
+  "description" : "helper server for websocket distrubution",
+  "dependencies": {
+    "express": "^4.10.2",
+    "websocket": "*"
+  }
+}
