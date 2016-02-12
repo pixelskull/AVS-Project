@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		4C98B1A11C52893800E2641B /* CustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A01C52893800E2641B /* CustomObject.m */; };
 		4C98B1A41C52895700E2641B /* HashStrategie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A31C52895700E2641B /* HashStrategie.swift */; };
+		4CE7BFD21C6D41A90020482F /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE7BFD11C6D41A90020482F /* Worker.swift */; };
+		4CE7BFD41C6D41C70020482F /* WorkerQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */; };
 		5005DEC51C625CA100D39F2C /* node_server in Resources */ = {isa = PBXBuildFile; fileRef = 5005DEC41C625CA100D39F2C /* node_server */; };
 		5005DEC71C63A3DF00D39F2C /* ServerAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */; };
 		50091C541C47EB6D003AD5D5 /* Starscream.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -63,6 +65,8 @@
 		4C98B1A01C52893800E2641B /* CustomObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomObject.m; sourceTree = "<group>"; };
 		4C98B1A21C52894800E2641B /* CustomObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomObject.h; sourceTree = "<group>"; };
 		4C98B1A31C52895700E2641B /* HashStrategie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HashStrategie.swift; sourceTree = "<group>"; };
+		4CE7BFD11C6D41A90020482F /* Worker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
+		4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkerQueue.swift; sourceTree = "<group>"; };
 		5005DEC41C625CA100D39F2C /* node_server */ = {isa = PBXFileReference; lastKnownFileType = folder; path = node_server; sourceTree = "<group>"; };
 		5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerAddress.swift; sourceTree = "<group>"; };
 		50091C531C47EB6D003AD5D5 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
@@ -130,6 +134,8 @@
 				5086D94A1C5FD680008F7464 /* MessageParser.swift */,
 				5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */,
 				E4A335571C6B4E9B00044D17 /* WorkerOperation.swift */,
+				4CE7BFD11C6D41A90020482F /* Worker.swift */,
+				4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -332,12 +338,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */,
+				4CE7BFD21C6D41A90020482F /* Worker.swift in Sources */,
 				E4A335581C6B4E9B00044D17 /* WorkerOperation.swift in Sources */,
 				4C98B1A41C52895700E2641B /* HashStrategie.swift in Sources */,
 				5086D94B1C5FD680008F7464 /* MessageParser.swift in Sources */,
 				501E6E631C1703C70068A44B /* SettingsViewController.swift in Sources */,
 				50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */,
 				50CE1D291C524C2F00A61514 /* Message.swift in Sources */,
+				4CE7BFD41C6D41C70020482F /* WorkerQueue.swift in Sources */,
 				50091C581C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift in Sources */,
 				4C98B1A11C52893800E2641B /* CustomObject.m in Sources */,
 				501E6E611C1703C70068A44B /* AppDelegate.swift in Sources */,
