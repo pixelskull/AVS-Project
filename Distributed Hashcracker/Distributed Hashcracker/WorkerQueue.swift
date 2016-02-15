@@ -37,8 +37,9 @@ class WorkerQueue {
     func get(workerID:String) -> Worker? {
         guard let workerByIdIndex = workerQueue.indexOf({$0.id == workerID}) else { return nil }
         
+        dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
         let workerByID = workerQueue[workerByIdIndex]
-        
+        dispatch_semaphore_signal(read_semaphore)
         return workerByID
     }
     
@@ -50,7 +51,11 @@ class WorkerQueue {
     func remove(workerID:String) -> Worker? {
         guard let workerByIdIndex = workerQueue.indexOf({$0.id == workerID}) else { return nil }
         
-        return workerQueue.removeAtIndex(workerByIdIndex)
+        dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
+        let workerByID = workerQueue.removeAtIndex(workerByIdIndex)
+        dispatch_semaphore_signal(read_semaphore)
+        
+        return workerByID
 
     }
 }

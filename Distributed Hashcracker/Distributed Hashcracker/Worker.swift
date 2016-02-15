@@ -10,11 +10,18 @@ import Foundation
 
 class Worker{
     
-    let id:String
-    var status:String
+    enum Status {
+        case Aktive
+        case Inactive
+    }
     
-    init(id:String, status:String){
+    let id:String
+    var ip:String
+    var status:Status
+    
+    init(id:String, ip:String, status:Status){
         self.id = id
+        self.ip = ip
         self.status = status
     
     }
@@ -23,11 +30,19 @@ class Worker{
         return id
     }
     
-    func getStatus() -> String{
+    func getIP() -> String{
+        return ip
+    }
+    
+    func setIP(newIP:String){
+        ip = newIP
+    }
+    
+    func getStatus() -> Status{
         return status
     }
     
-    func setStatus(newStatus:String){
+    func setStatus(newStatus:Status){
         status = newStatus
     }
     

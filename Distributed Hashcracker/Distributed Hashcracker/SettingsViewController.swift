@@ -16,6 +16,8 @@ class SettingsViewController: NSViewController {
     @IBOutlet var passwordField: NSTextField!
     @IBOutlet var hashAlgorithmSelected: NSPopUpButton!
     
+    var hashedPassword: String = ""
+    var hashAlgorithm: HashAlgorithm?
     let notificationCenter = NSNotificationCenter.defaultCenter()
     let queue = NSOperationQueue()
     let task = NSTask()
@@ -72,20 +74,19 @@ class SettingsViewController: NSViewController {
     @IBAction func StartButtonPressed(sender: NSButton) {
         if sender.state == NSOnState {
             
-            var hashAlgorith: HashAlgorith?
+            
             NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
             
-            var hashedPassword: String = ""
             switch hashAlgorithmSelected.titleOfSelectedItem!{
             case "MD5":
-                hashAlgorith = HashMD5()
-                hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
+                hashAlgorithm = HashMD5()
+                hashedPassword = hashAlgorithm!.hash(string: passwordField.stringValue)
             case "SHA-128":
-                hashAlgorith = HashSHA()
-                hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
+                hashAlgorithm = HashSHA()
+                hashedPassword = hashAlgorithm!.hash(string: passwordField.stringValue)
             case "SHA-256":
-                hashAlgorith = HashSHA256()
-                hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
+                hashAlgorithm = HashSHA256()
+                hashedPassword = hashAlgorithm!.hash(string: passwordField.stringValue)
             default:
                 hashedPassword = "Password not successfully hashed"
                 break
@@ -122,8 +123,6 @@ class SettingsViewController: NSViewController {
             return false
         })
     }
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
