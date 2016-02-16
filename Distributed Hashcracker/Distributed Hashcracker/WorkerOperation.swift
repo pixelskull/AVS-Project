@@ -11,11 +11,13 @@ import Starscream
 
 class WorkerOperation:NSOperation {
     
-    var message: Message?
+//    var message: Message?
     
     var algorithm:String = ""
     var target:String = ""
     var worker_id:String = ""
+    
+    var crackedPassword:String = ""
     
     var run:Bool = true
     
@@ -37,9 +39,10 @@ class WorkerOperation:NSOperation {
     
     override func main() {
         runloop: while true {
+            
             if run == false { break runloop }
             
-            message = getMessageFromQueue()
+            let message = getMessageFromQueue()
             
             if message != nil{
                 
@@ -47,11 +50,11 @@ class WorkerOperation:NSOperation {
                 
                 if message!.type == .Basic{
                     print("I'm a basic message")
-                    decideWhatToDoBasicMessage(message!)
+                    decideWhatToDoBasicMessage(message as! BasicMessage)
                 }
                 else if message!.type == .Extended{
                     print("I'm a extended message")
-                    decideWhatToDoExtendedMessage(message!)
+                    decideWhatToDoExtendedMessage(message as! ExtendedMessage)
                 }
                 else{
                     print("I'm not a message")
@@ -70,18 +73,18 @@ class WorkerOperation:NSOperation {
         return messageQueue.get()
     }
 
-    func decideWhatToDoExtendedMessage(message: Message){
+    func decideWhatToDoExtendedMessage(message: ExtendedMessage){
         
         let messageHeader = message.status
         
         switch messageHeader {
             
         case MessagesHeader.setupConfig:
-            setupConfig()
+            setupConfig(message)
         case MessagesHeader.newWorkBlog:
-            newWorkBlog()
+            newWorkBlog(message)
         case MessagesHeader.hitTargetHash:
-            hitTargetHash()
+            hitTargetHash(message)
         default:
             print("No matching extended header")
             
@@ -89,20 +92,20 @@ class WorkerOperation:NSOperation {
 
     }
     
-    func decideWhatToDoBasicMessage(message: Message){
+    func decideWhatToDoBasicMessage(message: BasicMessage){
         
         let messageHeader = message.status
         
         switch messageHeader {
     
         case MessagesHeader.newClientRegistration:
-            newClientRegistration()
+            newClientRegistration(message)
         case MessagesHeader.finishedWork:
-            finishedWork()
+            finishedWork(message)
         case MessagesHeader.stillAlive:
-            stillAlive()
+            stillAlive(message)
         case MessagesHeader.alive:
-            alive()
+            alive(message)
         default:
             print("No matching basic header")
             
@@ -117,15 +120,24 @@ class WorkerOperation:NSOperation {
     precondition = newClientRegistrationMessage of a new client with his IP
     postcondition = setupConfigMessage with the selected hash algorithm, the target hash and the worker_id was send to the new client
     */
-    func newClientRegistration(){
+    func newClientRegistration(message:BasicMessage){
         print("newClientRegistration")
         
+        let messageObject = message.value
         
-        let workerIP = "192.168.192.1"
+        let workerID:String = messageObject
+        
         let workerQueue = WorkerQueue.sharedInstance
         
-        //let settingsViewController = SettingsViewController()
+        let newWorker = Worker(id: workerID, status: .Aktive)
         
+        workerQueue.put(newWorker)
+
+        //Send setupConfigurationMessage
+        let setupConfigMessageValues: [String:String] = ["algorithm": "MD5", "target": "Test", "worker_id":workerID]
+        notificationCenter.postNotificationName("sendMessage", object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
+    
+        /*
         let workerQueueLenght = workerQueue.workerQueue.count + 1
         
         print("WorkerQueueLenght: \(workerQueue.workerQueue.count)")
@@ -139,17 +151,8 @@ class WorkerOperation:NSOperation {
         workerQueue.put(newWorker)
 
         print("WorkerQueueLenght after input Worker: \(workerQueue.workerQueue.count)")
-        
-        //print("SelectedHashAlgorithm: \(settingsViewController.hashAlgorithmSelected.titleOfSelectedItem)")
-        /*
-        print("targetHash: \(settingsViewController.hashedPassword)")
-        
-        
-        let setupConfigMessageValues: [String:String] = ["algorithm":settingsViewController.hashAlgorithmSelected.titleOfSelectedItem!, "target":settingsViewController.hashedPassword, "worker_id":workerID]
-        
-        webSocketBackgroundOperation.socket.write
-        (ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
         */
+
     }
     
     /**
@@ -159,8 +162,16 @@ class WorkerOperation:NSOperation {
      precondition = finishedWorkMessage from a client
      postcondition = newWorkBlogMessage was send to a client
      */
-    func finishedWork(){
+    func finishedWork(message:BasicMessage){
         print("finishedWork")
+        
+        let workerID = message.value
+        
+        let newWorkBlog = generateNewWorkBlog()
+        
+        //Send setupConfigurationMessage
+        let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
+        notificationCenter.postNotificationName("sendMessage", object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
     }
     
     /**
@@ -169,14 +180,12 @@ class WorkerOperation:NSOperation {
      precondition = stillAliveMessage from the server
      postcondition = aliveMessage was send to the server
      */
-    func stillAlive(){
+    func stillAlive(message:BasicMessage){
         print("stillAlive")
         
-        let messageObject = message?.jsonObject()
+        let messageObject = message.value
         
-        let messageValue:String = messageObject!["value"] as! String
-        
-        print("stillAlive message value: " + messageValue)
+        print("stillAlive message value: " + messageObject)
         
         //webSocket.sendMessage(BasicMessage(status: MessagesHeader.alive, value: "worker_id"))
         
@@ -188,8 +197,12 @@ class WorkerOperation:NSOperation {
      precondition = aliveMessage with the worker_id from a client
      postcondition = client stays in the workerQueue
      */
-    func alive(){
+    func alive(message:BasicMessage){
         print("alive")
+        
+        let messageObject = message.value
+        
+        print("stillAlive message value: " + messageObject)
         
         //webSocket.sendMessage(BasicMessage(status: MessagesHeader.stillAlive, value: "worker_id"))
 
@@ -201,34 +214,22 @@ class WorkerOperation:NSOperation {
      precondition = setupConfigMessage with values : {algorithm, target, worker_id}
      postcondition = client has send a finishedWorkMessage to the server
      */
-    func setupConfig(){
+    func setupConfig(message:ExtendedMessage){
         print("setupConfig")
         
+        let workerQueue = WorkerQueue.sharedInstance
+        
+        let workerID = message.values["worker_id"]!
+        
+        let ownClientWorker = Worker(id: workerID, status: .Aktive)
+        
+        workerQueue.put(ownClientWorker)
+        
         algorithm = "MD5"
-        target = "test"
-        worker_id = "Worker_1"
+        target = "Test"
         
-        let messageObject = message?.jsonObject()
-        
-        print("Algorithm: \(algorithm) Target: \(target) Worker_ID: \(worker_id)")
-        
-        for (key, value) in (messageObject)! {
-            print("Dictionary key \(key) -  Dictionary value \(value)")
-            /*
-            if(key == "value"){
-            algorithm = value["algorithm"] as! String
-            target = value["target"] as! String
-            worker_id = value["worker_id"] as! String
-            
-            print("Algorithm: \(algorithm) Target: \(target) Worker_ID: \(worker_id)")
-            }
-            */
-        }
-
-        newWorkBlog()
-        
-        //webSocket.sendMessage(BasicMessage(status: MessagesHeader.finishedWork, value: "worker_id"))
-        
+        //Send finishedWorkMessage
+        notificationCenter.postNotificationName("sendMessage", object: BasicMessage(status: MessagesHeader.finishedWork, value: workerID))
     }
     
     /**
@@ -237,10 +238,14 @@ class WorkerOperation:NSOperation {
      precondition = newWorkBlogMessage with a array of the new target passwords
      postcondition = calculated and checked hash values -> if(target hash was hit){send hitTargetHashMessage with the hash, the password, the time needed and the worker_id to the server} else {send finishedWorkMessage with the worker_id to the server}
      */
-    func newWorkBlog(){
+    func newWorkBlog(message:ExtendedMessage){
         print("newWorkBlog")
         
-        let passwordArray:[String] = ["Bla", "blub", "test"]
+        //let passwordArray:[String] = ["Bla", "blub", "test"]
+        
+        let workerID = message.values["worker_id"]
+        
+        let passwordArray: [String] = (message.values["hashes"]?.componentsSeparatedByString(","))!
         
         var hashedPassword:String = ""
         var hashAlgorithm: HashAlgorithm?
@@ -261,11 +266,13 @@ class WorkerOperation:NSOperation {
         }
 
         if(compareHash(hashAlgorithm!, passwordArray: passwordArray, hashedPassword: hashedPassword)){
-            //webSocket.sendMessage(ExtendedMessage(status: MessagesHeader.hitTargetHash, values: "values"))
+            let hitTargetHashValues: [String:String] = ["hash": hashedPassword, "password": crackedPassword, "time_needed": "ka", "by_worker": workerID!]
+            notificationCenter.postNotificationName("sendMessage", object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
+
             print("Found the searched password -> hitTargetHashMessage was send")
         }
         else{
-            //webSocket.sendMessage(BasicMessage(status: MessagesHeader.finishedWork, value: "worker_id"))
+            notificationCenter.postNotificationName("sendMessage", object: BasicMessage(status: MessagesHeader.finishedWork, value: workerID!))
             print("The searched password wasn't there -> finishedWorkMessage was send")
         }
         
@@ -287,15 +294,27 @@ class WorkerOperation:NSOperation {
      precondition = hitTargetHashMessage from a client/the server
      postcondition = clients stopped their work / the server showed the result
      */
-    func hitTargetHash(){
+    func hitTargetHash(message:ExtendedMessage){
         print("hitTargetHash")
         
+        let hash = message.values["hash"]
+        let password = message.values["password"]
+        let time_needed = message.values["time_needed"]
+        let by_worker = message.values["by_worker"]
+        
+        notificationCenter.postNotificationName("updateLog", object: "Password is cracked!")
+        notificationCenter.postNotificationName("updateLog", object: "Hash of the password: " + hash!)
+        notificationCenter.postNotificationName("updateLog", object: "Password: " + password!)
+        notificationCenter.postNotificationName("updateLog", object: "Time needed: " + time_needed!)
+        notificationCenter.postNotificationName("updateLog", object: "By worker: " + by_worker!)
+        
+        /*
         let messageObject = message?.jsonObject()
         
         for (key, value) in (messageObject)! {
             print("Dictionary key \(key) -  Dictionary value \(value)")
         }
-
+        */
     }
     
     func compareHash(hashAlgorithm: HashAlgorithm, passwordArray:[String], hashedPassword: String) -> Bool{
@@ -306,6 +325,7 @@ class WorkerOperation:NSOperation {
             
             if(hashedPasswordFromArray == hashedPassword){
                 print("Found the searched password! \(hashedPasswordFromArray) == \(hashedPassword) -> Password = \(password) (\(target))")
+                crackedPassword = password
                 return true
             }
             else{
@@ -315,6 +335,13 @@ class WorkerOperation:NSOperation {
         
         return false
         
+    }
+    
+    func generateNewWorkBlog() -> String{
+        
+        let newWorkBlogString = "bla,blub,bli,test,Test,foo"
+        
+        return newWorkBlogString
     }
     
     func stop(notification:NSNotification) {

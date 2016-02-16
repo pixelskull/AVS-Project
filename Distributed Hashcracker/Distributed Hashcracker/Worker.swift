@@ -16,12 +16,12 @@ class Worker{
     }
     
     let id:String
-    var ip:String
+//    var ip:String
     var status:Status
     
-    init(id:String, ip:String, status:Status){
+    init(id:String, /*ip:String,*/ status:Status){
         self.id = id
-        self.ip = ip
+//        self.ip = ip
         self.status = status
     
     }
@@ -30,13 +30,13 @@ class Worker{
         return id
     }
     
-    func getIP() -> String{
-        return ip
-    }
-    
-    func setIP(newIP:String){
-        ip = newIP
-    }
+//    func getIP() -> String{
+//        return ip
+//    }
+//    
+//    func setIP(newIP:String){
+//        ip = newIP
+//    }
     
     func getStatus() -> Status{
         return status

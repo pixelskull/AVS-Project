@@ -99,7 +99,9 @@ class SettingsViewController: NSViewController {
                 task.arguments = [resourcePath+"/node_server/server.js"]
                 task.launchPath = "/usr/local/bin/node"
                 task.launch()
+                
                 sleep(1)
+                //while !task.running { sleep(1) }
             }
             startBackgroundOperation()
             

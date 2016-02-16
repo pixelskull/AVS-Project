@@ -28,6 +28,11 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
             selector: "stop:",
             name: "stopWebSocketOperation",
             object: nil)
+        
+        notificationCenter.addObserver(self,
+            selector: "sendMessage:",
+            name: "sendMessage",
+            object: nil)
     }
     
     override func main() {
@@ -44,27 +49,29 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
             */
 
             //Test send alive message
-            
-            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: MessagesHeader.alive, value: "Are you alive"))
-            socket.writeString(jsonStringAlive!)
-
-            let jsonStringFinishedWork = jsonParser.createJSONStringFromMessage(BasicMessage(status: MessagesHeader.finishedWork, value: "I have done my work"))
-            socket.writeString(jsonStringFinishedWork!)
-            
-            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: MessagesHeader.newClientRegistration, value: "I'm a new client"))
+            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip03.local"))
             socket.writeString(jsonStringNewClient!)
             
-            let jsonStringStillAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: MessagesHeader.stillAlive, value: "true"))
-            socket.writeString(jsonStringStillAlive!)
-            
-            let jsonStringSetupConfig = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfig))
-            socket.writeString(jsonStringSetupConfig!)
-            
-            let jsonStringNewWorkBlog = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: MessagesHeader.newWorkBlog, values: newWorkBlog))
-            socket.writeString(jsonStringNewWorkBlog!)
-            
-            let jsonStringHitTargetHash = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHash))
-            socket.writeString(jsonStringHitTargetHash!)
+//            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: "Are you alive"))
+//            socket.writeString(jsonStringAlive!)
+//
+//            let jsonStringFinishedWork = jsonParser.createJSONStringFromMessage(BasicMessage(status: .finishedWork, value: "I have done my work"))
+//            socket.writeString(jsonStringFinishedWork!)
+//            
+//            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip03.local"))
+//            socket.writeString(jsonStringNewClient!)
+//            
+//            let jsonStringStillAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .stillAlive, value: "true"))
+//            socket.writeString(jsonStringStillAlive!)
+//            
+//            let jsonStringSetupConfig = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: .setupConfig, values: setupConfig))
+//            socket.writeString(jsonStringSetupConfig!)
+//            
+//            let jsonStringNewWorkBlog = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: .newWorkBlog, values: newWorkBlog))
+//            socket.writeString(jsonStringNewWorkBlog!)
+//            
+//            let jsonStringHitTargetHash = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: .hitTargetHash, values: hitTargetHash))
+//            socket.writeString(jsonStringHitTargetHash!)
             
             /*
             let jsonStringNewWorkBlog2 = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: MessagesHeader.newWorkBlog, values: newWorkBlog2))
@@ -85,12 +92,14 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         print("websocket is disconnected: \(error?.localizedDescription)")
     }
     
-    func sendMessage(message:Message){
+    func sendMessage(notification:NSNotification) {
         
+        guard let message = notification.object as? Message else { return }
+
         let messageObject = message.jsonObject()
-        
+
         for (key, value) in (messageObject) {
-            print("WSBO sendMessage -> Dictionary key \(key) -  Dictionary value \(value)")
+            	("WSBO sendMessage -> Dictionary key \(key) -  Dictionary value \(value)")
         }
         
         let jsonStringSendMessage = jsonParser.createJSONStringFromMessage(message)
