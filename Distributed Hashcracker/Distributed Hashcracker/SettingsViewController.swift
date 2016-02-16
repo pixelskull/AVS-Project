@@ -18,7 +18,7 @@ class SettingsViewController: NSViewController {
     
     let notificationCenter = NSNotificationCenter.defaultCenter()
     let queue = NSOperationQueue()
-    let task = NSTask()
+    var task = NSTask()
     
     private func prepareMasterInterface() {
         serverAdressField.enabled = false
@@ -50,7 +50,6 @@ class SettingsViewController: NSViewController {
     private func startBackgroundOperation() {
         let host:String
         if serverAdressField.stringValue.containsString(",") {
-//            let firstIP = serverAdressField.stringValue.componentsSeparatedByString(",").first!
             host = "127.0.0.1"
         } else {
             host = serverAdressField.stringValue
@@ -88,14 +87,20 @@ class SettingsViewController: NSViewController {
                 break
             }
             
-            NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Hash of the password: " + hashedPassword)
+            notificationCenter.postNotificationName("updateLog", object: "Hash of the password: " + hashedPassword)
             
             if isManager.state == NSOnState {
+                if task.running {
+                    task.terminate()
+                    task.waitUntilExit()
+                }
+                
                 let resourcePath = NSBundle.mainBundle().resourcePath!
-                task.arguments = [resourcePath+"/node_server/server.js"]
-                task.launchPath = "/usr/local/bin/node"
-                task.launch()
-                sleep(1)
+                let serverPath = resourcePath+"/node_server/server.js"
+                let launchPath = "/usr/local/bin/node"
+                
+                task = NSTask.launchedTaskWithLaunchPath(launchPath, arguments: [serverPath])
+                sleep(2)
             }
             startBackgroundOperation()
         } else {
@@ -118,22 +123,15 @@ class SettingsViewController: NSViewController {
         })
     }
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         passwordField.enabled = false
         hashAlgorithmSelected.enabled = false
     }
-
-    override var representedObject: AnyObject? {
-        didSet {
-        // Update the view, if already loaded.
-        }
-    }
     
-    deinit {
+    override func viewWillDisappear() {
         task.terminate()
+        task.waitUntilExit()
     }
 }
 

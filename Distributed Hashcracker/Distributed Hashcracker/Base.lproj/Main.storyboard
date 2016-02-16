@@ -962,19 +962,19 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ohJ-Me-0c8">
-                                <rect key="frame" x="20" y="20" width="440" height="260"/>
+                                <rect key="frame" x="20" y="61" width="440" height="219"/>
                                 <clipView key="contentView" id="nGi-V4-UIT">
-                                    <rect key="frame" x="1" y="1" width="438" height="258"/>
+                                    <rect key="frame" x="1" y="1" width="438" height="217"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="NC8-uo-v5R">
-                                            <rect key="frame" x="0.0" y="0.0" width="438" height="258"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="438" height="217"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="438" height="258"/>
+                                            <size key="minSize" width="438" height="217"/>
                                             <size key="maxSize" width="463" height="10000000"/>
                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="438" height="258"/>
+                                            <size key="minSize" width="438" height="217"/>
                                             <size key="maxSize" width="463" height="10000000"/>
                                         </textView>
                                     </subviews>
@@ -985,16 +985,28 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="3QI-hs-Eyj">
-                                    <rect key="frame" x="423" y="1" width="16" height="258"/>
+                                    <rect key="frame" x="423" y="1" width="16" height="217"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gpn-QQ-rLH">
+                                <rect key="frame" x="182" y="13" width="116" height="32"/>
+                                <buttonCell key="cell" type="push" title="show Charts" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="CJj-hi-UXq">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <segue destination="fXp-Xx-Ygu" kind="show" identifier="showChartView" id="Fik-zq-ZM2"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="gpn-QQ-rLH" firstAttribute="centerX" secondItem="FSl-6d-JpC" secondAttribute="centerX" id="2pM-VN-86B"/>
                             <constraint firstItem="ohJ-Me-0c8" firstAttribute="top" secondItem="FSl-6d-JpC" secondAttribute="top" constant="20" id="EyZ-If-w8V"/>
-                            <constraint firstAttribute="bottom" secondItem="ohJ-Me-0c8" secondAttribute="bottom" constant="20" id="R7F-Zs-OIs"/>
                             <constraint firstAttribute="trailing" secondItem="ohJ-Me-0c8" secondAttribute="trailing" constant="20" id="UHx-Vd-01q"/>
                             <constraint firstItem="ohJ-Me-0c8" firstAttribute="leading" secondItem="FSl-6d-JpC" secondAttribute="leading" constant="20" id="Wd3-Y8-hze"/>
+                            <constraint firstItem="gpn-QQ-rLH" firstAttribute="top" secondItem="ohJ-Me-0c8" secondAttribute="bottom" constant="20" id="vkS-9f-F2G"/>
+                            <constraint firstAttribute="bottom" secondItem="gpn-QQ-rLH" secondAttribute="bottom" constant="20" id="ygD-NX-yCL"/>
                         </constraints>
                     </view>
                     <connections>
@@ -1004,6 +1016,37 @@
                 <customObject id="q1e-gv-SBK" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="745" y="905"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="w7w-Zk-UgV">
+            <objects>
+                <windowController storyboardIdentifier="ChartWindowController" id="fXp-Xx-Ygu" customClass="ChartWindowController" customModule="Distributed_Hashcracker" customModuleProvider="target" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="Zgc-U7-g7b">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="1100" y="700" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
+                    </window>
+                    <connections>
+                        <segue destination="DK3-v7-LIx" kind="relationship" relationship="window.shadowedContentViewController" id="z1d-DP-ZSb"/>
+                    </connections>
+                </windowController>
+                <customObject id="3CT-Sc-Nbc" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="75" y="1396"/>
+        </scene>
+        <!--Chart View Controller-->
+        <scene sceneID="ssV-dT-bwc">
+            <objects>
+                <viewController storyboardIdentifier="ChartViewController" id="DK3-v7-LIx" customClass="ChartViewController" customModule="Distributed_Hashcracker" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="7d3-7z-249">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="TtZ-yW-PJU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="745" y="1388"/>
         </scene>
     </scenes>
 </document>

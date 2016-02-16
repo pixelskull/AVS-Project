@@ -16,7 +16,10 @@
 ```
 {
   "status" : "newWorkBlog",
-  "value" : ["#NEW_HASHES"]
+  "value" : {
+    "worker_id" : "#WORKER_ID"
+    "hashes" : ["#NEW_HASHES"]
+  }
 }
 ```
 
@@ -38,6 +41,7 @@
     "hash" : "#HASH_VALUE",
     "password" : "#PASSWORD"
     "time_needed" : "#TIME"
+    "by_worker" : "#WORKER_ID"
   }
 }
 ```
@@ -64,6 +68,10 @@
 ```
 {
   "status" : "alive",
-  "value" : "true/false"
+  "value" : "#WORKER_ID"
 }
 ```
+
+
+NOTE: 
+WORKER_ID == Hostname/IP
