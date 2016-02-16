@@ -50,7 +50,6 @@ class SettingsViewController: NSViewController {
     private func startBackgroundOperation() {
         let host:String
         if serverAdressField.stringValue.containsString(",") {
-//            let firstIP = serverAdressField.stringValue.componentsSeparatedByString(",").first!
             host = "127.0.0.1"
         } else {
             host = serverAdressField.stringValue
@@ -99,16 +98,9 @@ class SettingsViewController: NSViewController {
                 let resourcePath = NSBundle.mainBundle().resourcePath!
                 let serverPath = resourcePath+"/node_server/server.js"
                 let launchPath = "/usr/local/bin/node"
-//                task.arguments = [resourcePath+"/node_server/server.js"]
-//                task.launchPath = "/usr/local/bin/node"
-//                task.launch()
-                
                 
                 task = NSTask.launchedTaskWithLaunchPath(launchPath, arguments: [serverPath])
-//                print(task.running)
                 sleep(2)
-//                print(task.running)
-                
             }
             startBackgroundOperation()
         } else {
@@ -136,12 +128,6 @@ class SettingsViewController: NSViewController {
         passwordField.enabled = false
         hashAlgorithmSelected.enabled = false
     }
-
-//    override var representedObject: AnyObject? {
-//        didSet {
-//        // Update the view, if already loaded.
-//        }
-//    }
     
     override func viewWillDisappear() {
         task.terminate()

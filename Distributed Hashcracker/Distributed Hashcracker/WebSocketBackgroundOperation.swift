@@ -41,11 +41,7 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         run = true
     }
     
-    func connect() {
-//        while !socket.isConnected {
-        socket.connect()
-//        }
-    }
+    func connect() { socket.connect() }
     
     func websocketDidConnect(socket: WebSocket) { print("websocket is connected") }
     
