@@ -35,6 +35,12 @@ class LogViewController: NSViewController {
         logTextView.scrollRangeToVisible(range)
     }
     
+    override func prepareForSegue(segue: NSStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "showChartView" {
+            logTextView.string! += "showing ChartView \n"
+        }
+    }
+    
     deinit {
         notificationCenter.removeObserver(self)
     }

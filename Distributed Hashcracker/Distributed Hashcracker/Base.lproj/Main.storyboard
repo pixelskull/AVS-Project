@@ -996,7 +996,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <segue destination="fXp-Xx-Ygu" kind="show" id="Fik-zq-ZM2"/>
+                                    <segue destination="fXp-Xx-Ygu" kind="show" identifier="showChartView" id="Fik-zq-ZM2"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1046,7 +1046,7 @@
                 </viewController>
                 <customObject id="TtZ-yW-PJU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="745" y="1396"/>
+            <point key="canvasLocation" x="745" y="1388"/>
         </scene>
     </scenes>
 </document>
