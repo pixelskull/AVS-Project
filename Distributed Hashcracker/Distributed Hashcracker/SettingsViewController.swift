@@ -128,7 +128,7 @@ class SettingsViewController: NSViewController {
         passwordField.enabled = false
         hashAlgorithmSelected.enabled = false
         
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        notificationCenter.addObserver(self,
             selector: "stopServerTask:",
             name: "stopServerTask",
             object: nil)
@@ -140,6 +140,10 @@ class SettingsViewController: NSViewController {
         notificationCenter.postNotificationName("updateLog", object: "terminating server task")
         task.terminate()
         task.waitUntilExit()
+    }
+    
+    deinit {
+        notificationCenter.removeObserver(self)
     }
 }
 
