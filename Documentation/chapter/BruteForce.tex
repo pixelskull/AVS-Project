@@ -5,7 +5,9 @@ In diesem Kapitel wird die Konzeption des Brute Force-Angriffs beschrieben. Auf 
 
 
 \section{Architektur}
-%Wie genau soll die Architektur aussehen? Message-Paradigma?
+In diesem Kapitel wird die geplante Architektur des verteilten Systems beschrieben. \\
+Generell wird die Kommunikation nachrichtenbasiert umgesetzt. Dies bedeutet, dass die Komponenten des verteilten Systems kommunizieren, indem sie sich Nachrichten übermitteln können. Die Steuerung der Kommunikation wird primär von den als Master (siehe Glossar) ausgewählten Komponenten umgesetzt. Als Provider wird ein angepasster Webserver eingesetzt, die Verbindung der einzelnen Komponenten zueinander geschieht über WebSockets. Der Webserver basiert auf dem Javascript-Framework Node.js. \\
+Details der nachrichtenbasierten Kommunikation werden nun in den folgenden Kapiteln beschrieben. 
 
 
 \subsection{Nachrichtenstruktur}
@@ -131,11 +133,10 @@ Die erste Idee war es, dass der steuernde Rechner alle möglichen Passwörter in
 	]
 \end{lstlisting}
 
-Die exemplarische Darstellung soll die Aufteilung der Aufgaben verdeutlichen. Die hier dargestellte feste Länge der Passwörter auf 6 Zeichen dient als Proof Of Concept. Wenn dieses Proof of Concept erfolgreich umgesetzt werden kann, wird in der nächsten Iteration eine variable Passwortlänge ermöglicht. Im ersten Schritt soll die Passwortlänge noch ermittelt werden, bevor die Berechnung der möglichen Passwortkombinationen beginnt. Dadurch wird die Berechnung der Aufgabenverteilung vereinfacht. Wenn auch dieser Meilenstein erfolgreich implementiert werden kann, soll in der nächsten Iteration die Berechnung ohne bekannte Passwortlänge durchgeführt werden. Dies bedeutet implizit, dass die Berechnungsdauer durch die gewachsene Anzahl an möglichen Passwortkombinationen stark ansteigt. Dadurch dann die Robustheit der konzipierten verteilten Architektur geprüft werden. \\
+Die exemplarische Darstellung soll die geplante Aufteilung verdeutlichen. Die hier dargestellte feste Länge der Passwörter auf 6 Zeichen dient als Proof Of Concept. Wenn dieses Proof of Concept erfolgreich umgesetzt werden kann, wird in der nächsten Iteration eine variable Passwortlänge ermöglicht. Im ersten Schritt soll die Passwortlänge noch ermittelt werden, bevor die Berechnung der möglichen Passwortkombinationen beginnt. Dadurch wird die Berechnung der Aufgabenverteilung vereinfacht. Wenn auch dieser Meilenstein erfolgreich implementiert werden kann, soll in der nächsten Iteration die Berechnung ohne bekannte Passwortlänge durchgeführt werden. Dies bedeutet implizit, dass die Berechnungsdauer durch die gewachsene Anzahl an möglichen Passwortkombinationen stark ansteigt. Dadurch dann die Robustheit der konzipierten verteilten Architektur geprüft werden. \\
 
 \begin{figure}[!ht]
 	\centering
-		%[natürliche Breite in Pixeln, natürliche Höhe in Pixeln, Abhängigkeit von der Textbreite]
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=1.0\textwidth]{images/SchaubildAlgorithmBreitensuche.pdf}
 	\caption{Darstellung der Suchstrategie, die der Brute-Force Algorithmus zum Ermitteln des Passwortes benutzt.}
 	\label{fig:showcase}
@@ -143,15 +144,14 @@ Die exemplarische Darstellung soll die Aufteilung der Aufgaben verdeutlichen. Di
 
 %Hier Breitensuche einfügen
 
-\section{Benutzung der Anwendung}
+\section{Benutzeroberfläche}
 
-Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{Md5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.
+Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{MD5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.
 
 \begin{figure}[!ht]
 	\centering
-		%[natürliche Breite in Pixeln, natürliche Höhe in Pixeln, Abhängigkeit von der Textbreite]
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/WindowMaster.png}
-	\caption{Benutzeroberfläche der implementierten Anwendung als Master der verteilten Anwendung}
+		\caption{Benutzeroberfläche der implementierten Anwendung als Master der verteilten Anwendung}
 	\label{fig:WindowMaster}
 \end{figure}
 
@@ -159,9 +159,8 @@ Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schlie�
 
 \begin{figure}[!ht]
 	\centering
-		%[natürliche Breite in Pixeln, natürliche Höhe in Pixeln, Abhängigkeit von der Textbreite]
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/WindowWorker.png}
-	\caption{Benutzeroberfläche der implementierten Anwendung als Worker der verteilten Anwendung}
+		\caption{Benutzeroberfläche der implementierten Anwendung als Worker der verteilten Anwendung}
 	\label{fig:WindowMaster}
 \end{figure}
 
