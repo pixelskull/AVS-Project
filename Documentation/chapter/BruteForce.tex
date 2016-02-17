@@ -98,7 +98,8 @@ Mit dieser Nachricht wird die Anfrage \enquote{stillAlive} beantwortet. Verfügb
 \label{ideeBruteForce}
 Grundlegend ist das Ziel des Projektes das Entschlüsseln eines vorgegebenen Passwortes. Das zu entschlüsselnde Passwort wird vor der Berechnung vom Benutzer eingetragen. Das eingetragene Passwort wird dann durch eine Hashfunktion geleitet. Der entstandene Hash wird gespeichert und dient als Zielbedingung der folgenden Berechnung. \\
 Nun beginnt der eigentliche Angriff. Zu Beginn wird eine sogenannte \enquote{Dictionary-Attack} vorgenommen. Dies bedeutet, dass ein Wörterbuch mit häufig genutzten Passwörtern als Basis des Angriffs genutzt wird. Durch die vorangestellte Attacke auf Basis von häufig benutzten Passwörtern wird die Wahrscheinlichkeit des effizienten Entschlüsseln des gesuchten Passworts erhöht. \\
-Bleibt die Dictionary-Attack erfolglos, werden alle möglichen Zeichenkombinationen untersucht. Der steuernde Rechner wird alle möglichen Passwörter in einem Array ablegen. Das Muster der möglichen Passwörter soll wie folgt aufgebaut werden: 
+Bleibt die Dictionary-Attack erfolglos, werden alle möglichen Zeichenkombinationen untersucht. \\
+Die erste Idee war es, dass der steuernde Rechner alle möglichen Passwörter in einem Array ablegen wird. Das Muster der möglichen Passwörter sollte wie folgt aufgebaut werden: 
 
 \texttt{Muster der zu berechnenden Passwörter:}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -132,24 +133,36 @@ Bleibt die Dictionary-Attack erfolglos, werden alle möglichen Zeichenkombinatio
 
 Die exemplarische Darstellung soll die Aufteilung der Aufgaben verdeutlichen. Die hier dargestellte feste Länge der Passwörter auf 6 Zeichen dient als Proof Of Concept. Wenn dieses Proof of Concept erfolgreich umgesetzt werden kann, wird in der nächsten Iteration eine variable Passwortlänge ermöglicht. Im ersten Schritt soll die Passwortlänge noch ermittelt werden, bevor die Berechnung der möglichen Passwortkombinationen beginnt. Dadurch wird die Berechnung der Aufgabenverteilung vereinfacht. Wenn auch dieser Meilenstein erfolgreich implementiert werden kann, soll in der nächsten Iteration die Berechnung ohne bekannte Passwortlänge durchgeführt werden. Dies bedeutet implizit, dass die Berechnungsdauer durch die gewachsene Anzahl an möglichen Passwortkombinationen stark ansteigt. Dadurch dann die Robustheit der konzipierten verteilten Architektur geprüft werden. \\
 
-Das Befüllen des Arrays mit den Passwort-Mustern wird dynamisch durch eine Schleife geschehen. Die Schleife wird in Abhängigkeit angepasst, je nachdem, ob die Passwortlänge bekannt oder nicht bekannt ist. \\
-Die Rechner innerhalb der verteilten Architektur (Worker) holen sich nun \enquote{ihre} Aufgaben aus dem Array und beginnen mit der Berechnung. Die Worker berechnen nun, in Abhängigkeit der vorher bezogenen Aufgabe, alle möglichen Passworte und die zugehörigen Hashes. Die berechneten Hashes werden nun mit dem hinterlegten Hash des zu entschlüsselnden Passwortes verglichen. Sind berechneter Hash und Zielhash gleich, gilt das Passwort als entschlüsselt. \\
+\begin{figure}[!ht]
+	\centering
+		%[natürliche Breite in Pixeln, natürliche Höhe in Pixeln, Abhängigkeit von der Textbreite]
+		\includegraphics[natwidth=1200pt, natheight=349pt, width=1.0\textwidth]{images/SchaubildAlgorithmBreitensuche.pdf}
+	\caption{Darstellung der Suchstrategie, die der Brute-Force Algorithmus zum Ermitteln des Passwortes benutzt.}
+	\label{fig:showcase}
+\end{figure}
 
-\texttt{Pseudoalgorithmus der Passwortberechnung:}
-\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
-	func calculateHashes([u******])
-	{
-		while(![u******].isempty);
-			calculateNextPassword([u******]);
-			calculateHash(calculatedPassword);
-						
-			if(compareHashWithTargetHash
-			(calculatedHash)==true)
-				print("Password encrypted")
-	}
-\end{lstlisting}
+%Hier Breitensuche einfügen
 
-Dieser stark gekürzte Pseudoalgorithmus verdeutlicht die geplante Vorgehensweise bei der Passwortentschlüsselung. \\
-%TODO welche HashFunktion nutzen wir?
+\section{Benutzung der Anwendung}
+
+Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{Md5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.
+
+\begin{figure}[!ht]
+	\centering
+		%[natürliche Breite in Pixeln, natürliche Höhe in Pixeln, Abhängigkeit von der Textbreite]
+		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/WindowMaster.png}
+	\caption{Benutzeroberfläche der implementierten Anwendung als Master der verteilten Anwendung}
+	\label{fig:WindowMaster}
+\end{figure}
+
+
+
+\begin{figure}[!ht]
+	\centering
+		%[natürliche Breite in Pixeln, natürliche Höhe in Pixeln, Abhängigkeit von der Textbreite]
+		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/WindowWorker.png}
+	\caption{Benutzeroberfläche der implementierten Anwendung als Worker der verteilten Anwendung}
+	\label{fig:WindowMaster}
+\end{figure}
 
 
