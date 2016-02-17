@@ -12,7 +12,6 @@ class LogViewController: NSViewController {
     
     @IBOutlet var logTextView: NSTextView!
    
-    
     let notificationCenter = NSNotificationCenter.defaultCenter()
     
     override func viewDidLoad() {

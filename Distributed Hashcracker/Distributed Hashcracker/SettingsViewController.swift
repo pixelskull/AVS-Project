@@ -11,7 +11,7 @@ import Starscream
 
 class SettingsViewController: NSViewController {
 
-    @IBOutlet weak var isManager: NSButton!
+    @IBOutlet var isManager: NSButton!
     @IBOutlet var serverAdressField: NSTextField!
     @IBOutlet var passwordField: NSTextField!
     @IBOutlet var hashAlgorithmSelected: NSPopUpButton!
@@ -69,7 +69,7 @@ class SettingsViewController: NSViewController {
         if sender.state == NSOnState {
             
             var hashAlgorith: HashAlgorith?
-            NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
+            notificationCenter.postNotificationName("updateLog", object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
             
             var hashedPassword: String = ""
             switch hashAlgorithmSelected.titleOfSelectedItem!{
@@ -127,9 +127,17 @@ class SettingsViewController: NSViewController {
         super.viewDidLoad()
         passwordField.enabled = false
         hashAlgorithmSelected.enabled = false
+        
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "stopServerTask:",
+            name: "stopServerTask",
+            object: nil)
     }
     
-    override func viewWillDisappear() {
+    
+    func stopServerTask(notification:NSNotification) {
+        print("terminating server task")
+        notificationCenter.postNotificationName("updateLog", object: "terminating server task")
         task.terminate()
         task.waitUntilExit()
     }
