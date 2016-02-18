@@ -54,6 +54,17 @@
 }
 ```
 
+## hashes per time (.Extended)
+```
+{
+  "status" : "hashesPerTime"
+  "value" : {
+    "hash_count" : "#NUMBER_COMPUTED_HASHES"
+    "time_needed" : "#TIME"
+  }
+}
+```
+
 # Universal Messages
 
 ## still alive (.Basic)
