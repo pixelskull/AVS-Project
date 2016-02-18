@@ -73,7 +73,7 @@ class SettingsViewController: NSViewController {
     @IBAction func StartButtonPressed(sender: NSButton) {
         if sender.state == NSOnState {
             
-            var hashAlgorith: HashAlgorith?
+            var hashAlgorith: HashAlgorithm?
             notificationCenter.postNotificationName("updateLog", object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
             
             switch hashAlgorithmSelected.titleOfSelectedItem!{

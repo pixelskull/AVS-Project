@@ -32,6 +32,7 @@
 		50CE1D291C524C2F00A61514 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CE1D281C524C2F00A61514 /* Message.swift */; };
 		50E889811C6B500B00B854D5 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E889801C6B500B00B854D5 /* ChartViewController.swift */; };
 		50E889831C6B6E6000B854D5 /* ChartWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E889821C6B6E6000B854D5 /* ChartWindowController.swift */; };
+		E4A335581C6B4E9B00044D17 /* WorkerOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A335571C6B4E9B00044D17 /* WorkerOperation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +110,7 @@
 		50CE1D281C524C2F00A61514 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		50E889801C6B500B00B854D5 /* ChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		50E889821C6B6E6000B854D5 /* ChartWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartWindowController.swift; sourceTree = "<group>"; };
+		E4A335571C6B4E9B00044D17 /* WorkerOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkerOperation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
