@@ -8,13 +8,13 @@
 
 import Foundation
 
-protocol HashAlgorith {
+protocol HashAlgorithm {
     
     func hash(string string: String) -> String
     
 }
 
-class HashMD5: HashAlgorith {
+class HashMD5: HashAlgorithm {
     
     func hash(string string: String) -> String {
         print("MD5-Hash")
@@ -37,7 +37,7 @@ class HashMD5: HashAlgorith {
 }
 
 
-class HashSHA: HashAlgorith {
+class HashSHA: HashAlgorithm {
     
     func hash(string string: String) -> String {
         print("SHA-128-Hash")
@@ -50,7 +50,7 @@ class HashSHA: HashAlgorith {
     
 }
 
-class HashSHA256: HashAlgorith {
+class HashSHA256: HashAlgorithm {
     
     func hash(string string: String) -> String {
         print("SHA-256-Hash")
