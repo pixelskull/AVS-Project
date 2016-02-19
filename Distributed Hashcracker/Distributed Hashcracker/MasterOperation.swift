@@ -85,6 +85,9 @@ class MasterOperation:MasterWorkerOperation {
         case MessagesHeader.hitTargetHash:
             hitTargetHash(message)
             break
+        case MessagesHeader.hashesPerTime:
+            hashesPerTime(message)
+            break
         default:
             print("No matching extended header")
         }
@@ -151,7 +154,7 @@ class MasterOperation:MasterWorkerOperation {
         let hash = message.values["hash"]
         let password = message.values["password"]
         let time_needed = message.values["time_needed"]
-        let by_worker = message.values["by_worker"]
+        let worker_id = message.values["worker_id"]
         
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "Password is cracked!")
@@ -162,7 +165,7 @@ class MasterOperation:MasterWorkerOperation {
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "Time needed: " + time_needed!)
         notificationCenter.postNotificationName(Constants.NCValues.updateLog, object:
-            "By worker: " + by_worker!)
+            "By worker: " + worker_id!)
         
         /*
         let messageObject = message?.jsonObject()
@@ -195,6 +198,15 @@ class MasterOperation:MasterWorkerOperation {
     
     func hashesPerTime(message:ExtendedMessage){
         print("hashesPerTime")
+        
+        let hash_count = message.values["hash_count"]
+        let time_needed = message.values["time_needed"]
+        let worker_id = message.values["worker_id"]
+        
+        let hashesPerSecond:Int = Int(hash_count!)! / Int(time_needed!)!
+        
+        print("HashesPerTimeMessage -> Worker_ID: \(worker_id) hashesPerSecond: \(hashesPerSecond)")
+        
     }
     
     /**

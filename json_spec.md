@@ -49,7 +49,7 @@
     "hash" : "#HASH_VALUE",
     "password" : "#PASSWORD"
     "time_needed" : "#TIME"
-    "by_worker" : "#WORKER_ID"
+    "worker_id" : "#WORKER_ID"
   }
 }
 ```
@@ -67,6 +67,7 @@
 {
   "status" : "hashesPerTime"
   "value" : {
+    "worker_id" : "#WORKER_ID"
     "hash_count" : "#NUMBER_COMPUTED_HASHES"
     "time_needed" : "#TIME"
   }

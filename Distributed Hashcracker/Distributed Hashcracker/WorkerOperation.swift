@@ -146,7 +146,7 @@ class WorkerOperation:MasterWorkerOperation {
         }
         
         if(compareHash(hashAlgorithm!, passwordArray: passwordArray, hashedPassword: hashedPassword)){
-            let hitTargetHashValues: [String:String] = ["hash": hashedPassword, "password": crackedPassword, "time_needed": "ka", "by_worker": workerID!]
+            let hitTargetHashValues: [String:String] = ["hash": hashedPassword, "password": crackedPassword, "time_needed": "ka", "worker_id": workerID!]
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                 object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
             
