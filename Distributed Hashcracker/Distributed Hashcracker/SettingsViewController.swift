@@ -139,6 +139,13 @@ class SettingsViewController: NSViewController {
         } else {
             notificationCenter.postNotificationName(Constants.NCValues.stopWebSocket,
                 object: nil)
+            if isManager.state == NSOnState {
+                notificationCenter.postNotificationName(Constants.NCValues.stopMaster,
+                    object: nil)
+            } else {
+                notificationCenter.postNotificationName(Constants.NCValues.stopWorker,
+                    object: nil)
+            }
         }
     }
     

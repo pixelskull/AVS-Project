@@ -22,7 +22,7 @@ class WorkerOperation:MasterWorkerOperation {
         super.init()
         let notificationName = Constants.NCValues.stopWorker
         notificationCenter.addObserver(self,
-            selector: "stop:",
+            selector: "stopWorkerOperation:",
             name: notificationName,
             object: nil)
     }
@@ -210,7 +210,7 @@ class WorkerOperation:MasterWorkerOperation {
         
     }
     
-    func stop(notification:NSNotification) {
+    func stopWorkerOperation(notification:NSNotification) {
         run = false
     }
     
