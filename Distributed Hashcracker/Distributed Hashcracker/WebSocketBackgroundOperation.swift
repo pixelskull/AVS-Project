@@ -19,6 +19,7 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     let jsonParser = MessageParser()
     
     init(host:String = "localhost", port:Int = 3000) {
+        print("----"+host+"---")
         socket = WebSocket(url: NSURL(string: "ws://\(host):\(port)")!)
         
         super.init()
