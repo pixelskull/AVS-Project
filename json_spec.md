@@ -6,7 +6,7 @@
   "status" : "setupConfig",
   "value" : {
     "algorithm" : "#HASH_ID",
-    "target" : "#TARGET_HASH", 
+    "target" : "#TARGET_HASH",
     "worker_id" : "#WORKER_ID"
   }
 }
@@ -61,7 +61,6 @@
   "value" : {
     "hash_count" : "#NUMBER_COMPUTED_HASHES"
     "time_needed" : "#TIME"
-    "worker:id" : "#WORKER_ID"
   }
 }
 ```
@@ -85,5 +84,5 @@
 ```
 
 
-NOTE: 
+##NOTE: 
 WORKER_ID == Hostname/IP
