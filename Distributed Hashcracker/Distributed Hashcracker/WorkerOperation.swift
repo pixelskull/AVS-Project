@@ -193,7 +193,7 @@ class WorkerOperation:NSOperation {
         let worker_id = workerQueue.getFirstWorker()?.getID()
             
         //Send a stillAliveMessage to the master with the worker_id of the client
-        notificationCenter.postNotificationName("sendMessage", object: BasicMessage(status: MessagesHeader.alive, value: worker_id!))
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker_id!))
         
     }
     
