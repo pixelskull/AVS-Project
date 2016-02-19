@@ -73,7 +73,7 @@ class SettingsViewController: NSViewController {
     private func startWebsocketBackgroundOperation() {
         let host:String
         if serverAdressField.stringValue.containsString(",") {
-            host = "127.0.0.1"
+            host = serverAdressField.stringValue.componentsSeparatedByString(", ").first!
         } else {
             host = serverAdressField.stringValue
         }

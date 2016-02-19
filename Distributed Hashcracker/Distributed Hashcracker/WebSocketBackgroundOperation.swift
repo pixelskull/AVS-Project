@@ -82,7 +82,7 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
             */
             
 
-            sleep(10)
+            sleep(1)
         }
         run = true
     }
@@ -102,7 +102,7 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         let messageObject = message.jsonObject()
 
         for (key, value) in (messageObject) {
-            	("WSBO sendMessage -> Dictionary key \(key) -  Dictionary value \(value)")
+            	print("WSBO sendMessage -> Dictionary key \(key) -  Dictionary value \(value)")
         }
         
         let jsonStringSendMessage = jsonParser.createJSONStringFromMessage(message)
