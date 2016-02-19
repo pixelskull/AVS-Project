@@ -24,14 +24,17 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         super.init()
         socket.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
         socket.delegate = self
+        
+        let stopWSNotificationName = Constants.NCValues.stopWebSocket
         notificationCenter.addObserver(self,
             selector: "stop:",
-            name: "stopWebSocketOperation",
+            name: stopWSNotificationName,
             object: nil)
         
+        let sendMessageNotificationName = Constants.NCValues.sendMessage
         notificationCenter.addObserver(self,
             selector: "sendMessage:",
-            name: "sendMessage",
+            name: sendMessageNotificationName,
             object: nil)
     }
     

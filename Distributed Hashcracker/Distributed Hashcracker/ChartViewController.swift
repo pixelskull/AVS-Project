@@ -19,6 +19,8 @@ class ChartViewController: NSViewController {
     var values:[String:[Point]] = [String:[Point]]()
     let startTime = NSDate().timeIntervalSince1970
     
+    let notificationCenter = NSNotificationCenter.defaultCenter()
+    
     var const = 0.0
     var plotView:PlotView = PlotView()
 
@@ -26,11 +28,11 @@ class ChartViewController: NSViewController {
         super.viewDidLoad()
         
         plotView = setupPlotView()
-        
         self.view.addSubview(plotView)
         
-//        NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "increment", userInfo: nil, repeats: true)
         NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: "update", userInfo: nil, repeats: true)
+        let notificationName = Constants.notificationCenterValues.addHashValue
+        notificationCenter.addObserver(self, selector: "addHashChartValues:", name: notificationName, object: nil)
     }
     
     func setupPlotView() -> PlotView {

@@ -31,9 +31,10 @@ class WorkerOperation:NSOperation {
         
         super.init()
         
+        let notificationName = Constants.NCValues.stopWebSocket
         notificationCenter.addObserver(self,
             selector: "stop:",
-            name: "stopWebSocketOperation",
+            name: notificationName,
             object: nil)
     }
     
@@ -135,7 +136,8 @@ class WorkerOperation:NSOperation {
 
         //Send setupConfigurationMessage
         let setupConfigMessageValues: [String:String] = ["algorithm": "MD5", "target": "Test", "worker_id":workerID]
-        notificationCenter.postNotificationName("sendMessage", object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+            object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
     
         /*
         let workerQueueLenght = workerQueue.workerQueue.count + 1
@@ -171,7 +173,8 @@ class WorkerOperation:NSOperation {
         
         //Send setupConfigurationMessage
         let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
-        notificationCenter.postNotificationName("sendMessage", object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+            object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
     }
     
     /**
@@ -229,7 +232,8 @@ class WorkerOperation:NSOperation {
         target = "Test"
         
         //Send finishedWorkMessage
-        notificationCenter.postNotificationName("sendMessage", object: BasicMessage(status: MessagesHeader.finishedWork, value: workerID))
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+            object: BasicMessage(status: MessagesHeader.finishedWork, value: workerID))
     }
     
     /**
@@ -267,12 +271,14 @@ class WorkerOperation:NSOperation {
 
         if(compareHash(hashAlgorithm!, passwordArray: passwordArray, hashedPassword: hashedPassword)){
             let hitTargetHashValues: [String:String] = ["hash": hashedPassword, "password": crackedPassword, "time_needed": "ka", "by_worker": workerID!]
-            notificationCenter.postNotificationName("sendMessage", object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
+            notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
 
             print("Found the searched password -> hitTargetHashMessage was send")
         }
         else{
-            notificationCenter.postNotificationName("sendMessage", object: BasicMessage(status: MessagesHeader.finishedWork, value: workerID!))
+            notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                object: BasicMessage(status: MessagesHeader.finishedWork, value: workerID!))
             print("The searched password wasn't there -> finishedWorkMessage was send")
         }
         
@@ -302,11 +308,16 @@ class WorkerOperation:NSOperation {
         let time_needed = message.values["time_needed"]
         let by_worker = message.values["by_worker"]
         
-        notificationCenter.postNotificationName("updateLog", object: "Password is cracked!")
-        notificationCenter.postNotificationName("updateLog", object: "Hash of the password: " + hash!)
-        notificationCenter.postNotificationName("updateLog", object: "Password: " + password!)
-        notificationCenter.postNotificationName("updateLog", object: "Time needed: " + time_needed!)
-        notificationCenter.postNotificationName("updateLog", object: "By worker: " + by_worker!)
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "Password is cracked!")
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "Hash of the password: " + hash!)
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "Password: " + password!)
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "Time needed: " + time_needed!)
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object:
+            "By worker: " + by_worker!)
         
         /*
         let messageObject = message?.jsonObject()

@@ -18,9 +18,7 @@ class MessageQueue {
     var read_semaphore = dispatch_semaphore_create(1)
     let write_semaphore = dispatch_semaphore_create(1)
     
-    private init() {
-//        notificationCenter.addObserver(self, selector: "put:", name: "putMessage", object: nil)
-    }
+    private init() {}
 
     /**
      appends new message to MessageQueue (Blocking)

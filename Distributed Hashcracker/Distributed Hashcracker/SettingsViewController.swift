@@ -27,7 +27,9 @@ class SettingsViewController: NSViewController {
         passwordField.enabled = true
         hashAlgorithmSelected.enabled = true
         
-        notificationCenter.postNotificationName("updateLog", object: "this Mac is now Master")
+        
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "this Mac is now Master")
         
         let hostName = NSHost.currentHost().name
         if hostName!.characters.count <= 40 {
@@ -46,7 +48,8 @@ class SettingsViewController: NSViewController {
         passwordField.enabled = false
         hashAlgorithmSelected.enabled = false
         
-        notificationCenter.postNotificationName("updateLog", object: "this Mac is now Worker")
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "this Mac is now Worker")
     }
     
     private func startBackgroundOperation() {
@@ -74,7 +77,8 @@ class SettingsViewController: NSViewController {
         if sender.state == NSOnState {
             
             var hashAlgorith: HashAlgorithm?
-            notificationCenter.postNotificationName("updateLog", object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
+            notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
             
             switch hashAlgorithmSelected.titleOfSelectedItem!{
             case "MD5":
@@ -91,7 +95,8 @@ class SettingsViewController: NSViewController {
                 break
             }
             
-            notificationCenter.postNotificationName("updateLog", object: "Hash of the password: " + hashedPassword)
+            notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "Hash of the password: " + hashedPassword)
             
             if isManager.state == NSOnState {
                 if task.running {
@@ -110,7 +115,8 @@ class SettingsViewController: NSViewController {
             
             
         } else {
-            notificationCenter.postNotificationName("stopWebSocketOperation", object: nil)
+            notificationCenter.postNotificationName(Constants.NCValues.stopWebSocket,
+                object: nil)
         }
     }
     
@@ -134,16 +140,18 @@ class SettingsViewController: NSViewController {
         passwordField.enabled = false
         hashAlgorithmSelected.enabled = false
         
+        let notificationName = Constants.NCValues.stopServer
         notificationCenter.addObserver(self,
             selector: "stopServerTask:",
-            name: "stopServerTask",
+            name: notificationName,
             object: nil)
     }
     
     
     func stopServerTask(notification:NSNotification) {
         print("terminating server task")
-        notificationCenter.postNotificationName("updateLog", object: "terminating server task")
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "terminating server task")
         task.terminate()
         task.waitUntilExit()
     }
