@@ -59,9 +59,6 @@ class MasterOperation:MasterWorkerOperation {
         case MessagesHeader.finishedWork:
             finishedWork(message)
             break
-        case MessagesHeader.stillAlive:
-            stillAlive(message)
-            break
         case MessagesHeader.alive:
             alive(message)
             break
@@ -189,7 +186,19 @@ class MasterOperation:MasterWorkerOperation {
     func hashesPerTime(message:ExtendedMessage){
         print("hashesPerTime")
     }
-
+    
+    /**
+     Reaction of the server on a aliveMessage ->
+     - keep the worker in the workerQueue and the Worker.status = .Aktive
+     precondition = aliveMessage with the worker_id from a client
+     postcondition = client stays in the workerQueue
+     */
+    func alive(message:BasicMessage){
+        print("alive")
+        let messageObject = message.value
+        print("stillAlive message value: " + messageObject)
+        //webSocket.sendMessage(BasicMessage(status: MessagesHeader.stillAlive, value: "worker_id"))
+    }
     
     /*
     Hepler functions

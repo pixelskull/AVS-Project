@@ -23,6 +23,14 @@
 }
 ```
 
+## still alive (.Basic)
+```
+{
+  "status" : "stillAlive",
+  "value" : ""
+}
+```
+
 # Messages to Master  
 
 ## new Client registration (.Basic)
@@ -65,16 +73,6 @@
 }
 ```
 
-# Universal Messages
-
-## still alive (.Basic)
-```
-{
-  "status" : "stillAlive",
-  "value" : ""
-}
-```
-
 ## reply alive (.Basic)
 ```
 {
@@ -83,6 +81,5 @@
 }
 ```
 
-
-##NOTE: 
+##NOTE:
 WORKER_ID == Hostname/IP

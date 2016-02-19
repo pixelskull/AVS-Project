@@ -61,9 +61,6 @@ class WorkerOperation:MasterWorkerOperation {
         case MessagesHeader.stillAlive:
             stillAlive(message)
             break
-        case MessagesHeader.alive:
-            alive(message)
-            break
         default:
             print("No matching basic header")
             break
@@ -168,8 +165,20 @@ class WorkerOperation:MasterWorkerOperation {
         print("Dictionary key \(key) -  Dictionary value \(value)")
         }
         */
-        
-        
+    }
+    
+    /**
+     Reaction of a client on a stillAliveMessage ->
+     - send a aliveMessage with his own worker_id
+     precondition = stillAliveMessage from the server
+     postcondition = aliveMessage was send to the server
+     */
+    func stillAlive(message:BasicMessage){
+        print("stillAlive")
+        let workerQueue = WorkerQueue.sharedInstance
+        let worker_id = workerQueue.getFirstWorker()?.getID()
+        //Send a stillAliveMessage to the master with the worker_id of the client
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker_id!))
     }
     
     
