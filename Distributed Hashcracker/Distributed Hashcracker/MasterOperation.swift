@@ -10,7 +10,11 @@ import Cocoa
 
 class MasterOperation:MasterWorkerOperation {
     
-    override init() {
+    var targetHash:String   = ""
+    var selectedAlgorithm:String = ""
+    
+    
+    private override init() {
         
         super.init()
         
@@ -19,6 +23,12 @@ class MasterOperation:MasterWorkerOperation {
             selector: "stop:",
             name: notificationName,
             object: nil)
+    }
+    
+    convenience init(targetHash:String, selectedAlgorithm:String) {
+        self.init()
+        self.targetHash = targetHash
+        self.selectedAlgorithm = selectedAlgorithm
     }
     
     override func main() {

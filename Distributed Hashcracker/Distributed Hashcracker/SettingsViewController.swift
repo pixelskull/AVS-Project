@@ -52,20 +52,41 @@ class SettingsViewController: NSViewController {
             object: "this Mac is now Worker")
     }
     
-    private func startBackgroundOperation() {
+    private func startWorkerBackgroundOperation() {
+        let workerOperation = WorkerOperation()
+        workerOperation.completionBlock = {
+            self.notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "WorkerOperation finished")
+        }
+        startBackgroundOperation(workerOperation)
+    }
+    
+    private func startMasterBackgroundOperation() {
+        let masterOperation = MasterOperation(targetHash: hashedPassword, selectedAlgorithm: String(hashAlgorithmSelected.titleOfSelectedItem))
+        masterOperation.completionBlock = {
+            self.notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "MasterOperation finished")
+        }
+        startBackgroundOperation(masterOperation)
+    }
+    
+    private func startWebsocketBackgroundOperation() {
         let host:String
         if serverAdressField.stringValue.containsString(",") {
             host = "127.0.0.1"
         } else {
             host = serverAdressField.stringValue
         }
-        
-        let backgroundOperation = WebSocketBackgroundOperation(host: host)
-        let workerOperation = WorkerOperation()
-        queue.addOperation(backgroundOperation)
-        queue.addOperation(workerOperation)
-        backgroundOperation.completionBlock = { print("operation finished") }
-        workerOperation.completionBlock = {print("worker operation finished")}
+        let webSocketOperation = WebSocketBackgroundOperation(host: host)
+        webSocketOperation.completionBlock = {
+            self.notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "WebsocketOperation finished")
+        }
+        startBackgroundOperation(webSocketOperation)
+    }
+    
+    private func startBackgroundOperation(operation:NSOperation) {
+        queue.addOperation(operation)
     }
     
     @IBAction func isServerButtonPressed(sender: NSButton) {
@@ -95,6 +116,8 @@ class SettingsViewController: NSViewController {
                 break
             }
             
+            startWebsocketBackgroundOperation()
+            
             notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                 object: "Hash of the password: " + hashedPassword)
             
@@ -110,9 +133,8 @@ class SettingsViewController: NSViewController {
                 
                 task = NSTask.launchedTaskWithLaunchPath(launchPath, arguments: [serverPath])
                 sleep(2)
-            }
-            startBackgroundOperation()
-            
+                startMasterBackgroundOperation()
+            } else { startWorkerBackgroundOperation() }
             
         } else {
             notificationCenter.postNotificationName(Constants.NCValues.stopWebSocket,
