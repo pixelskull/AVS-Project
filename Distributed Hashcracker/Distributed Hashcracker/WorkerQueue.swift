@@ -34,7 +34,7 @@ class WorkerQueue {
      
      - returns: Worker by from list when not empty otherwise nil
      */
-    func get(workerID:String) -> Worker? {
+    func getWorkerByID(workerID:String) -> Worker? {
         guard let workerByIdIndex = workerQueue.indexOf({$0.id == workerID}) else { return nil }
         
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
@@ -42,6 +42,17 @@ class WorkerQueue {
         dispatch_semaphore_signal(read_semaphore)
         return workerByID
     }
+    
+    /**
+     get Worker by ID if WorkerQueue is not empty (Blocking)
+     
+     - returns: Worker by from list when not empty otherwise nil
+     */
+    func getFirstWorker() -> Worker? {
+        guard let firstWorker = workerQueue.first else { return nil }
+        return firstWorker
+    }
+
     
     /**
      delete Worker by ID if WorkerQueue is not empty (Blocking)
