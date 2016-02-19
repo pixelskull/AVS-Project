@@ -169,11 +169,11 @@ class WorkerOperation:NSOperation {
     func stillAlive(message:BasicMessage){
         print("stillAlive")
         
-        let messageObject = message.value
+        let workerQueue = WorkerQueue.sharedInstance
         
-        print("stillAlive message value: " + messageObject)
-        
-        //webSocket.sendMessage(BasicMessage(status: MessagesHeader.alive, value: "worker_id"))
+        let worker_id = workerQueue.getFirstWorker()?.getID()
+        //Send a stillAliveMessage to the master with the worker_id of the client
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker_id!))
         
     }
     
@@ -309,6 +309,10 @@ class WorkerOperation:NSOperation {
             print("Dictionary key \(key) -  Dictionary value \(value)")
         }
         */
+    }
+    
+    func hashesPerTime(message:ExtendedMessage){
+        print("hashesPerTime")
     }
     
     func compareHash(hashAlgorithm: HashAlgorithm, passwordArray:[String], hashedPassword: String) -> Bool{
