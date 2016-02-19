@@ -119,7 +119,7 @@ class MasterOperation:MasterWorkerOperation {
         workerQueue.put(newWorker)
         
         //Send setupConfigurationMessage
-        let setupConfigMessageValues: [String:String] = ["algorithm": "MD5", "target": "Test", "worker_id":workerID]
+        let setupConfigMessageValues: [String:String] = ["algorithm": selectedAlgorithm, "target": targetHash, "worker_id":workerID]
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
         
