@@ -31,7 +31,7 @@ class ChartViewController: NSViewController {
         self.view.addSubview(plotView)
         
         NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: "update", userInfo: nil, repeats: true)
-        let notificationName = Constants.notificationCenterValues.addHashValue
+        let notificationName = Constants.NCValues.addHashValue
         notificationCenter.addObserver(self, selector: "addHashChartValues:", name: notificationName, object: nil)
     }
     
