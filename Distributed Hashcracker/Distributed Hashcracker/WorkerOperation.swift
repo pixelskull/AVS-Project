@@ -85,6 +85,8 @@ class WorkerOperation:NSOperation {
             newWorkBlog(message)
         case MessagesHeader.hitTargetHash:
             hitTargetHash(message)
+        case MessagesHeader.hashesPerTime:
+            hashesPerTime(message)
         default:
             print("No matching extended header")
             
@@ -315,6 +317,10 @@ class WorkerOperation:NSOperation {
             print("Dictionary key \(key) -  Dictionary value \(value)")
         }
         */
+    }
+    
+    func hashesPerTime(message:ExtendedMessage){
+        print("hashesPerTime")
     }
     
     func compareHash(hashAlgorithm: HashAlgorithm, passwordArray:[String], hashedPassword: String) -> Bool{
