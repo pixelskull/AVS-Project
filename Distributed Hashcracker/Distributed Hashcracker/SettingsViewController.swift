@@ -134,6 +134,9 @@ class SettingsViewController: NSViewController {
                 task = NSTask.launchedTaskWithLaunchPath(launchPath, arguments: [serverPath])
                 sleep(2)
                 startMasterBackgroundOperation()
+                
+                //simulated test
+                startWorkerBackgroundOperation()
             } else { startWorkerBackgroundOperation() }
             
         } else {

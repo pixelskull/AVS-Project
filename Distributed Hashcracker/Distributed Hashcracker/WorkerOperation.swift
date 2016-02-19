@@ -42,11 +42,12 @@ class WorkerOperation:MasterWorkerOperation {
                     decideWhatToDoExtendedMessage(message as! ExtendedMessage)
                     break
                 }
+                sleep(5)
             } else{
-                print("No message in the queue")
+                //print("No message in the queue")
             }
         }
-        sleep(1)
+        sleep(2)
         run = true
     }
     
