@@ -61,6 +61,7 @@
   "value" : {
     "hash_count" : "#NUMBER_COMPUTED_HASHES"
     "time_needed" : "#TIME"
+    "worker:id" : "#WORKER_ID"
   }
 }
 ```
