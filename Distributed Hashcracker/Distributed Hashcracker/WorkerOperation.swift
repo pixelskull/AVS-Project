@@ -61,24 +61,23 @@ class WorkerOperation:NSOperation {
         run = true
     }
     
-    func getMessageFromQueue() -> Message? {
-        return messageQueue.get()
-    }
+    /*
+    Decision functions
+    */
     
     func decideWhatToDoBasicMessage(message: BasicMessage){
         let messageHeader = message.status
         
         switch messageHeader {
-        case MessagesHeader.newClientRegistration:
-            newClientRegistration(message)
-        case MessagesHeader.finishedWork:
-            finishedWork(message)
         case MessagesHeader.stillAlive:
             stillAlive(message)
+            break
         case MessagesHeader.alive:
             alive(message)
+            break
         default:
             print("No matching basic header")
+            break
         }
     }
 
@@ -88,111 +87,19 @@ class WorkerOperation:NSOperation {
         switch messageHeader {
         case MessagesHeader.setupConfig:
             setupConfig(message)
+            break
         case MessagesHeader.newWorkBlog:
             newWorkBlog(message)
-        case MessagesHeader.hitTargetHash:
-            hitTargetHash(message)
+            break
         default:
             print("No matching extended header")
+            break
         }
     }
     
-    /**
-    Reaction of the server on a newClientRegistrationMessage ->  
-     - adding a new Worker to the WorkerQueue
-     - sending a setupConfigMessage to the new Worker
-    precondition = newClientRegistrationMessage of a new client with his IP
-    postcondition = setupConfigMessage with the selected hash algorithm, the target hash and the worker_id was send to the new client
+    /*
+    Worker related Message reactions 
     */
-    func newClientRegistration(message:BasicMessage){
-        print("newClientRegistration")
-        
-        let messageObject = message.value
-        
-        let workerID:String = messageObject
-        
-        let workerQueue = WorkerQueue.sharedInstance
-        
-        let newWorker = Worker(id: workerID, status: .Aktive)
-        
-        workerQueue.put(newWorker)
-
-        //Send setupConfigurationMessage
-        let setupConfigMessageValues: [String:String] = ["algorithm": "MD5", "target": "Test", "worker_id":workerID]
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
-    
-        /*
-        let workerQueueLenght = workerQueue.workerQueue.count + 1
-        
-        print("WorkerQueueLenght: \(workerQueue.workerQueue.count)")
-        
-        let workerID = "Worker_" + String(workerQueueLenght)
-        
-        print("WorkerID: " + workerID)
-        
-        let newWorker = Worker(id: workerID, ip: workerIP, status: .Aktive)
-        
-        workerQueue.put(newWorker)
-
-        print("WorkerQueueLenght after input Worker: \(workerQueue.workerQueue.count)")
-        */
-
-    }
-    
-    /**
-     Reaction of the server on a finishedWorkMessage ->
-     - create a new target password blog
-     - sending a newWorkBlogMessage to the client which send the finishedWorkMessage
-     precondition = finishedWorkMessage from a client
-     postcondition = newWorkBlogMessage was send to a client
-     */
-    func finishedWork(message:BasicMessage){
-        print("finishedWork")
-        
-        let workerID = message.value
-        
-        let newWorkBlog = generateNewWorkBlog()
-        
-        //Send setupConfigurationMessage
-        let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
-    }
-    
-    /**
-     Reaction of a client on a stillAliveMessage ->
-     - send a aliveMessage with his own worker_id
-     precondition = stillAliveMessage from the server
-     postcondition = aliveMessage was send to the server
-     */
-    func stillAlive(message:BasicMessage){
-        print("stillAlive")
-        
-        let workerQueue = WorkerQueue.sharedInstance
-        
-        let worker_id = workerQueue.getFirstWorker()?.getID()
-        //Send a stillAliveMessage to the master with the worker_id of the client
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker_id!))
-        
-    }
-    
-    /**
-     Reaction of the server on a aliveMessage ->
-     - keep the worker in the workerQueue and the Worker.status = .Aktive
-     precondition = aliveMessage with the worker_id from a client
-     postcondition = client stays in the workerQueue
-     */
-    func alive(message:BasicMessage){
-        print("alive")
-        
-        let messageObject = message.value
-        
-        print("stillAlive message value: " + messageObject)
-        
-        //webSocket.sendMessage(BasicMessage(status: MessagesHeader.stillAlive, value: "worker_id"))
-
-    }
     
     /**
      Reaction of a client on a setupConfigMessage ->
@@ -251,12 +158,12 @@ class WorkerOperation:NSOperation {
             hashedPassword = "Password not successfully hashed"
             break
         }
-
+        
         if(compareHash(hashAlgorithm!, passwordArray: passwordArray, hashedPassword: hashedPassword)){
             let hitTargetHashValues: [String:String] = ["hash": hashedPassword, "password": crackedPassword, "time_needed": "ka", "by_worker": workerID!]
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                 object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
-
+            
             print("Found the searched password -> hitTargetHashMessage was send")
         }
         else{
@@ -269,50 +176,58 @@ class WorkerOperation:NSOperation {
         let messageObject = message?.jsonObject()
         
         for (key, value) in (messageObject)! {
-            print("Dictionary key \(key) -  Dictionary value \(value)")
+        print("Dictionary key \(key) -  Dictionary value \(value)")
         }
         */
         
+        
+    }
+    
+    /*
+    Universal Message reactions
+    */
+    
+    /**
+     Reaction of a client on a stillAliveMessage ->
+     - send a aliveMessage with his own worker_id
+     precondition = stillAliveMessage from the server
+     postcondition = aliveMessage was send to the server
+     */
+    func stillAlive(message:BasicMessage){
+        print("stillAlive")
+        
+        let workerQueue = WorkerQueue.sharedInstance
+        
+        let worker_id = workerQueue.getFirstWorker()?.getID()
+        //Send a stillAliveMessage to the master with the worker_id of the client
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker_id!))
         
     }
     
     /**
-     Reaction of the server/client on a hitTargetHashMessage ->
-     - client = stop calculating und checking hash values
-     - server = issue the result of the successful hash crack
-     precondition = hitTargetHashMessage from a client/the server
-     postcondition = clients stopped their work / the server showed the result
+     Reaction of the server on a aliveMessage ->
+     - keep the worker in the workerQueue and the Worker.status = .Aktive
+     precondition = aliveMessage with the worker_id from a client
+     postcondition = client stays in the workerQueue
      */
-    func hitTargetHash(message:ExtendedMessage){
-        print("hitTargetHash")
+    func alive(message:BasicMessage){
+        print("alive")
         
-        let hash = message.values["hash"]
-        let password = message.values["password"]
-        let time_needed = message.values["time_needed"]
-        let by_worker = message.values["by_worker"]
+        let messageObject = message.value
         
-        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
-            object: "Password is cracked!")
-        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
-            object: "Hash of the password: " + hash!)
-        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
-            object: "Password: " + password!)
-        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
-            object: "Time needed: " + time_needed!)
-        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object:
-            "By worker: " + by_worker!)
+        print("stillAlive message value: " + messageObject)
         
-        /*
-        let messageObject = message?.jsonObject()
-        
-        for (key, value) in (messageObject)! {
-            print("Dictionary key \(key) -  Dictionary value \(value)")
-        }
-        */
+        //webSocket.sendMessage(BasicMessage(status: MessagesHeader.stillAlive, value: "worker_id"))
+
     }
     
-    func hashesPerTime(message:ExtendedMessage){
-        print("hashesPerTime")
+    
+    /*
+    Helper functions
+    */
+    
+    func getMessageFromQueue() -> Message? {
+        return messageQueue.get()
     }
     
     func compareHash(hashAlgorithm: HashAlgorithm, passwordArray:[String], hashedPassword: String) -> Bool{
@@ -333,13 +248,6 @@ class WorkerOperation:NSOperation {
         
         return false
         
-    }
-    
-    func generateNewWorkBlog() -> String{
-        
-        let newWorkBlogString = "bla,blub,bli,test,Test,foo"
-        
-        return newWorkBlogString
     }
     
     func stop(notification:NSNotification) {
