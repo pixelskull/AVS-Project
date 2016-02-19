@@ -19,6 +19,7 @@ enum MessagesHeader {
     case newClientRegistration
     case hitTargetHash
     case finishedWork
+    case hashesPerTime
     case stillAlive
     case alive
 }

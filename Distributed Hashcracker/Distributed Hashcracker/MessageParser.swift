@@ -89,6 +89,8 @@ class MessageParser {
             return MessagesHeader.hitTargetHash
         case "finishedWork":
             return MessagesHeader.finishedWork
+        case "hashesPerTime":
+            return MessagesHeader.hashesPerTime
         case "stillAlive":
             return MessagesHeader.stillAlive
         case "alive":
