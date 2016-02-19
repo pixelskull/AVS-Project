@@ -31,7 +31,7 @@ class WorkerOperation:NSOperation {
         
         super.init()
         
-        let notificationName = Constants.NCValues.stopWebSocket
+        let notificationName = Constants.NCValues.stopWorker
         notificationCenter.addObserver(self,
             selector: "stop:",
             name: notificationName,
@@ -40,65 +40,35 @@ class WorkerOperation:NSOperation {
     
     override func main() {
         runloop: while true {
-            
-            if run == false { break runloop }
-            
-            let message = getMessageFromQueue()
-            
-            if message != nil{
-                
-                print("WorkerOperation message from queue message type",message?.type)
-                
-                if message!.type == .Basic{
+            guard run == true else { break runloop }
+            if let message = getMessageFromQueue() {
+                print("WorkerOperation message from queue message type",message.type)
+                switch message.type {
+                case .Basic:
                     print("I'm a basic message")
                     decideWhatToDoBasicMessage(message as! BasicMessage)
-                }
-                else if message!.type == .Extended{
+                    break
+                case .Extended:
                     print("I'm a extended message")
                     decideWhatToDoExtendedMessage(message as! ExtendedMessage)
+                    break
                 }
-                else{
-                    print("I'm not a message")
-                }
-            }
-            else{
+            } else{
                 print("No message in the queue")
             }
-            
-            sleep(1)
         }
+        sleep(1)
         run = true
     }
     
     func getMessageFromQueue() -> Message? {
         return messageQueue.get()
     }
-
-    func decideWhatToDoExtendedMessage(message: ExtendedMessage){
-        
-        let messageHeader = message.status
-        
-        switch messageHeader {
-            
-        case MessagesHeader.setupConfig:
-            setupConfig(message)
-        case MessagesHeader.newWorkBlog:
-            newWorkBlog(message)
-        case MessagesHeader.hitTargetHash:
-            hitTargetHash(message)
-        default:
-            print("No matching extended header")
-            
-        }
-
-    }
     
     func decideWhatToDoBasicMessage(message: BasicMessage){
-        
         let messageHeader = message.status
         
         switch messageHeader {
-    
         case MessagesHeader.newClientRegistration:
             newClientRegistration(message)
         case MessagesHeader.finishedWork:
@@ -109,9 +79,22 @@ class WorkerOperation:NSOperation {
             alive(message)
         default:
             print("No matching basic header")
-            
         }
+    }
 
+    func decideWhatToDoExtendedMessage(message: ExtendedMessage){
+        let messageHeader = message.status
+        
+        switch messageHeader {
+        case MessagesHeader.setupConfig:
+            setupConfig(message)
+        case MessagesHeader.newWorkBlog:
+            newWorkBlog(message)
+        case MessagesHeader.hitTargetHash:
+            hitTargetHash(message)
+        default:
+            print("No matching extended header")
+        }
     }
     
     /**

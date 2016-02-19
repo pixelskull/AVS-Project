@@ -28,6 +28,7 @@
 		5088E8941C7499F80065C39B /* PlotKit.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5088E8931C7499F80065C39B /* PlotKit.framework.dSYM */; };
 		5088E8961C749A1D0065C39B /* Starscream.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5088E8951C749A1D0065C39B /* Starscream.framework.dSYM */; };
 		5088E8A91C772BED0065C39B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088E8A81C772BED0065C39B /* Constants.swift */; };
+		5088E8AB1C7739200065C39B /* MasterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088E8AA1C7739200065C39B /* MasterOperation.swift */; };
 		50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ADD84E1C28777E00E8DC42 /* LogViewController.swift */; };
 		50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CE1D261C5129BD00A61514 /* MessageQueue.swift */; };
 		50CE1D291C524C2F00A61514 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CE1D281C524C2F00A61514 /* Message.swift */; };
@@ -107,6 +108,7 @@
 		5088E8931C7499F80065C39B /* PlotKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = PlotKit.framework.dSYM; sourceTree = "<group>"; };
 		5088E8951C749A1D0065C39B /* Starscream.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = Starscream.framework.dSYM; sourceTree = "<group>"; };
 		5088E8A81C772BED0065C39B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		5088E8AA1C7739200065C39B /* MasterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterOperation.swift; sourceTree = "<group>"; };
 		50ADD84E1C28777E00E8DC42 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		50CE1D261C5129BD00A61514 /* MessageQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageQueue.swift; sourceTree = "<group>"; };
 		50CE1D281C524C2F00A61514 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				5086D94A1C5FD680008F7464 /* MessageParser.swift */,
 				5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */,
 				E4A335571C6B4E9B00044D17 /* WorkerOperation.swift */,
+				5088E8AA1C7739200065C39B /* MasterOperation.swift */,
 				4CE7BFD11C6D41A90020482F /* Worker.swift */,
 				4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */,
 				5088E8A81C772BED0065C39B /* Constants.swift */,
@@ -387,6 +390,7 @@
 				501E6E631C1703C70068A44B /* SettingsViewController.swift in Sources */,
 				5088E8A91C772BED0065C39B /* Constants.swift in Sources */,
 				50E889811C6B500B00B854D5 /* ChartViewController.swift in Sources */,
+				5088E8AB1C7739200065C39B /* MasterOperation.swift in Sources */,
 				50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */,
 				50CE1D291C524C2F00A61514 /* Message.swift in Sources */,
 				4CE7BFD41C6D41C70020482F /* WorkerQueue.swift in Sources */,

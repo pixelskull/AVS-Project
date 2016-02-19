@@ -15,7 +15,9 @@ struct Constants {
         static let addHashValue  = "newHashValues"
         static let sendMessage   = "sendMessage"
         static let stopServer    = "stopServerTask"
+        static let stopMaster    = "stopMaster"
         static let stopWebSocket = "stopWebSocketOperation"
+        static let stopWorker    = "stopWorker"
         static let updateLog     = "updateLog"
     }
 }
