@@ -5,13 +5,13 @@ var http = require('http') //.Server(app);
 var conf = require('./config.json')
 
 var server = http.createServer(function(req, res) {
-  console.log((new Date()) + ' recieved request for ' + req.url);
+  console.log("NODE.JS::::" + (new Date()) + ' recieved request for ' + req.url);
   res.writeHead(404);
   res.end();
 });
 
 server.listen(conf.port, function() {
-  console.log((new Date()) + ' Server is listening on port ' + conf.port);
+  console.log("NODE.JS::: " + (new Date()) + ' Server is listening on port ' + conf.port);
 });
 
 wsServer = new WebsocketServer({
@@ -26,19 +26,19 @@ function originIsAllowed(origin) {
 wsServer.on('request', function(req) {
   if (!originIsAllowed(req.origin)) {
     req.reject();
-    console.log('connection rejected');
+    console.log("NODE.JS::: connection rejected");
   }
 
   var connection = req.accept('distributed_hashcracker_protocol', req.origin);
-  console.log((new Date()) + 'connection accepted.');
+  console.log("NODE.JS::: " + (new Date()) + 'connection accepted.');
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
-            console.log('Received Message: ' + message.utf8Data);
+            console.log("NODE.JS::: Received Message: " + message.utf8Data);
             connection.sendUTF(message.utf8Data);
         }
         else if (message.type === 'binary') {
-            console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
+            console.log("NODE.JS::: Received Binary Message of ' + message.binaryData.length + ' bytes");
             connection.sendBytes(message.binaryData);
         }
   });
@@ -46,8 +46,8 @@ wsServer.on('request', function(req) {
 
 function exitHandler(options, err) {
     server.close();
-    if (options.cleanup) console.log('clean');
-    if (err) console.log(err.stack);
+    if (options.cleanup) console.log("NODE.JS::: clean");
+    if (err) console.log("NODE.JS::: " + err.stack);
     if (options.exit) process.exit();
     process.exit()
 }

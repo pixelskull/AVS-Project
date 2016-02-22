@@ -19,6 +19,7 @@ enum MessagesHeader {
     case newClientRegistration
     case hitTargetHash
     case finishedWork
+    case hashesPerTime
     case stillAlive
     case alive
 }
@@ -27,7 +28,7 @@ protocol Message {
     var status:MessagesHeader { get set }
     var type:MessageType { get set }
     
-    func jsonObject() -> [String:AnyObject]
+    func jsonObject() -> JSONObject
 }
 
 class BasicMessage:Message {
@@ -40,7 +41,7 @@ class BasicMessage:Message {
         self.value = value
     }
     
-    func jsonObject() -> [String:AnyObject] {
+    func jsonObject() -> JSONObject {
         return ["status":String(status), "value":String(value)]
     }
 }
@@ -55,7 +56,7 @@ class ExtendedMessage:Message {
         self.values = values
     }
     
-    func jsonObject() -> [String:AnyObject] {
+    func jsonObject() -> JSONObject {
         let jsonValues = try! NSJSONSerialization.dataWithJSONObject(values, options: NSJSONWritingOptions(rawValue: 0))
         let valuesJSONString = NSString(data: jsonValues, encoding: NSUTF8StringEncoding)
         return ["status":String(status), "value":valuesJSONString as! String]

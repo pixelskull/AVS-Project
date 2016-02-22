@@ -6,7 +6,7 @@
   "status" : "setupConfig",
   "value" : {
     "algorithm" : "#HASH_ID",
-    "target" : "#TARGET_HASH", 
+    "target" : "#TARGET_HASH",
     "worker_id" : "#WORKER_ID"
   }
 }
@@ -20,6 +20,14 @@
     "worker_id" : "#WORKER_ID"
     "hashes" : ["#NEW_HASHES"]
   }
+}
+```
+
+## still alive (.Basic)
+```
+{
+  "status" : "stillAlive",
+  "value" : ""
 }
 ```
 
@@ -41,7 +49,7 @@
     "hash" : "#HASH_VALUE",
     "password" : "#PASSWORD"
     "time_needed" : "#TIME"
-    "by_worker" : "#WORKER_ID"
+    "worker_id" : "#WORKER_ID"
   }
 }
 ```
@@ -54,13 +62,15 @@
 }
 ```
 
-# Universal Messages
-
-## still alive (.Basic)
+## hashes per time (.Extended)
 ```
 {
-  "status" : "stillAlive",
-  "value" : ""
+  "status" : "hashesPerTime"
+  "value" : {
+    "worker_id" : "#WORKER_ID"
+    "hash_count" : "#NUMBER_COMPUTED_HASHES"
+    "time_needed" : "#TIME"
+  }
 }
 ```
 
@@ -72,6 +82,5 @@
 }
 ```
 
-
-NOTE: 
+##NOTE:
 WORKER_ID == Hostname/IP

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		4C98B1A11C52893800E2641B /* CustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A01C52893800E2641B /* CustomObject.m */; };
 		4C98B1A41C52895700E2641B /* HashStrategie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A31C52895700E2641B /* HashStrategie.swift */; };
+		4CE7BFD21C6D41A90020482F /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE7BFD11C6D41A90020482F /* Worker.swift */; };
+		4CE7BFD41C6D41C70020482F /* WorkerQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */; };
 		5005DEC51C625CA100D39F2C /* node_server in Resources */ = {isa = PBXBuildFile; fileRef = 5005DEC41C625CA100D39F2C /* node_server */; };
 		5005DEC71C63A3DF00D39F2C /* ServerAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */; };
 		50091C541C47EB6D003AD5D5 /* Starscream.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -21,12 +23,19 @@
 		501E6E731C1703C70068A44B /* Distributed_HashcrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E721C1703C70068A44B /* Distributed_HashcrackerTests.swift */; };
 		501E6E7E1C1703C70068A44B /* Distributed_HashcrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E7D1C1703C70068A44B /* Distributed_HashcrackerUITests.swift */; };
 		5086D94B1C5FD680008F7464 /* MessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5086D94A1C5FD680008F7464 /* MessageParser.swift */; };
+		5088E8901C74994C0065C39B /* PlotKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5088E88F1C74994C0065C39B /* PlotKit.framework */; };
+		5088E8911C74994C0065C39B /* PlotKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 5088E88F1C74994C0065C39B /* PlotKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5088E8941C7499F80065C39B /* PlotKit.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5088E8931C7499F80065C39B /* PlotKit.framework.dSYM */; };
+		5088E8961C749A1D0065C39B /* Starscream.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5088E8951C749A1D0065C39B /* Starscream.framework.dSYM */; };
+		5088E8A91C772BED0065C39B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088E8A81C772BED0065C39B /* Constants.swift */; };
+		5088E8AB1C7739200065C39B /* MasterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088E8AA1C7739200065C39B /* MasterOperation.swift */; };
+		5088E8AD1C7744170065C39B /* MasterWorkerOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088E8AC1C7744170065C39B /* MasterWorkerOperation.swift */; };
 		50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ADD84E1C28777E00E8DC42 /* LogViewController.swift */; };
 		50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CE1D261C5129BD00A61514 /* MessageQueue.swift */; };
 		50CE1D291C524C2F00A61514 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CE1D281C524C2F00A61514 /* Message.swift */; };
 		50E889811C6B500B00B854D5 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E889801C6B500B00B854D5 /* ChartViewController.swift */; };
 		50E889831C6B6E6000B854D5 /* ChartWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E889821C6B6E6000B854D5 /* ChartWindowController.swift */; };
-		50E889851C6CBCA700B854D5 /* LineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E889841C6CBCA700B854D5 /* LineChart.swift */; };
+		E4A335581C6B4E9B00044D17 /* WorkerOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A335571C6B4E9B00044D17 /* WorkerOperation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,9 +62,21 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				5088E8911C74994C0065C39B /* PlotKit.framework in Copy Frameworks */,
 				50091C541C47EB6D003AD5D5 /* Starscream.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5088E8921C7499A20065C39B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				5088E8941C7499F80065C39B /* PlotKit.framework.dSYM in CopyFiles */,
+				5088E8961C749A1D0065C39B /* Starscream.framework.dSYM in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -65,6 +86,8 @@
 		4C98B1A01C52893800E2641B /* CustomObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomObject.m; sourceTree = "<group>"; };
 		4C98B1A21C52894800E2641B /* CustomObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomObject.h; sourceTree = "<group>"; };
 		4C98B1A31C52895700E2641B /* HashStrategie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HashStrategie.swift; sourceTree = "<group>"; };
+		4CE7BFD11C6D41A90020482F /* Worker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
+		4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkerQueue.swift; sourceTree = "<group>"; };
 		5005DEC41C625CA100D39F2C /* node_server */ = {isa = PBXFileReference; lastKnownFileType = folder; path = node_server; sourceTree = "<group>"; };
 		5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerAddress.swift; sourceTree = "<group>"; };
 		50091C531C47EB6D003AD5D5 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
@@ -72,9 +95,9 @@
 		501E6E5D1C1703C70068A44B /* Distributed Hashcracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Distributed Hashcracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		501E6E601C1703C70068A44B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		501E6E621C1703C70068A44B /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		501E6E641C1703C70068A44B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		501E6E641C1703C70068A44B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "Distributed Hashcracker/Assets.xcassets"; sourceTree = "<group>"; };
 		501E6E671C1703C70068A44B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		501E6E691C1703C70068A44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		501E6E691C1703C70068A44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Distributed Hashcracker/Info.plist"; sourceTree = "<group>"; };
 		501E6E6E1C1703C70068A44B /* Distributed HashcrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Distributed HashcrackerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		501E6E721C1703C70068A44B /* Distributed_HashcrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Distributed_HashcrackerTests.swift; sourceTree = "<group>"; };
 		501E6E741C1703C70068A44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -82,12 +105,18 @@
 		501E6E7D1C1703C70068A44B /* Distributed_HashcrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Distributed_HashcrackerUITests.swift; sourceTree = "<group>"; };
 		501E6E7F1C1703C70068A44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5086D94A1C5FD680008F7464 /* MessageParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageParser.swift; sourceTree = "<group>"; };
+		5088E88F1C74994C0065C39B /* PlotKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PlotKit.framework; sourceTree = "<group>"; };
+		5088E8931C7499F80065C39B /* PlotKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = PlotKit.framework.dSYM; sourceTree = "<group>"; };
+		5088E8951C749A1D0065C39B /* Starscream.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = Starscream.framework.dSYM; sourceTree = "<group>"; };
+		5088E8A81C772BED0065C39B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		5088E8AA1C7739200065C39B /* MasterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterOperation.swift; sourceTree = "<group>"; };
+		5088E8AC1C7744170065C39B /* MasterWorkerOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterWorkerOperation.swift; sourceTree = "<group>"; };
 		50ADD84E1C28777E00E8DC42 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		50CE1D261C5129BD00A61514 /* MessageQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageQueue.swift; sourceTree = "<group>"; };
 		50CE1D281C524C2F00A61514 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		50E889801C6B500B00B854D5 /* ChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		50E889821C6B6E6000B854D5 /* ChartWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartWindowController.swift; sourceTree = "<group>"; };
-		50E889841C6CBCA700B854D5 /* LineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChart.swift; sourceTree = "<group>"; };
+		E4A335571C6B4E9B00044D17 /* WorkerOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkerOperation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +124,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5088E8901C74994C0065C39B /* PlotKit.framework in Frameworks */,
 				50091C551C47EB88003AD5D5 /* Starscream.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -119,6 +149,7 @@
 		50091C4E1C47E5E8003AD5D5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5088E88F1C74994C0065C39B /* PlotKit.framework */,
 				50091C531C47EB6D003AD5D5 /* Starscream.framework */,
 			);
 			name = Frameworks;
@@ -133,6 +164,12 @@
 				50CE1D281C524C2F00A61514 /* Message.swift */,
 				5086D94A1C5FD680008F7464 /* MessageParser.swift */,
 				5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */,
+				5088E8AC1C7744170065C39B /* MasterWorkerOperation.swift */,
+				E4A335571C6B4E9B00044D17 /* WorkerOperation.swift */,
+				5088E8AA1C7739200065C39B /* MasterOperation.swift */,
+				4CE7BFD11C6D41A90020482F /* Worker.swift */,
+				4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */,
+				5088E8A81C772BED0065C39B /* Constants.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -140,6 +177,7 @@
 		501E6E541C1703C70068A44B = {
 			isa = PBXGroup;
 			children = (
+				5088E8971C749A3A0065C39B /* Supporting Files */,
 				5005DEC41C625CA100D39F2C /* node_server */,
 				50091C4E1C47E5E8003AD5D5 /* Frameworks */,
 				501E6E5F1C1703C70068A44B /* Distributed Hashcracker */,
@@ -162,13 +200,10 @@
 		501E6E5F1C1703C70068A44B /* Distributed Hashcracker */ = {
 			isa = PBXGroup;
 			children = (
-				50E889841C6CBCA700B854D5 /* LineChart.swift */,
 				50091C561C493790003AD5D5 /* Model */,
 				50ADD8501C28791100E8DC42 /* Controller */,
 				501E6E601C1703C70068A44B /* AppDelegate.swift */,
-				501E6E641C1703C70068A44B /* Assets.xcassets */,
 				501E6E661C1703C70068A44B /* Main.storyboard */,
-				501E6E691C1703C70068A44B /* Info.plist */,
 				4C98B1A01C52893800E2641B /* CustomObject.m */,
 				4C98B19F1C52893800E2641B /* Distributed Hashcracker-Bridging-Header.h */,
 				4C98B1A21C52894800E2641B /* CustomObject.h */,
@@ -194,6 +229,17 @@
 			path = "Distributed HashcrackerUITests";
 			sourceTree = "<group>";
 		};
+		5088E8971C749A3A0065C39B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5088E8951C749A1D0065C39B /* Starscream.framework.dSYM */,
+				5088E8931C7499F80065C39B /* PlotKit.framework.dSYM */,
+				501E6E641C1703C70068A44B /* Assets.xcassets */,
+				501E6E691C1703C70068A44B /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		50ADD8501C28791100E8DC42 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -216,6 +262,7 @@
 				501E6E5A1C1703C70068A44B /* Frameworks */,
 				501E6E5B1C1703C70068A44B /* Resources */,
 				50091C4F1C47E5FA003AD5D5 /* Copy Frameworks */,
+				5088E8921C7499A20065C39B /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -338,18 +385,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */,
+				4CE7BFD21C6D41A90020482F /* Worker.swift in Sources */,
+				E4A335581C6B4E9B00044D17 /* WorkerOperation.swift in Sources */,
 				4C98B1A41C52895700E2641B /* HashStrategie.swift in Sources */,
 				5086D94B1C5FD680008F7464 /* MessageParser.swift in Sources */,
 				50E889831C6B6E6000B854D5 /* ChartWindowController.swift in Sources */,
 				501E6E631C1703C70068A44B /* SettingsViewController.swift in Sources */,
-				50E889851C6CBCA700B854D5 /* LineChart.swift in Sources */,
+				5088E8A91C772BED0065C39B /* Constants.swift in Sources */,
 				50E889811C6B500B00B854D5 /* ChartViewController.swift in Sources */,
+				5088E8AB1C7739200065C39B /* MasterOperation.swift in Sources */,
 				50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */,
 				50CE1D291C524C2F00A61514 /* Message.swift in Sources */,
+				4CE7BFD41C6D41C70020482F /* WorkerQueue.swift in Sources */,
 				50091C581C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift in Sources */,
 				4C98B1A11C52893800E2641B /* CustomObject.m in Sources */,
 				501E6E611C1703C70068A44B /* AppDelegate.swift in Sources */,
 				5005DEC71C63A3DF00D39F2C /* ServerAddress.swift in Sources */,
+				5088E8AD1C7744170065C39B /* MasterWorkerOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

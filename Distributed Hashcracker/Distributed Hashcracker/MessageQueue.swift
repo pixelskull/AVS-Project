@@ -10,7 +10,7 @@ import Cocoa
 
 class MessageQueue {
 
-    let notificationCenter = NSNotificationCenter.defaultCenter()
+//    let notificationCenter = NSNotificationCenter.defaultCenter()
     var messages:[Message] = [Message]()
     
     static let sharedInstance = MessageQueue()
@@ -18,9 +18,7 @@ class MessageQueue {
     var read_semaphore = dispatch_semaphore_create(1)
     let write_semaphore = dispatch_semaphore_create(1)
     
-    init() {
-        notificationCenter.addObserver(self, selector: "put:", name: "putMessage", object: nil)
-    }
+    private init() {}
 
     /**
      appends new message to MessageQueue (Blocking)
@@ -62,7 +60,7 @@ class MessageQueue {
     */
     func notify(notificationName:String) {}
     
-    deinit {
-        notificationCenter.removeObserver(self)
-    }
+//    deinit {
+//        notificationCenter.removeObserver(self)
+//    }
 }
