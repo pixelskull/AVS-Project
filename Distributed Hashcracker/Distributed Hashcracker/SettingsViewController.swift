@@ -11,37 +11,82 @@ import Starscream
 
 class SettingsViewController: NSViewController {
 
-    @IBOutlet weak var isManager: NSButton!
+    @IBOutlet var isManager: NSButton!
     @IBOutlet var serverAdressField: NSTextField!
     @IBOutlet var passwordField: NSTextField!
     @IBOutlet var hashAlgorithmSelected: NSPopUpButton!
     
-    let socket = WebSocket(url: NSURL(string: "http://localhost:3000/")!)
+    var hashedPassword: String = ""
+    var hashAlgorithm: HashAlgorithm?
     let notificationCenter = NSNotificationCenter.defaultCenter()
-    
     let queue = NSOperationQueue()
-    
+    var task = NSTask()
     
     private func prepareMasterInterface() {
-        serverAdressField.stringValue = "127.0.0.1"
         serverAdressField.enabled = false
         passwordField.enabled = true
+        hashAlgorithmSelected.enabled = true
         
-        notificationCenter.postNotificationName("updateLog", object: "this Mac is now Master")
+        
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "this Mac is now Master")
+        
+        let hostName = NSHost.currentHost().name
+        if hostName!.characters.count <= 40 {
+            serverAdressField.stringValue = hostName!
+        } else {
+            let validIPs = getValidIPs(NSHost.currentHost().addresses, show_ipV6: false)
+            for ip in validIPs {
+                serverAdressField.stringValue += ip + ", "
+            }
+        }
     }
     
     private func prepareWorkerInterface() {
         serverAdressField.stringValue = ""
         serverAdressField.enabled = true
         passwordField.enabled = false
+        hashAlgorithmSelected.enabled = false
         
-        notificationCenter.postNotificationName("updateLog", object: "this Mac is now Worker")
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "this Mac is now Worker")
     }
     
-    private func startBackgroundOperation() {
-        let backgroundOperation = WebSocketBackgroundOperation()
-        queue.addOperation(backgroundOperation)
-        backgroundOperation.completionBlock = { print("operation finished") }
+    private func startWorkerBackgroundOperation() {
+        let workerOperation = WorkerOperation()
+        workerOperation.completionBlock = {
+            self.notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "WorkerOperation finished")
+        }
+        startBackgroundOperation(workerOperation)
+    }
+    
+    private func startMasterBackgroundOperation() {
+        let masterOperation = MasterOperation(targetHash: hashedPassword, selectedAlgorithm: String(hashAlgorithmSelected.titleOfSelectedItem))
+        masterOperation.completionBlock = {
+            self.notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "MasterOperation finished")
+        }
+        startBackgroundOperation(masterOperation)
+    }
+    
+    private func startWebsocketBackgroundOperation() {
+        let host:String
+        if serverAdressField.stringValue.containsString(",") {
+            host = serverAdressField.stringValue.componentsSeparatedByString(", ").first!
+        } else {
+            host = serverAdressField.stringValue
+        }
+        let webSocketOperation = WebSocketBackgroundOperation(host: host)
+        webSocketOperation.completionBlock = {
+            self.notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "WebsocketOperation finished")
+        }
+        startBackgroundOperation(webSocketOperation)
+    }
+    
+    private func startBackgroundOperation(operation:NSOperation) {
+        queue.addOperation(operation)
     }
     
     @IBAction func isServerButtonPressed(sender: NSButton) {
@@ -52,57 +97,96 @@ class SettingsViewController: NSViewController {
     @IBAction func StartButtonPressed(sender: NSButton) {
         if sender.state == NSOnState {
             
-            var hashAlgorith: HashAlgorith?
-            
-            NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
-            
-            var hashedPassword: String = ""
-            
-            print(passwordField.stringValue)
-            print(hashAlgorithmSelected.titleOfSelectedItem!)
+            var hashAlgorithm: HashAlgorithm?
+            notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "Selected Hash-Algorithm: " + hashAlgorithmSelected.titleOfSelectedItem!)
             
             switch hashAlgorithmSelected.titleOfSelectedItem!{
             case "MD5":
-                hashAlgorith = HashMD5()
-                hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
-                print(hashedPassword)
-                //print(hashAlgorith.hash(string: passwordField.stringValue))
-                
+                hashAlgorithm = HashMD5()
+                hashedPassword = hashAlgorithm!.hash(string: passwordField.stringValue)
             case "SHA-128":
-                hashAlgorith = HashSHA()
-                hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
-                print(hashedPassword)
-                
+                hashAlgorithm = HashSHA()
+                hashedPassword = hashAlgorithm!.hash(string: passwordField.stringValue)
             case "SHA-256":
-                hashAlgorith = HashSHA256()
-                hashedPassword = hashAlgorith!.hash(string: passwordField.stringValue)
-                print(hashedPassword)
-                
+                hashAlgorithm = HashSHA256()
+                hashedPassword = hashAlgorithm!.hash(string: passwordField.stringValue)
             default:
                 hashedPassword = "Password not successfully hashed"
-                print("Password not successfully hashed");
                 break
-                
             }
             
-            NSNotificationCenter.defaultCenter().postNotificationName("updateLog", object: "Hash of the password: " + hashedPassword)
+            startWebsocketBackgroundOperation()
             
-            startBackgroundOperation()
+            notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "Hash of the password: " + hashedPassword)
+            
+            if isManager.state == NSOnState {
+                if task.running {
+                    task.terminate()
+                    task.waitUntilExit()
+                }
+                
+                let resourcePath = NSBundle.mainBundle().resourcePath!
+                let serverPath = resourcePath+"/node_server/server.js"
+                let launchPath = "/usr/local/bin/node"
+                
+                task = NSTask.launchedTaskWithLaunchPath(launchPath, arguments: [serverPath])
+                sleep(2)
+                startMasterBackgroundOperation()
+            } else { startWorkerBackgroundOperation() }
             
         } else {
-            notificationCenter.postNotificationName("stopWebSocketOperation", object: nil)
+            notificationCenter.postNotificationName(Constants.NCValues.stopWebSocket,
+                object: nil)
+            if isManager.state == NSOnState {
+                notificationCenter.postNotificationName(Constants.NCValues.stopMaster,
+                    object: nil)
+            } else {
+                notificationCenter.postNotificationName(Constants.NCValues.stopWorker,
+                    object: nil)
+            }
         }
+    }
+    
+    func getValidIPs(addresses:[String], show_ipV4:Bool = true, show_ipV6:Bool = true) -> [String] {
+        return addresses.filter({ address -> Bool in
+            let sAddress = ServerIP(address: address)
+            
+            if !sAddress.isLocalHost() {
+                if sAddress.isIPV4() && show_ipV4{
+                    return true
+                } else if sAddress.isIPV6() && show_ipV6 {
+                    return true
+                }
+            }
+            return false
+        })
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        passwordField.enabled = false
+        hashAlgorithmSelected.enabled = false
+        
+        let notificationName = Constants.NCValues.stopServer
+        notificationCenter.addObserver(self,
+            selector: "stopServerTask:",
+            name: notificationName,
+            object: nil)
     }
-
-    override var representedObject: AnyObject? {
-        didSet {
-        // Update the view, if already loaded.
-        }
+    
+    
+    func stopServerTask(notification:NSNotification) {
+        print("terminating server task")
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "terminating server task")
+        task.terminate()
+        task.waitUntilExit()
+    }
+    
+    deinit {
+        notificationCenter.removeObserver(self)
     }
 }
 

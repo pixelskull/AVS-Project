@@ -1,0 +1,10 @@
+framework module PlotKit {
+  umbrella header "PlotKit.h"
+
+  export *
+  module * { export * }
+}
+
+module PlotKit.Swift {
+    header "PlotKit-Swift.h"
+}
