@@ -96,16 +96,18 @@ class WorkerOperation:MasterWorkerOperation {
     func setupConfig(message:ExtendedMessage){
         print("setupConfig")
         
+//        algorithm = "MD5"
+//        target = "Test"
+        
         let workerQueue = WorkerQueue.sharedInstance
         
         let workerID = message.values["worker_id"]!
+        target = message.values["target"]!
+        algorithm = message.values["algorithm"]!
         
         let ownClientWorker = Worker(id: workerID, status: .Aktive)
         
         workerQueue.put(ownClientWorker)
-        
-        algorithm = "MD5"
-        target = "Test"
         
         //Send finishedWorkMessage
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
@@ -127,26 +129,23 @@ class WorkerOperation:MasterWorkerOperation {
         
         let passwordArray: [String] = (message.values["hashes"]?.componentsSeparatedByString(","))!
         
-        var hashedPassword:String = ""
         var hashAlgorithm: HashAlgorithm?
         
         switch algorithm {
         case "MD5":
             hashAlgorithm = HashMD5()
-            hashedPassword = hashAlgorithm!.hash(string: target)
         case "SHA-128":
             hashAlgorithm = HashSHA()
-            hashedPassword = hashAlgorithm!.hash(string: target)
         case "SHA-256":
             hashAlgorithm = HashSHA256()
-            hashedPassword = hashAlgorithm!.hash(string: target)
         default:
-            hashedPassword = "Password not successfully hashed"
+            hashAlgorithm = HashMD5()
+            print("Selected Hashalgorithm not found - Default HashMD5 selected")
             break
         }
         
-        if(compareHash(hashAlgorithm!, passwordArray: passwordArray, hashedPassword: hashedPassword)){
-            let hitTargetHashValues: [String:String] = ["hash": hashedPassword, "password": crackedPassword, "time_needed": "ka", "worker_id": workerID!]
+        if(compareHash(hashAlgorithm!, passwordArray: passwordArray, hashedPassword: target)){
+            let hitTargetHashValues: [String:String] = ["hash": target, "password": crackedPassword, "time_needed": "ka", "worker_id": workerID!]
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                 object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
             

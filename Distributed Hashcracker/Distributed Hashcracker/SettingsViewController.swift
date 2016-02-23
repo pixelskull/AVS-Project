@@ -59,7 +59,10 @@ class SettingsViewController: NSViewController {
                 object: "WorkerOperation finished")
         }
         startBackgroundOperation(workerOperation)
+        
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.newClientRegistration, value: NSHost.currentHost().name!))
     }
+    
     
     private func startMasterBackgroundOperation() {
         let masterOperation = MasterOperation(targetHash: hashedPassword, selectedAlgorithm: String(hashAlgorithmSelected.titleOfSelectedItem))
