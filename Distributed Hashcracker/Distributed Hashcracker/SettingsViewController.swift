@@ -60,7 +60,9 @@ class SettingsViewController: NSViewController {
         }
         startBackgroundOperation(workerOperation)
         
+        
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.newClientRegistration, value: NSHost.currentHost().name!))
+        
     }
     
     
