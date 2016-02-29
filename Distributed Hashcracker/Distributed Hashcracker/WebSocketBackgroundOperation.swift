@@ -127,6 +127,10 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     
     func websocketDidReceiveMessage(socket: WebSocket, text: String) {
         print("got some text: \(text)")
+        
+        /*ToDo: Überprüfen ob die Message für Client (worker_id from message == NSHost.currentHost().name! && Message.status == message for worker) oder für Server (isManager.state == NSOnState && Message.status == message for master) relevant ist
+        */
+
         if let newMessage = jsonParser.createMessageFromJSONString(text) {
             messageQueue.put(newMessage)
         }

@@ -116,6 +116,13 @@ class MasterOperation:MasterWorkerOperation {
         
         let workerQueue = WorkerQueue.sharedInstance
         
+        
+        if(workerQueue.workerQueue.count == 0){
+            dispatch_async(dispatch_get_main_queue()) {
+               self.generateNewWorkBlog()
+            }
+        }
+        
         let newWorker = Worker(id: workerID, status: .Aktive)
         
         workerQueue.put(newWorker)
@@ -188,9 +195,11 @@ class MasterOperation:MasterWorkerOperation {
     func finishedWork(message:BasicMessage){
         print("finishedWork")
         
+        let workBlogQueue = WorkBlogQueue.sharedInstance
+        
         let workerID = message.value
         
-        let newWorkBlog = generateNewWorkBlog()
+        let newWorkBlog = workBlogQueue.getFirstWorkBlog()!.value
         
         //Send setupConfigurationMessage
         let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
@@ -232,11 +241,71 @@ class MasterOperation:MasterWorkerOperation {
         return messageQueue.get()
     }
     
-    func generateNewWorkBlog() -> String{
+    func generateNewWorkBlog(){
         
-        let newWorkBlogString = "bla,blub,bli,test,Test,foo"
+        var workBlogID:Int = 1
         
-        return newWorkBlogString
+        let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        
+        var tempArray:[String] = charArray
+        
+        let workBlogQueue = WorkBlogQueue.sharedInstance
+        
+        //let newWorkBlogString = "bla,blub,bli,test,Test,foo"
+
+        func appendToArrayFirstTime(array:[String], toAppend:[String]){
+            var tmpArray:[String] = [String]()
+            
+            for char in toAppend {
+                tmpArray += array.map({ return $0 + char })
+                
+            }
+            
+            let firstWorkArray = charArray + tmpArray
+            
+            let firstWorkBlog = WorkBlog(id: String(workBlogID), value: firstWorkArray)
+            
+            ++workBlogID
+            
+            workBlogQueue.put(firstWorkBlog)
+            
+            tempArray = firstWorkArray
+        }
+        
+        func appendToArray(array:[String], toAppend:[String]){
+            var tmpArray:[String] = [String]()
+            
+            var index: Int = 0
+            
+            for char in toAppend {
+                
+                if(index < 5000){
+                    tmpArray += array.map({ return $0 + char })
+                    ++index
+                }
+                else{
+                    tmpArray += array.map({ return $0 + char })
+                    let newWorkBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
+                    workBlogQueue.put(newWorkBlog)
+                    index = 0
+                    ++workBlogID
+                }
+            }
+            
+            tempArray = tmpArray
+        }
+
+        
+        for var index = 0; index < 9; ++index{
+            
+            if(index == 0){
+                appendToArrayFirstTime(tempArray, toAppend: charArray)
+            }
+           else{
+                appendToArray(tempArray, toAppend: charArray)
+            }
+        }
+        
     }
     
     func stopMasterOperation(notification:NSNotification) {

@@ -102,9 +102,10 @@ class WorkerOperation:MasterWorkerOperation {
         
         let workerQueue = WorkerQueue.sharedInstance
         
-        let workerID = message.values["worker_id"]!
+        worker_id = message.values["worker_id"]!
         algorithm = message.values["algorithm"]!
         target = message.values["target"]!
+        algorithm = message.values["algorithm"]!
         
         let ownClientWorker = Worker(id: worker_id, status: .Aktive)
         
