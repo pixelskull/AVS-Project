@@ -59,16 +59,16 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
             */
 
             //Test send alive message
-            /*
+
             let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip04.local"))
             socket.writeString(jsonStringNewClient!)
-            */
+
 //            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: "Are you alive"))
 //            socket.writeString(jsonStringAlive!)
 //
-//            let jsonStringFinishedWork = jsonParser.createJSONStringFromMessage(BasicMessage(status: .finishedWork, value: "I have done my work"))
-//            socket.writeString(jsonStringFinishedWork!)
-//            
+            let jsonStringFinishedWork = jsonParser.createJSONStringFromMessage(BasicMessage(status: .finishedWork, value: "I have done my work"))
+            socket.writeString(jsonStringFinishedWork!)
+//
 //            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip03.local"))
 //            socket.writeString(jsonStringNewClient!)
 //            
