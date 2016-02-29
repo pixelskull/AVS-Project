@@ -225,7 +225,7 @@ class MasterOperation:MasterWorkerOperation {
     }
     
     /*
-    Hepler functions
+    Helper functions
     */
     
     func getMessageFromQueue() -> Message? {

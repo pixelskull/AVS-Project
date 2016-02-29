@@ -106,13 +106,13 @@ class WorkerOperation:MasterWorkerOperation {
         algorithm = message.values["algorithm"]!
         target = message.values["target"]!
         
-        let ownClientWorker = Worker(id: workerID, status: .Aktive)
+        let ownClientWorker = Worker(id: worker_id, status: .Aktive)
         
         workerQueue.put(ownClientWorker)
         
         //Send finishedWorkMessage
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: BasicMessage(status: MessagesHeader.finishedWork, value: workerID))
+            object: BasicMessage(status: MessagesHeader.finishedWork, value: worker_id))
     }
     
     /**
@@ -152,15 +152,13 @@ class WorkerOperation:MasterWorkerOperation {
         switch algorithm {
         case "MD5":
             hashAlgorithm = HashMD5()
-            hashedPassword = hashAlgorithm!.hash(string: target)
         case "SHA-128":
             hashAlgorithm = HashSHA()
-            hashedPassword = hashAlgorithm!.hash(string: target)
         case "SHA-256":
             hashAlgorithm = HashSHA256()
-            hashedPassword = hashAlgorithm!.hash(string: target)
         default:
-            hashedPassword = "Password not successfully hashed"
+            hashAlgorithm = HashMD5()
+            print("Selected Hashalgorithm not found - Default HashMD5 selected")
             break
         }
         */

@@ -14,7 +14,7 @@ Aus diesem Zitat lässt sich unter anderem entnehmen, dass bei einem verteilten 
 Nach \citep{tanenbaum} verfolgt ein verteiltes System zudem folgende Ziele: 
 \begin{itemize}
 	\item \textbf{Ein verteiltes System sollte Ressourcen leicht verfügbar machen.}
-	Die einfache Verfügbarkeit von Ressourcen innerhalb ist nach Aussage des Autors das Hauptziel eines verteilten Systems. Als Ressource kann dabei alles angesehen werden, was sich innerhalb des verteilten Systems befindet. Dies kann beispielsweise eine Datei, ein Drucker, Speichergeräte oder ähnliches sein. 
+	Die einfache Verfügbarkeit von Ressourcen innerhalb der Systemkomponenten ist nach Aussage des Autors das Hauptziel eines verteilten Systems. Als Ressource kann dabei alles angesehen werden, was sich innerhalb des verteilten Systems befindet. Dies kann beispielsweise eine Datei, ein Drucker, Speichergeräte oder ähnliches sein. 
 	\item \textbf{Es sollte die Tatsache vernünftig verbergen, dass Ressourcen über ein Netzwerk verteilt sind.}
 	Das System soll sich bei der Benutzung so anfühlen, als würde es nur auf einem einzigen Rechner arbeiten. Die Tatsache, dass verschiedene Komponenten in einem Netz verteilt sind, soll für den Anwender nicht bemerkbar sein.
 	\item \textbf{Es sollte offen sein.}
@@ -27,7 +27,7 @@ In der rezitierten Literatur werden drei Faktoren genannt, mit denen die Skalier
 \label{Voraussetzungen}
 In diesem Abschnitt wird die soft- und hardwareseitigen Basis des Projekts vorgestellt. 
 \subsection{Hardwarebasis}
-Das verteilte System wird auf einem Mac-Cluster implementiert, das von der Hochschule zur Verfügung gestellt wird. Es kann auf 10 Rechner zugegriffen werden, die mit \emph{pip02} bis \emph{pip11} gekennzeichnet sind. Auf allen Rechnern ist (Stand 18.12.2016) aktuellste Version des Betriebssystems El Capitain und der Entwicklungsumgebung Xcode installiert. Details zu den Softwareversionen sind in Kapitel \ref{softwarebasis} zu finden. \\
+Das verteilte System wird auf einem Mac-Cluster implementiert, das von der Hochschule zur Verfügung gestellt wird. Es kann auf 10 Rechner zugegriffen werden, die mit \emph{pip02} bis \emph{pip11} gekennzeichnet sind. Auf allen Rechnern ist (Stand 18.12.2015) aktuellste Version des Betriebssystems El Capitain und der Entwicklungsumgebung Xcode installiert. Details zu den Softwareversionen sind in Kapitel \ref{softwarebasis} zu finden. \\
 In der folgenden Liste sind die Details zu den einzelnen Rechnern zu finden:
 
 \begin{itemize}
@@ -124,6 +124,17 @@ Zur Versionierung des Programmcodes und zum vereinfachtem dezentralen Entwickeln
 
 Damit im Projekt weitere Frameworks mit wenig Aufwand eingesetzt werden können, hat das Projektteam sich entschieden \emph{Carthage}\footnote{\url{https://github.com/Carthage/Carthage}} einzusetzen. Carthage ist ein \enquote{einfacher, dezentraler Dependency-Manager} und wird quelloffen zur Verfügung gestellt. Durch die Auflösung von Abhängigkeiten, beispielsweise von bestimmten Frameworks, wird das asynchrone und dezentrale Entwickeln weiter optimiert. \\
 Als alternativer Dependency-Manager hätte sich das Werkzeug \emph{CocoaPods}\footnote{\url{https://github.com/CocoaPods/CocoaPods}} angeboten. Einer der großen Unterschiede in der Arbeitsweise der beiden Werkzeuge liegt in der Verwaltung der Dependencies. Während CocoaPods auf eine zentrale Verwaltung setzt, werden die Abhängigkeiten bei Carthage dezentral verwaltet. Durch die dezentrale Verwaltung wird unser Primärziel, das effektive kollaborative Arbeiten, besser abgedeckt. Zudem wird Carthage nicht so tief in das Entwicklungsprojekt in der Entwicklungsumgebung Xcode verwurzelt, als es bei CocoaPods der Fall wäre. Dadurch entsteht eine weniger starke Abhängigkeit von dem Werkzeug. Aus den genannten Gründen entschied das Projektteam sich gegen die Verwendung von CocoaPods. 
+
+
+%======================================================================
+%======================================================================
+% Eintraege ins Glossar
+\nomenclature{Master}{Instanz innerhalb des verteilten Systems, welche für die Verteilung der anfallenden Tätigkeiten verantwortlich ist.\vspace{4mm}}
+
+\nomenclature{Worker}{Instanz innerhalb des verteilten Systems, welche für die Bearbeitung der anfallenden Tätigkeiten verantwortlich ist.\vspace{4mm}}
+
+
+\nomenclature{Provider}{Synonym für den \emph{Master}.\vspace{4mm}}
 
 
 

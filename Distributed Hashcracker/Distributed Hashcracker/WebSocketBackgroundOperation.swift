@@ -17,8 +17,10 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     let notificationCenter = NSNotificationCenter.defaultCenter()
     let messageQueue = MessageQueue.sharedInstance
     let jsonParser = MessageParser()
+   
     
     init(host:String = "localhost", port:Int = 3000) {
+        print("----"+host+"---")
         socket = WebSocket(url: NSURL(string: "ws://\(host):\(port)")!)
         
         super.init()
@@ -36,6 +38,8 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
             selector: "sendMessage:",
             name: sendMessageNotificationName,
             object: nil)
+        
+        
     }
     
     override func main() {
@@ -43,18 +47,22 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         runloop: while true {
             if run == false { break runloop }
             
+            //sleep(5)
             
+            /*
             let newWorkBlog: [String:String] = ["Value1":"Test", "Value2":"Blub", "Value3":"Bla"]
             let hitTargetHash: [String:String] = ["Value1":"hash", "Value2":"password", "Value3":"time"]
             let setupConfig: [String:String] = ["algorith":"MD5", "target":"test", "worker_id":"Worker_1"]
+            */
             /*
             let newWorkBlog2: [String:String] = ["Value1":"Bla", "Value2":"Bli", "Value3":"Blu"]
             */
 
             //Test send alive message
-            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip03.local"))
+            /*
+            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip04.local"))
             socket.writeString(jsonStringNewClient!)
-            
+            */
 //            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: "Are you alive"))
 //            socket.writeString(jsonStringAlive!)
 //

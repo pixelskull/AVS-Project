@@ -89,7 +89,7 @@
 		4CE7BFD11C6D41A90020482F /* Worker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 		4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkerQueue.swift; sourceTree = "<group>"; };
 		5005DEC41C625CA100D39F2C /* node_server */ = {isa = PBXFileReference; lastKnownFileType = folder; path = node_server; sourceTree = "<group>"; };
-		5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerAddress.swift; sourceTree = "<group>"; };
+		5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerAddress.swift; path = "Distributed Hashcracker/ServerAddress.swift"; sourceTree = "<group>"; };
 		50091C531C47EB6D003AD5D5 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
 		50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketBackgroundOperation.swift; sourceTree = "<group>"; };
 		501E6E5D1C1703C70068A44B /* Distributed Hashcracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Distributed Hashcracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -163,7 +163,6 @@
 				50CE1D261C5129BD00A61514 /* MessageQueue.swift */,
 				50CE1D281C524C2F00A61514 /* Message.swift */,
 				5086D94A1C5FD680008F7464 /* MessageParser.swift */,
-				5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */,
 				5088E8AC1C7744170065C39B /* MasterWorkerOperation.swift */,
 				E4A335571C6B4E9B00044D17 /* WorkerOperation.swift */,
 				5088E8AA1C7739200065C39B /* MasterOperation.swift */,
@@ -177,6 +176,7 @@
 		501E6E541C1703C70068A44B = {
 			isa = PBXGroup;
 			children = (
+				5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */,
 				5088E8971C749A3A0065C39B /* Supporting Files */,
 				5005DEC41C625CA100D39F2C /* node_server */,
 				50091C4E1C47E5E8003AD5D5 /* Frameworks */,
