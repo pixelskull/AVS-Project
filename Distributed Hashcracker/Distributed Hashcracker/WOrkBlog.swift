@@ -16,7 +16,6 @@ class WorkBlog{
     
     init(id:String, value:[String]){
         self.id = id
-        //        self.ip = ip
         self.value = value
         
     }

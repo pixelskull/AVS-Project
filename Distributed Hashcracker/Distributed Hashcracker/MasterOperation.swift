@@ -199,7 +199,7 @@ class MasterOperation:MasterWorkerOperation {
         
         let workerID = message.value
         
-        let newWorkBlog = workBlogQueue.getFirstWorkBlog()!.value
+        let newWorkBlog = convertWorkBlogArrayToString(workBlogQueue.getFirstWorkBlog()!.value)
         
         //Send setupConfigurationMessage
         let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
@@ -306,6 +306,24 @@ class MasterOperation:MasterWorkerOperation {
             }
         }
         
+    }
+    
+    func convertWorkBlogArrayToString(workBlog:[String]) -> String{
+        
+        var counter=0
+        var workBlogString:String = ""
+        
+        for character in workBlog{
+            if(counter < workBlog.count){
+                workBlogString = workBlogString + character + ","
+                counter++
+            }
+            else{
+                workBlogString = workBlogString + character
+            }
+        }
+        
+        return workBlogString
     }
     
     func stopMasterOperation(notification:NSNotification) {
