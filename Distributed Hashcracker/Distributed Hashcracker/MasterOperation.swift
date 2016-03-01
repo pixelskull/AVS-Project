@@ -117,7 +117,7 @@ class MasterOperation:MasterWorkerOperation {
         
         print("Länge workerQueue: \(workerQueue.workerQueue.count)")
         
-        if(workerQueue.workerQueue.count >= 0){
+        if(workerQueue.workerQueue.count == 0){
             dispatch_async(dispatch_get_main_queue()) {
                print("generateNewWorkBlog")
                 
@@ -287,30 +287,24 @@ class MasterOperation:MasterWorkerOperation {
         func appendToArray(array:[String], toAppend:[String]){
             var tmpArray:[String] = [String]()
             
-            var index: Int = 0
-            
             for char in toAppend {
                 
-                if(index < 5000){
+                if(tmpArray.count < 5000){
                     tmpArray += array.map({ return $0 + char })
-                    ++index
+                    tempArray = tmpArray
                 }
                 else{
-                    tmpArray += array.map({ return $0 + char })
-                    
+                    tempArray = tmpArray
                     print("Current WorkArray: \(tmpArray)")
                     
                     let newWorkBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
                     workBlogQueue.put(newWorkBlog)
                     
                     print("Länge WorkBlogQueue:  \(workBlogQueue.workBlogQueue.count)")
-                    
-                    index = 0
+                    tmpArray = [String]()
                     ++workBlogID
                 }
             }
-            
-            tempArray = tmpArray
         }
 
         

@@ -121,8 +121,6 @@ class SettingsViewController: NSViewController {
                 break
             }
             
-            startWebsocketBackgroundOperation()
-            
             notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                 object: "Hash of the password: " + hashedPassword)
             
@@ -138,11 +136,14 @@ class SettingsViewController: NSViewController {
                 
                 task = NSTask.launchedTaskWithLaunchPath(launchPath, arguments: [serverPath])
                 sleep(2)
+                
                 startMasterBackgroundOperation()
                 
                 //simulated test
                 //startWorkerBackgroundOperation()
             } else { startWorkerBackgroundOperation() }
+            
+            startWebsocketBackgroundOperation()
             
         } else {
             notificationCenter.postNotificationName(Constants.NCValues.stopWebSocket,
