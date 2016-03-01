@@ -61,17 +61,21 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
 
             //Test send alive message
 
-            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip04.local"))
-            socket.writeString(jsonStringNewClient!)
-
-            
-            sleep(5)
+//            let jsonStringFinishedWork = jsonParser.createJSONStringFromMessage(BasicMessage(status: .finishedWork, value: "I have done my work"))
+//            socket.writeString(jsonStringFinishedWork!)
+//            
+//            sleep(5)
+//            
+//            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip04.local"))
+//            socket.writeString(jsonStringNewClient!)
+//
+//            
+//            sleep(5)
             
 //            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: "Are you alive"))
 //            socket.writeString(jsonStringAlive!)
 //
-            let jsonStringFinishedWork = jsonParser.createJSONStringFromMessage(BasicMessage(status: .finishedWork, value: "I have done my work"))
-            socket.writeString(jsonStringFinishedWork!)
+            
 //
 //            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip03.local"))
 //            socket.writeString(jsonStringNewClient!)
@@ -138,6 +142,8 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
 
         if let newMessage = jsonParser.createMessageFromJSONString(text) {
             messageQueue.put(newMessage)
+        } else {
+            print("failed to parse: \(text)")
         }
     }
 //    func websocketDidReceiveMessage(socket: WebSocket, text: String) {

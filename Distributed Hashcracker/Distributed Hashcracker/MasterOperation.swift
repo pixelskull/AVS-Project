@@ -295,7 +295,7 @@ class MasterOperation:MasterWorkerOperation {
                 }
                 else{
                     tempArray = tmpArray
-                    print("Current WorkArray: \(tmpArray)")
+                    print("New WorkArray")
                     
                     let newWorkBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
                     workBlogQueue.put(newWorkBlog)
