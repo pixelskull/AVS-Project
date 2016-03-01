@@ -61,6 +61,7 @@ class SettingsViewController: NSViewController {
                 object: "WorkerOperation finished")
         }
         startBackgroundOperation(workerOperation)
+        
     }
     
     
