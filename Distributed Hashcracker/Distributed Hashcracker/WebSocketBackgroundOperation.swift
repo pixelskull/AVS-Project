@@ -19,11 +19,12 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     let jsonParser = MessageParser()
     
     init(host:String = "localhost", port:Int = 3000) {
+        
         print("----"+host+"---")
         socket = WebSocket(url: NSURL(string: "ws://\(host):\(port)")!)
+        socket.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
         
         super.init()
-        socket.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
         socket.delegate = self
         
         let stopWSNotificationName = Constants.NCValues.stopWebSocket
@@ -119,12 +120,16 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         }
     }
     
+
     func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-        print("got some text: \(text)")
-        if let newMessage = jsonParser.createMessageFromJSONString(text) {
-            messageQueue.put(newMessage)
-        }
+        print("gjdkfbnsdklf")
     }
+//    func websocketDidReceiveMessage(socket: WebSocket, text: String) {
+//        print("got some text: \(text)")
+//        if let newMessage = jsonParser.createMessageFromJSONString(text) {
+//            messageQueue.put(newMessage)
+//        }
+//    }
     
     func stop(notification:NSNotification) {
         run = false

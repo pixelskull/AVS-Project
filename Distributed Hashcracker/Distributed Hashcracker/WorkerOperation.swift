@@ -101,17 +101,17 @@ class WorkerOperation:MasterWorkerOperation {
         
         let workerQueue = WorkerQueue.sharedInstance
         
-        let workerID = message.values["worker_id"]!
+        worker_id = message.values["worker_id"]!
         target = message.values["target"]!
         algorithm = message.values["algorithm"]!
         
-        let ownClientWorker = Worker(id: workerID, status: .Aktive)
+        let ownClientWorker = Worker(id: worker_id, status: .Aktive)
         
         workerQueue.put(ownClientWorker)
         
         //Send finishedWorkMessage
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: BasicMessage(status: MessagesHeader.finishedWork, value: workerID))
+            object: BasicMessage(status: MessagesHeader.finishedWork, value: worker_id))
     }
     
     /**
