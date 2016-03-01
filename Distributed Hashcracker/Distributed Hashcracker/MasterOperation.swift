@@ -23,6 +23,12 @@ class MasterOperation:MasterWorkerOperation {
             selector: "stopMasterOperation:",
             name: notificationName,
             object: nil)
+        
+        let timer = NSTimer.scheduledTimerWithTimeInterval(1.0,
+            target: self,
+            selector: "sendStillAlive",
+            userInfo: nil,
+            repeats: true)
     }
     
     convenience init(targetHash:String, selectedAlgorithm:String) {
@@ -92,6 +98,12 @@ class MasterOperation:MasterWorkerOperation {
         default:
             print("No matching extended header")
         }
+    }
+    
+    
+    func sendStillAlive() {
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+            object: BasicMessage(status: .stillAlive, value: ""))
     }
     
     

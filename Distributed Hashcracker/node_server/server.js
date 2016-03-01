@@ -36,11 +36,11 @@ wsServer.on('request', function(req) {
 
   var connection = req.accept('distributed_hashcracker_protocol', req.origin);
   console.log("NODE.JS::: " + (new Date()) + 'connection accepted.');
-            
+
   connections.push(connection)
-            
+
   connection.on('close', function() {
-        console.log(connection.remoteAddress + "disconnected")
+        console.log("NODE.JS::: " + connection.remoteAddress + " disconnected")
         var index = connections.indexOf(connection);
         if (index !== -1) {
             connections.splice(index, 1)

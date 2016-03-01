@@ -61,8 +61,8 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
 
             //Test send alive message
             
-            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: ""))
-            socket.writeString(jsonStringNewClient!)
+//            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: ""))
+//            socket.writeString(jsonStringNewClient!)
 
 //            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: "Are you alive"))
 //            socket.writeString(jsonStringAlive!)
