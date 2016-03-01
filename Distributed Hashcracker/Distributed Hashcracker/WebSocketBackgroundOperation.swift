@@ -64,6 +64,9 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
             let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip04.local"))
             socket.writeString(jsonStringNewClient!)
 
+            
+            sleep(5)
+            
 //            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: "Are you alive"))
 //            socket.writeString(jsonStringAlive!)
 //

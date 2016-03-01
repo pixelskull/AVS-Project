@@ -115,9 +115,12 @@ class MasterOperation:MasterWorkerOperation {
         
         let workerQueue = WorkerQueue.sharedInstance
         
+        print("Länge workerQueue: \(workerQueue.workerQueue.count)")
         
-        if(workerQueue.workerQueue.count == 0){
+        if(workerQueue.workerQueue.count >= 0){
             dispatch_async(dispatch_get_main_queue()) {
+               print("generateNewWorkBlog")
+                
                self.generateNewWorkBlog()
             }
         }
@@ -198,12 +201,18 @@ class MasterOperation:MasterWorkerOperation {
         
         let workerID = message.value
         
+        
+        if(workBlogQueue.workBlogQueue.count > 0){
         let newWorkBlog = convertWorkBlogArrayToString(workBlogQueue.getFirstWorkBlog()!.value)
         
         //Send setupConfigurationMessage
         let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
+        }
+        else{
+            print("Es ist momentan kein WorkBlog vorhanden")
+        }
     }
     
     func hashesPerTime(message:ExtendedMessage){
@@ -262,11 +271,15 @@ class MasterOperation:MasterWorkerOperation {
             
             let firstWorkArray = charArray + tmpArray
             
+            print("First Work Array: \(firstWorkArray)")
+            
             let firstWorkBlog = WorkBlog(id: String(workBlogID), value: firstWorkArray)
             
             ++workBlogID
             
             workBlogQueue.put(firstWorkBlog)
+            
+            print("Länge WorkBlogQueue:  \(workBlogQueue.workBlogQueue.count)")
             
             tempArray = firstWorkArray
         }
@@ -284,8 +297,14 @@ class MasterOperation:MasterWorkerOperation {
                 }
                 else{
                     tmpArray += array.map({ return $0 + char })
+                    
+                    print("Current WorkArray: \(tmpArray)")
+                    
                     let newWorkBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
                     workBlogQueue.put(newWorkBlog)
+                    
+                    print("Länge WorkBlogQueue:  \(workBlogQueue.workBlogQueue.count)")
+                    
                     index = 0
                     ++workBlogID
                 }
