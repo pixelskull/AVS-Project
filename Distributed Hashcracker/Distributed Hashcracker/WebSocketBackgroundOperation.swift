@@ -97,7 +97,9 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     
     func connect() { socket.connect() }
     
-    func websocketDidConnect(socket: WebSocket) { print("websocket is connected") }
+    func websocketDidConnect(socket: WebSocket) { print("websocket is connected")
+    notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.newClientRegistration, value: NSHost.currentHost().name!))
+    }
     
     func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
         print("websocket is disconnected: \(error?.localizedDescription)")

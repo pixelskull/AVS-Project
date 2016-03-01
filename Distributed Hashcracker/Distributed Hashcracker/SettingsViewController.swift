@@ -59,10 +59,6 @@ class SettingsViewController: NSViewController {
                 object: "WorkerOperation finished")
         }
         startBackgroundOperation(workerOperation)
-        
-        
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.newClientRegistration, value: NSHost.currentHost().name!))
-        
     }
     
     
@@ -121,8 +117,6 @@ class SettingsViewController: NSViewController {
                 break
             }
             
-            startWebsocketBackgroundOperation()
-            
             notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                 object: "Hash of the password: " + hashedPassword)
             
@@ -140,6 +134,9 @@ class SettingsViewController: NSViewController {
                 sleep(2)
                 startMasterBackgroundOperation()
             } else { startWorkerBackgroundOperation() }
+            
+            startWebsocketBackgroundOperation()
+    
             
         } else {
             notificationCenter.postNotificationName(Constants.NCValues.stopWebSocket,

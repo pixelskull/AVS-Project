@@ -15,8 +15,8 @@ class MessageQueue {
     
     static let sharedInstance = MessageQueue()
     
-    var read_semaphore = dispatch_semaphore_create(1)
-    let write_semaphore = dispatch_semaphore_create(1)
+    var read_semaphore = dispatch_semaphore_create(0)
+    let write_semaphore = dispatch_semaphore_create(0)
     
     private init() {}
 
