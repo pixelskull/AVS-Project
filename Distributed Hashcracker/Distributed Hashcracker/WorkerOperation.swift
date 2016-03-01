@@ -102,6 +102,7 @@ class WorkerOperation:MasterWorkerOperation {
         let workerQueue = WorkerQueue.sharedInstance
         
         worker_id = message.values["worker_id"]!
+        algorithm = message.values["algorithm"]!
         target = message.values["target"]!
         algorithm = message.values["algorithm"]!
         
