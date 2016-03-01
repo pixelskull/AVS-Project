@@ -8,7 +8,7 @@
 import Foundation
 import Starscream
 
-class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
+class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
 
     var socket: WebSocket
     
@@ -130,6 +130,8 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         let dataString = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
         if let newMessage = jsonParser.createMessageFromJSONString(dataString) {
             messageQueue.put(newMessage)
+        } else {
+            print(NSString(data: data, encoding: NSUTF8StringEncoding))
         }
     }
     

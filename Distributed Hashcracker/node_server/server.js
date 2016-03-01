@@ -10,6 +10,11 @@ var server = http.createServer(function(req, res) {
   res.end();
 });
 
+var connections = [];
+
+
+
+
 server.listen(conf.port, function() {
   console.log("NODE.JS::: " + (new Date()) + ' Server is listening on port ' + conf.port);
 });
@@ -31,15 +36,31 @@ wsServer.on('request', function(req) {
 
   var connection = req.accept('distributed_hashcracker_protocol', req.origin);
   console.log("NODE.JS::: " + (new Date()) + 'connection accepted.');
+            
+  connections.push(connection)
+            
+  connection.on('close', function() {
+        console.log(connection.remoteAddress + "disconnected")
+        var index = connections.indexOf(connection);
+        if (index !== -1) {
+            connections.splice(index, 1)
+        }
+  })
 
   connection.on('message', function(message) {
-    if (message.type === 'utf8') {
+        if (message.type === 'utf8') {
             console.log("NODE.JS::: Received Message: " + message.utf8Data);
-            connection.sendUTF(message.utf8Data);
+            //connection.sendUTF(message.utf8Data);
+            connections.forEach(function(destination) {
+                destination.sendUTF(message.utf8Data);
+            });
         }
         else if (message.type === 'binary') {
             console.log("NODE.JS::: Received Binary Message of ' + message.binaryData.length + ' bytes");
-            connection.sendBytes(message.binaryData);
+            //connection.sendBytes(message.binaryData);
+            connections.forEach(function(destination) {
+                destination.sendUTF(message.utf8Data);
+            });
         }
   });
 });

@@ -46,7 +46,7 @@ class WorkerOperation:MasterWorkerOperation {
                 //print("No message in the queue")
             }
         }
-        sleep(1)
+//        sleep(1)
         run = true
     }
     
