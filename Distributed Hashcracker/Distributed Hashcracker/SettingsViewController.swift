@@ -80,7 +80,11 @@ class SettingsViewController: NSViewController {
         } else {
             host = serverAdressField.stringValue
         }
-        let webSocketOperation = WebSocketBackgroundOperation(host: host)
+        
+        let webSocketOperation:WebSocketBackgroundOperation
+        
+        if(isManager.state == NSOnState){
+            webSocketOperation = WebSocketBackgroundOperation(host: host, master: true)
 //        if let url = NSURL(string: host) {
 //            socket = WebSocket(url: url)
 //            socket!.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
@@ -89,7 +93,9 @@ class SettingsViewController: NSViewController {
 //        } else {
 //            print("error while creating Websocket")
 //        }
-        
+        } else{
+            webSocketOperation = WebSocketBackgroundOperation(host: host, master: false)
+        }
         webSocketOperation.completionBlock = {
             self.notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                 object: "WebsocketOperation finished")
@@ -143,8 +149,13 @@ class SettingsViewController: NSViewController {
                 
                 task = NSTask.launchedTaskWithLaunchPath(launchPath, arguments: [serverPath])
                 sleep(2)
+                
                 startMasterBackgroundOperation()
+                
+                //simulated test
+                //startWorkerBackgroundOperation()
             } else { startWorkerBackgroundOperation() }
+            
             
             startWebsocketBackgroundOperation()
     

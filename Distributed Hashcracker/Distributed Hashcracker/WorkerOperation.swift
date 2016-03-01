@@ -102,6 +102,7 @@ class WorkerOperation:MasterWorkerOperation {
         let workerQueue = WorkerQueue.sharedInstance
         
         worker_id = message.values["worker_id"]!
+        algorithm = message.values["algorithm"]!
         target = message.values["target"]!
         algorithm = message.values["algorithm"]!
         
@@ -139,12 +140,30 @@ class WorkerOperation:MasterWorkerOperation {
         case "SHA-256":
             hashAlgorithm = HashSHA256()
         default:
+            print("Selected hash algorithm wasn't found: Default hash algorithm MD5 has been set")
+            hashAlgorithm = HashMD5()
+            break
+        }
+        
+        /*
+        var hashedPassword:String = ""
+        var hashAlgorithm: HashAlgorithm?
+        
+        switch algorithm {
+        case "MD5":
+            hashAlgorithm = HashMD5()
+        case "SHA-128":
+            hashAlgorithm = HashSHA()
+        case "SHA-256":
+            hashAlgorithm = HashSHA256()
+        default:
             hashAlgorithm = HashMD5()
             print("Selected Hashalgorithm not found - Default HashMD5 selected")
             break
         }
+        */
         
-        if(compareHash(hashAlgorithm!, passwordArray: passwordArray, hashedPassword: target)){
+        if(compareHash(hashAlgorithm!, passwordArray: passwordArray, targetHash: target)){
             let hitTargetHashValues: [String:String] = ["hash": target, "password": crackedPassword, "time_needed": "ka", "worker_id": workerID!]
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                 object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
@@ -189,14 +208,14 @@ class WorkerOperation:MasterWorkerOperation {
         return messageQueue.get()
     }
     
-    func compareHash(hashAlgorithm: HashAlgorithm, passwordArray:[String], hashedPassword: String) -> Bool{
+    func compareHash(hashAlgorithm: HashAlgorithm, passwordArray:[String], targetHash: String) -> Bool{
         
         for password in passwordArray{
             
             let hashedPasswordFromArray = hashAlgorithm.hash(string: password)
             
-            if(hashedPasswordFromArray == hashedPassword){
-                print("Found the searched password! \(hashedPasswordFromArray) == \(hashedPassword) -> Password = \(password) (\(target))")
+            if(hashedPasswordFromArray == targetHash){
+                print("Found the searched password! \(hashedPasswordFromArray) == \(targetHash) -> Password = \(password) (\(target))")
                 crackedPassword = password
                 return true
             }
