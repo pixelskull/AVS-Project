@@ -17,6 +17,7 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
     let notificationCenter = NSNotificationCenter.defaultCenter()
     let messageQueue = MessageQueue.sharedInstance
     let jsonParser = MessageParser()
+   
     
     init(host:String = "localhost", port:Int = 3000) {
         
@@ -38,6 +39,8 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
             selector: "sendMessage:",
             name: sendMessageNotificationName,
             object: nil)
+        
+        
     }
     
     override func main() {
@@ -45,25 +48,28 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         runloop: while true {
             if run == false { break runloop }
             
+            //sleep(5)
             
+            /*
             let newWorkBlog: [String:String] = ["Value1":"Test", "Value2":"Blub", "Value3":"Bla"]
             let hitTargetHash: [String:String] = ["Value1":"hash", "Value2":"password", "Value3":"time"]
             let setupConfig: [String:String] = ["algorith":"MD5", "target":"test", "worker_id":"Worker_1"]
+            */
             /*
             let newWorkBlog2: [String:String] = ["Value1":"Bla", "Value2":"Bli", "Value3":"Blu"]
             */
 
             //Test send alive message
-            /*
-            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip03.local"))
+
+            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip04.local"))
             socket.writeString(jsonStringNewClient!)
-            */
+
 //            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: "Are you alive"))
 //            socket.writeString(jsonStringAlive!)
 //
-//            let jsonStringFinishedWork = jsonParser.createJSONStringFromMessage(BasicMessage(status: .finishedWork, value: "I have done my work"))
-//            socket.writeString(jsonStringFinishedWork!)
-//            
+            let jsonStringFinishedWork = jsonParser.createJSONStringFromMessage(BasicMessage(status: .finishedWork, value: "I have done my work"))
+            socket.writeString(jsonStringFinishedWork!)
+//
 //            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip03.local"))
 //            socket.writeString(jsonStringNewClient!)
 //            
@@ -85,7 +91,7 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
             */
             
 
-            sleep(1)
+            sleep(10)
         }
         run = true
     }

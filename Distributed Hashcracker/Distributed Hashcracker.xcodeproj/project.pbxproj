@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C3F3EB81C845B6900F837DB /* WorkBlogQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */; };
+		4C3F3EBC1C84602900F837DB /* WorkBlog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EBB1C84602900F837DB /* WorkBlog.swift */; };
 		4C98B1A11C52893800E2641B /* CustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A01C52893800E2641B /* CustomObject.m */; };
 		4C98B1A41C52895700E2641B /* HashStrategie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A31C52895700E2641B /* HashStrategie.swift */; };
 		4CE7BFD21C6D41A90020482F /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE7BFD11C6D41A90020482F /* Worker.swift */; };
@@ -82,6 +84,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkBlogQueue.swift; sourceTree = "<group>"; };
+		4C3F3EBB1C84602900F837DB /* WorkBlog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkBlog.swift; sourceTree = "<group>"; };
 		4C98B19F1C52893800E2641B /* Distributed Hashcracker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Distributed Hashcracker-Bridging-Header.h"; sourceTree = "<group>"; };
 		4C98B1A01C52893800E2641B /* CustomObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomObject.m; sourceTree = "<group>"; };
 		4C98B1A21C52894800E2641B /* CustomObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomObject.h; sourceTree = "<group>"; };
@@ -89,7 +93,7 @@
 		4CE7BFD11C6D41A90020482F /* Worker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 		4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkerQueue.swift; sourceTree = "<group>"; };
 		5005DEC41C625CA100D39F2C /* node_server */ = {isa = PBXFileReference; lastKnownFileType = folder; path = node_server; sourceTree = "<group>"; };
-		5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerAddress.swift; sourceTree = "<group>"; };
+		5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerAddress.swift; path = "Distributed Hashcracker/ServerAddress.swift"; sourceTree = "<group>"; };
 		50091C531C47EB6D003AD5D5 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
 		50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketBackgroundOperation.swift; sourceTree = "<group>"; };
 		501E6E5D1C1703C70068A44B /* Distributed Hashcracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Distributed Hashcracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -170,6 +174,8 @@
 				4CE7BFD11C6D41A90020482F /* Worker.swift */,
 				4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */,
 				5088E8A81C772BED0065C39B /* Constants.swift */,
+				4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */,
+				4C3F3EBB1C84602900F837DB /* WorkBlog.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -177,6 +183,7 @@
 		501E6E541C1703C70068A44B = {
 			isa = PBXGroup;
 			children = (
+				5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */,
 				5088E8971C749A3A0065C39B /* Supporting Files */,
 				5005DEC41C625CA100D39F2C /* node_server */,
 				50091C4E1C47E5E8003AD5D5 /* Frameworks */,
@@ -385,6 +392,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */,
+				4C3F3EB81C845B6900F837DB /* WorkBlogQueue.swift in Sources */,
 				4CE7BFD21C6D41A90020482F /* Worker.swift in Sources */,
 				E4A335581C6B4E9B00044D17 /* WorkerOperation.swift in Sources */,
 				4C98B1A41C52895700E2641B /* HashStrategie.swift in Sources */,
@@ -395,6 +403,7 @@
 				50E889811C6B500B00B854D5 /* ChartViewController.swift in Sources */,
 				5088E8AB1C7739200065C39B /* MasterOperation.swift in Sources */,
 				50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */,
+				4C3F3EBC1C84602900F837DB /* WorkBlog.swift in Sources */,
 				50CE1D291C524C2F00A61514 /* Message.swift in Sources */,
 				4CE7BFD41C6D41C70020482F /* WorkerQueue.swift in Sources */,
 				50091C581C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift in Sources */,

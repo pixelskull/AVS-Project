@@ -60,7 +60,9 @@ class SettingsViewController: NSViewController {
         }
         startBackgroundOperation(workerOperation)
         
+        
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.newClientRegistration, value: NSHost.currentHost().name!))
+        
     }
     
     
@@ -137,6 +139,9 @@ class SettingsViewController: NSViewController {
                 task = NSTask.launchedTaskWithLaunchPath(launchPath, arguments: [serverPath])
                 sleep(2)
                 startMasterBackgroundOperation()
+                
+                //simulated test
+                //startWorkerBackgroundOperation()
             } else { startWorkerBackgroundOperation() }
             
         } else {
