@@ -102,8 +102,8 @@ class MasterOperation:MasterWorkerOperation {
     
     
     func sendStillAlive() {
-//        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-//            object: BasicMessage(status: .stillAlive, value: ""))
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+            object: BasicMessage(status: .stillAlive, value: ""))
     }
     
     
