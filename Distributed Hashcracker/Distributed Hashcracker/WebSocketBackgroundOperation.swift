@@ -8,7 +8,7 @@
 import Foundation
 import Starscream
 
-class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
+class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
 
     var socket: WebSocket
     
@@ -20,6 +20,7 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
    
     
     init(host:String = "localhost", port:Int = 3000) {
+//        super.init()
         print("----"+host+"---")
         socket = WebSocket(url: NSURL(string: "ws://\(host):\(port)")!)
         
@@ -59,10 +60,10 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
             */
 
             //Test send alive message
-            /*
-            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip04.local"))
+            
+            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: ""))
             socket.writeString(jsonStringNewClient!)
-            */
+
 //            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: "Are you alive"))
 //            socket.writeString(jsonStringAlive!)
 //
@@ -122,6 +123,8 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         let dataString = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
         if let newMessage = jsonParser.createMessageFromJSONString(dataString) {
             messageQueue.put(newMessage)
+        } else {
+            print(NSString(data: data, encoding: NSUTF8StringEncoding))
         }
     }
     
@@ -129,6 +132,8 @@ class WebSocketBackgroundOperation:NSOperation, WebSocketDelegate {
         print("got some text: \(text)")
         if let newMessage = jsonParser.createMessageFromJSONString(text) {
             messageQueue.put(newMessage)
+        } else {
+            print("failed to parse message: \(text)")
         }
     }
     
