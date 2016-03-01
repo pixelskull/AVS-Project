@@ -62,10 +62,6 @@ class SettingsViewController: NSViewController {
         }
         startBackgroundOperation(workerOperation)
         
-        
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: BasicMessage(status: MessagesHeader.newClientRegistration, value: NSHost.currentHost().name!))
-        
     }
     
     
@@ -85,7 +81,11 @@ class SettingsViewController: NSViewController {
         } else {
             host = serverAdressField.stringValue
         }
-        let webSocketOperation = WebSocketBackgroundOperation(host: host)
+        
+        let webSocketOperation:WebSocketBackgroundOperation
+        
+        if(isManager.state == NSOnState){
+            webSocketOperation = WebSocketBackgroundOperation(host: host, master: true)
 //        if let url = NSURL(string: host) {
 //            socket = WebSocket(url: url)
 //            socket!.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
@@ -94,7 +94,9 @@ class SettingsViewController: NSViewController {
 //        } else {
 //            print("error while creating Websocket")
 //        }
-        
+        } else{
+            webSocketOperation = WebSocketBackgroundOperation(host: host, master: false)
+        }
         webSocketOperation.completionBlock = {
             self.notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                 object: "WebsocketOperation finished")
@@ -133,6 +135,8 @@ class SettingsViewController: NSViewController {
                 break
             }
             
+//            startWebsocketBackgroundOperation()
+            
             notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                 object: "Hash of the password: " + hashedPassword)
             
@@ -154,6 +158,7 @@ class SettingsViewController: NSViewController {
                 //simulated test
                 //startWorkerBackgroundOperation()
             } else { startWorkerBackgroundOperation() }
+            
             
             startWebsocketBackgroundOperation()
             

@@ -12,6 +12,8 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
 
     var socket: WebSocket
     
+    var master: Bool = true
+    
     var run:Bool = true
     
     let notificationCenter = NSNotificationCenter.defaultCenter()
@@ -19,11 +21,12 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
     let jsonParser = MessageParser()
    
     
-    init(host:String = "localhost", port:Int = 3000) {
+    init(host:String = "localhost", port:Int = 3000, master:Bool) {
         
         print("----"+host+"---")
         socket = WebSocket(url: NSURL(string: "ws://\(host):\(port)")!)
         socket.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
+        self.master = master
         
         super.init()
         socket.delegate = self
@@ -72,6 +75,9 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
 //            
 //            sleep(5)
             
+//            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: ""))
+//            socket.writeString(jsonStringNewClient!)
+
 //            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: "Are you alive"))
 //            socket.writeString(jsonStringAlive!)
 //
@@ -105,7 +111,13 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
     
     func connect() { socket.connect() }
     
-    func websocketDidConnect(socket: WebSocket) { print("websocket is connected") }
+    func websocketDidConnect(socket: WebSocket) { print("websocket is connected")
+    
+        if(master == false){
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+            object: BasicMessage(status: MessagesHeader.newClientRegistration, value: NSHost.currentHost().name!))
+        }
+    }
     
     func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
         print("websocket is disconnected: \(error?.localizedDescription)")
@@ -145,7 +157,7 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
         if let newMessage = jsonParser.createMessageFromJSONString(text) {
             messageQueue.put(newMessage)
         } else {
-            print("failed to parse: \(text)")
+            print("failed to parse message: \(text)")
         }
     }
 //    func websocketDidReceiveMessage(socket: WebSocket, text: String) {
