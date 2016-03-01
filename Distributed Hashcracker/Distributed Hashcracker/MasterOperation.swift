@@ -127,6 +127,16 @@ class MasterOperation:MasterWorkerOperation {
         
         let workerQueue = WorkerQueue.sharedInstance
         
+        print("Länge workerQueue: \(workerQueue.workerQueue.count)")
+        
+        if(workerQueue.workerQueue.count == 0){
+            dispatch_async(dispatch_get_main_queue()) {
+               print("generateNewWorkBlog")
+                
+               self.generateNewWorkBlog()
+            }
+        }
+        
         let newWorker = Worker(id: workerID, status: .Aktive)
         
         workerQueue.put(newWorker)
@@ -199,14 +209,22 @@ class MasterOperation:MasterWorkerOperation {
     func finishedWork(message:BasicMessage){
         print("finishedWork")
         
+        let workBlogQueue = WorkBlogQueue.sharedInstance
+        
         let workerID = message.value
         
-        let newWorkBlog = generateNewWorkBlog()
+        
+        if(workBlogQueue.workBlogQueue.count > 0){
+        let newWorkBlog = convertWorkBlogArrayToString(workBlogQueue.getFirstWorkBlog()!.value)
         
         //Send setupConfigurationMessage
         let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
+        }
+        else{
+            print("Es ist momentan kein WorkBlog vorhanden")
+        }
     }
     
     func hashesPerTime(message:ExtendedMessage){
@@ -243,11 +261,93 @@ class MasterOperation:MasterWorkerOperation {
         return messageQueue.get()
     }
     
-    func generateNewWorkBlog() -> String{
+    func generateNewWorkBlog(){
         
-        let newWorkBlogString = "bla,blub,bli,test,Test,foo"
+        var workBlogID:Int = 1
         
-        return newWorkBlogString
+        let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        
+        var tempArray:[String] = charArray
+        
+        let workBlogQueue = WorkBlogQueue.sharedInstance
+        
+        //let newWorkBlogString = "bla,blub,bli,test,Test,foo"
+
+        func appendToArrayFirstTime(array:[String], toAppend:[String]){
+            var tmpArray:[String] = [String]()
+            
+            for char in toAppend {
+                tmpArray += array.map({ return $0 + char })
+                
+            }
+            
+            let firstWorkArray = charArray + tmpArray
+            
+            print("First Work Array: \(firstWorkArray)")
+            
+            let firstWorkBlog = WorkBlog(id: String(workBlogID), value: firstWorkArray)
+            
+            ++workBlogID
+            
+            workBlogQueue.put(firstWorkBlog)
+            
+            print("Länge WorkBlogQueue:  \(workBlogQueue.workBlogQueue.count)")
+            
+            tempArray = firstWorkArray
+        }
+        
+        func appendToArray(array:[String], toAppend:[String]){
+            var tmpArray:[String] = [String]()
+            
+            for char in toAppend {
+                
+                if(tmpArray.count < 5000){
+                    tmpArray += array.map({ return $0 + char })
+                    tempArray = tmpArray
+                }
+                else{
+                    tempArray = tmpArray
+                    print("New WorkArray")
+                    
+                    let newWorkBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
+                    workBlogQueue.put(newWorkBlog)
+                    
+                    print("Länge WorkBlogQueue:  \(workBlogQueue.workBlogQueue.count)")
+                    tmpArray = [String]()
+                    ++workBlogID
+                }
+            }
+        }
+
+        
+        for var index = 0; index < 9; ++index{
+            
+            if(index == 0){
+                appendToArrayFirstTime(tempArray, toAppend: charArray)
+            }
+           else{
+                appendToArray(tempArray, toAppend: charArray)
+            }
+        }
+        
+    }
+    
+    func convertWorkBlogArrayToString(workBlog:[String]) -> String{
+        
+        var counter=0
+        var workBlogString:String = ""
+        
+        for character in workBlog{
+            if(counter < workBlog.count){
+                workBlogString = workBlogString + character + ","
+                counter++
+            }
+            else{
+                workBlogString = workBlogString + character
+            }
+        }
+        
+        return workBlogString
     }
     
     func stopMasterOperation(notification:NSNotification) {
