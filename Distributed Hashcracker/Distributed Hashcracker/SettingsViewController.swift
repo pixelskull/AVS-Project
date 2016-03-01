@@ -22,6 +22,8 @@ class SettingsViewController: NSViewController {
     let queue = NSOperationQueue()
     var task = NSTask()
     
+    var socket:WebSocket?
+    
     private func prepareMasterInterface() {
         serverAdressField.enabled = false
         passwordField.enabled = true
@@ -79,6 +81,15 @@ class SettingsViewController: NSViewController {
             host = serverAdressField.stringValue
         }
         let webSocketOperation = WebSocketBackgroundOperation(host: host)
+//        if let url = NSURL(string: host) {
+//            socket = WebSocket(url: url)
+//            socket!.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
+//            socket!.delegate = webSocketOperation
+//            socket!.connect()
+//        } else {
+//            print("error while creating Websocket")
+//        }
+        
         webSocketOperation.completionBlock = {
             self.notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                 object: "WebsocketOperation finished")
