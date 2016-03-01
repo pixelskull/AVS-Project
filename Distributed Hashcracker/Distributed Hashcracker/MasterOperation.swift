@@ -24,7 +24,7 @@ class MasterOperation:MasterWorkerOperation {
             name: notificationName,
             object: nil)
         
-        let timer = NSTimer.scheduledTimerWithTimeInterval(1.0,
+         NSTimer.scheduledTimerWithTimeInterval(1.0,
             target: self,
             selector: "sendStillAlive",
             userInfo: nil,
@@ -102,8 +102,8 @@ class MasterOperation:MasterWorkerOperation {
     
     
     func sendStillAlive() {
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: BasicMessage(status: .stillAlive, value: ""))
+//        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+//            object: BasicMessage(status: .stillAlive, value: ""))
     }
     
     
@@ -128,14 +128,23 @@ class MasterOperation:MasterWorkerOperation {
         let workerQueue = WorkerQueue.sharedInstance
         
         print("Länge workerQueue: \(workerQueue.workerQueue.count)")
-        
-        if(workerQueue.workerQueue.count == 0){
-            dispatch_async(dispatch_get_main_queue()) {
-               print("generateNewWorkBlog")
-                
-               self.generateNewWorkBlog()
+//        
+//        if(workerQueue.workerQueue.count == 0){
+//            dispatch_async(dispatch_get_main_queue()) {
+//               print("generateNewWorkBlog")
+//                
+//               self.generateNewWorkBlog()
+//            }
+//        }
+//        performSelectorInBackground("generateNewWorkBlog", withObject: nil)
+        if workerQueue.workerQueue.count == 0 {
+            let queue = dispatch_queue_create("de.th-koeln.DistributedHashCracker", nil)
+            dispatch_async(queue) {
+                print("work work work")
+                self.generateNewWorkBlog()
             }
         }
+        print("it goes on and on and on ... ")
         
         let newWorker = Worker(id: workerID, status: .Aktive)
         
@@ -145,6 +154,9 @@ class MasterOperation:MasterWorkerOperation {
         let setupConfigMessageValues: [String:String] = ["algorithm": selectedAlgorithm, "target": targetHash, "worker_id":workerID]
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
+        
+        
+        print("Send SetupMessage")
         
         /*
         let workerQueueLenght = workerQueue.workerQueue.count + 1
@@ -213,6 +225,9 @@ class MasterOperation:MasterWorkerOperation {
         
         let workerID = message.value
         
+        while workBlogQueue.workBlogQueue.count == 0 {
+            sleep(1)
+        }
         
         if(workBlogQueue.workBlogQueue.count > 0){
         let newWorkBlog = convertWorkBlogArrayToString(workBlogQueue.getFirstWorkBlog()!.value)
@@ -261,7 +276,7 @@ class MasterOperation:MasterWorkerOperation {
         return messageQueue.get()
     }
     
-    func generateNewWorkBlog(){
+    func generateNewWorkBlog() {
         
         var workBlogID:Int = 1
         
@@ -301,18 +316,19 @@ class MasterOperation:MasterWorkerOperation {
             
             for char in toAppend {
                 
-                if(tmpArray.count < 5000){
+                if(tmpArray.count <= 6200){
                     tmpArray += array.map({ return $0 + char })
                     tempArray = tmpArray
                 }
                 else{
+//                    tmpArray += array.map({ return $0 + char })
                     tempArray = tmpArray
-                    print("New WorkArray")
+                    //print("New WorkArray")
                     
                     let newWorkBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
                     workBlogQueue.put(newWorkBlog)
                     
-                    print("Länge WorkBlogQueue:  \(workBlogQueue.workBlogQueue.count)")
+                    //print("Länge WorkBlogQueue:  \(workBlogQueue.workBlogQueue.count)")
                     tmpArray = [String]()
                     ++workBlogID
                 }

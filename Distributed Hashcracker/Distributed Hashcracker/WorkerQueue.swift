@@ -14,8 +14,8 @@ class WorkerQueue {
     
     static let sharedInstance = WorkerQueue()
     
-    var read_semaphore = dispatch_semaphore_create(0)
-    let write_semaphore = dispatch_semaphore_create(0)
+    var read_semaphore = dispatch_semaphore_create(1)
+    let write_semaphore = dispatch_semaphore_create(1)
     
     
     /**

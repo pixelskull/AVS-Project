@@ -104,7 +104,7 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
             */
             
 
-            sleep(10)
+            sleep(1)
         }
         run = true
     }

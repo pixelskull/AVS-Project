@@ -50,6 +50,10 @@ class WorkBlogQueue {
      */
     func getFirstWorkBlog() -> WorkBlog? {
         guard let firstWorkBlog = workBlogQueue.first else { return nil }
+        dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
+        workBlogQueue = workBlogQueue.dropFirst().map { $0 }
+        dispatch_semaphore_signal(read_semaphore)
+        
         return firstWorkBlog
     }
     
