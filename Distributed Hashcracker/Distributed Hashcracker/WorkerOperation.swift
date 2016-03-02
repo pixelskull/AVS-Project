@@ -194,7 +194,7 @@ class WorkerOperation:MasterWorkerOperation {
     func stillAlive(message:BasicMessage){
         print("stillAlive")
         let workerQueue = WorkerQueue.sharedInstance
-        let worker_id = workerQueue.getFirstWorker()?.getID()
+        let worker_id = workerQueue.getFirstWorker()?.id
         //Send a stillAliveMessage to the master with the worker_id of the client
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker_id!))
     }
