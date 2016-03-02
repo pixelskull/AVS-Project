@@ -16,35 +16,24 @@ class Worker{
     }
     
     let id:String
-//    var ip:String
     var status:Status
     
-    init(id:String, /*ip:String,*/ status:Status){
+    var algorithm:String?
+    var target:String?
+    
+    init(id:String, status:Status){
         self.id = id
-//        self.ip = ip
         self.status = status
-    
     }
     
-    func getID() -> String{
-        return id
+    /**
+     checks if given WorkerID ist equal with own WorkerID
+     
+     - parameter workerID: workerID to check (from Message)
+     
+     - returns: true if workerID ist equal to own id
+     */
+    func checkWorkerID(workerID:String) -> Bool {
+        return id == workerID ? true : false
     }
-    
-//    func getIP() -> String{
-//        return ip
-//    }
-//    
-//    func setIP(newIP:String){
-//        ip = newIP
-//    }
-    
-    func getStatus() -> Status{
-        return status
-    }
-    
-    func setStatus(newStatus:Status){
-        status = newStatus
-    }
-    
-    
 }
