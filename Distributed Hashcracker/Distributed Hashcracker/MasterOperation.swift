@@ -24,7 +24,7 @@ class MasterOperation:MasterWorkerOperation {
             name: notificationName,
             object: nil)
         
-         NSTimer.scheduledTimerWithTimeInterval(1.0,
+         NSTimer.scheduledTimerWithTimeInterval(60.0,
             target: self,
             selector: "sendStillAlive",
             userInfo: nil,
