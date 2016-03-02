@@ -11,9 +11,6 @@ import Starscream
 
 class WorkerOperation:MasterWorkerOperation {
     
-    var algorithm:String?
-    var target:String?
-    var worker:Worker?
     var crackedPassword:String?
     
     override init() {
@@ -95,16 +92,18 @@ class WorkerOperation:MasterWorkerOperation {
     func setupConfig(message:ExtendedMessage){
         print("setupConfig")
         
-        algorithm = message.values["algorithm"]!
-        target = message.values["target"]!
-        worker = Worker(id: message.values["worker_id"]!, status: .Aktive)
+        let algorithm = message.values["algorithm"]!
+        let target = message.values["target"]!
+        let worker = Worker(id: message.values["worker_id"]!, status: .Aktive)
+        worker.algorithm = algorithm
+        worker.target = target
         
         let workerQueue = WorkerQueue.sharedInstance
-        workerQueue.put(worker!)
+        workerQueue.put(worker)
         
         //Send finishedWorkMessage
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: BasicMessage(status: MessagesHeader.finishedWork, value: worker!.id))
+            object: BasicMessage(status: MessagesHeader.finishedWork, value: worker.id))
     }
     
     /**
@@ -117,9 +116,13 @@ class WorkerOperation:MasterWorkerOperation {
         print("newWorkBlog")
         
         let workerID = message.values["worker_id"]
-        guard workerID == worker!.id else { return }
-        guard let algo = algorithm,
-            let tar = target,
+        // check if worker is in queue
+        guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
+        // check if workerID is the id of this worker
+        guard workerID == worker.id else { return }
+        // check other settings
+        guard let algo = worker.algorithm,
+            let tar = worker.target,
             let crackedPW = crackedPassword
             else { return } /// TODO: hier vielleicht neue setupConfig reagieren
         
@@ -138,7 +141,7 @@ class WorkerOperation:MasterWorkerOperation {
         }
         
         if compareHash(hashAlgorithm!, passwordArray: passwordArray, targetHash: tar) {
-            let hitTargetHashValues: [String:String] = ["hash": tar, "password": crackedPW, "time_needed": "ka", "worker_id": worker!.id]
+            let hitTargetHashValues: [String:String] = ["hash": tar, "password": crackedPW, "time_needed": "ka", "worker_id": worker.id]
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                 object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
             
@@ -146,7 +149,7 @@ class WorkerOperation:MasterWorkerOperation {
         }
         else{
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-                object: BasicMessage(status: MessagesHeader.finishedWork, value: worker!.id))
+                object: BasicMessage(status: MessagesHeader.finishedWork, value: worker.id))
             print("The searched password wasn't there -> finishedWorkMessage was send")
         }
     }
@@ -160,7 +163,8 @@ class WorkerOperation:MasterWorkerOperation {
     func stillAlive(message:BasicMessage){
         print("stillAlive")
         //Send a stillAliveMessage to the master with the worker_id of the client
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker!.id))
+        guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker.id))
     }
     
     
@@ -179,7 +183,7 @@ class WorkerOperation:MasterWorkerOperation {
             let hashedPasswordFromArray = hashAlgorithm.hash(string: password)
             
             if(hashedPasswordFromArray == targetHash){
-                print("Found the searched password! \(hashedPasswordFromArray) == \(targetHash) -> Password = \(password) (\(target))")
+                print("Found the searched password! \(hashedPasswordFromArray) == \(targetHash) -> Password = \(password))")
                 crackedPassword = password
                 return true
             }
@@ -187,7 +191,6 @@ class WorkerOperation:MasterWorkerOperation {
                 print("\(password) isn't the searched password")
             }
         }
-        
         return false
         
     }

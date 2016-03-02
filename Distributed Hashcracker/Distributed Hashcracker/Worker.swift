@@ -18,6 +18,9 @@ class Worker{
     let id:String
     var status:Status
     
+    var algorithm:String?
+    var target:String?
+    
     init(id:String, status:Status){
         self.id = id
         self.status = status
