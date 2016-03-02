@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B6A0D621C8717990085CF12 /* dictionaryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6A0D611C8717990085CF12 /* dictionaryReader.swift */; };
 		4C3F3EB81C845B6900F837DB /* WorkBlogQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */; };
 		4C3F3EBC1C84602900F837DB /* WorkBlog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EBB1C84602900F837DB /* WorkBlog.swift */; };
 		4C98B1A11C52893800E2641B /* CustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A01C52893800E2641B /* CustomObject.m */; };
@@ -84,6 +85,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3B6A0D611C8717990085CF12 /* dictionaryReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dictionaryReader.swift; sourceTree = "<group>"; };
 		4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkBlogQueue.swift; sourceTree = "<group>"; };
 		4C3F3EBB1C84602900F837DB /* WorkBlog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkBlog.swift; sourceTree = "<group>"; };
 		4C98B19F1C52893800E2641B /* Distributed Hashcracker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Distributed Hashcracker-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -167,7 +169,6 @@
 				50CE1D261C5129BD00A61514 /* MessageQueue.swift */,
 				5086D94A1C5FD680008F7464 /* MessageParser.swift */,
 				50CE1D281C524C2F00A61514 /* Message.swift */,
-				5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */,
 				5088E8AC1C7744170065C39B /* MasterWorkerOperation.swift */,
 				E4A335571C6B4E9B00044D17 /* WorkerOperation.swift */,
 				5088E8AA1C7739200065C39B /* MasterOperation.swift */,
@@ -176,6 +177,7 @@
 				5088E8A81C772BED0065C39B /* Constants.swift */,
 				4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */,
 				4C3F3EBB1C84602900F837DB /* WorkBlog.swift */,
+				3B6A0D611C8717990085CF12 /* dictionaryReader.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -391,6 +393,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B6A0D621C8717990085CF12 /* dictionaryReader.swift in Sources */,
 				50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */,
 				4C3F3EB81C845B6900F837DB /* WorkBlogQueue.swift in Sources */,
 				4CE7BFD21C6D41A90020482F /* Worker.swift in Sources */,
