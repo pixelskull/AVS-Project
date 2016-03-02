@@ -1,12 +1,21 @@
 //Dictionary Attack in Arrays zu 1000 Passwoertern schreiben und in Worker Queue packen
 
+//Dictionary Attack in Arrays zu 1000 Passwoertern schreiben und in Worker Queue packen
+
 import Cocoa
 
-let path = "/Users/denjae/sciebo/Studium/AVS/AVS-Project/PasswordDictionary.txt"
-do{
-    let file = String(contentsOfFile: path, encoding: UTF8 , error: nil)
-    print(file)
-}
+let path = "PasswordDictionary.txt"
+var rawStandards = NSArray(contentsOfFile: path)
+
+let passwords = String(NSBundle.mainBundle().bundleURL.URLByAppendingPathComponent(path))
+
+print(path)
+
+//do {
+//    let passwords = try NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding)
+//}
+//catch {/* error handling here */}
+
 
 
 //let text = String(contentsOfFile:file, encoding: NSUTF8StringEncoding, error: nil)
