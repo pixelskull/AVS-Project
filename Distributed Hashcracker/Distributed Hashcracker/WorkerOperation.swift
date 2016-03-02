@@ -92,14 +92,18 @@ class WorkerOperation:MasterWorkerOperation {
     func setupConfig(message:ExtendedMessage){
         print("setupConfig")
         
+        let workerIDFromMessage = message.values["worker_id"]!
+        
+        // check if worker is in queue
+        guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
+        
+        // check if workerID is the id of this worker
+        guard worker.checkWorkerID(workerIDFromMessage) else { return }
+        
         let algorithm = message.values["algorithm"]!
         let target = message.values["target"]!
-        let worker = Worker(id: message.values["worker_id"]!, status: .Aktive)
         worker.algorithm = algorithm
         worker.target = target
-        
-        let workerQueue = WorkerQueue.sharedInstance
-        workerQueue.put(worker)
         
         //Send finishedWorkMessage
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
@@ -115,11 +119,13 @@ class WorkerOperation:MasterWorkerOperation {
     func newWorkBlog(message:ExtendedMessage){
         print("newWorkBlog")
         
-        let workerID = message.values["worker_id"]
+        let workerIDFromMessage = message.values["worker_id"]!
+        
         // check if worker is in queue
         guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
+        
         // check if workerID is the id of this worker
-        guard workerID == worker.id else { return }
+        guard worker.checkWorkerID(workerIDFromMessage) else { return }
         // check other settings
         guard let algo = worker.algorithm,
             let tar = worker.target,

@@ -114,8 +114,15 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
     func websocketDidConnect(socket: WebSocket) { print("websocket is connected")
     
         if(master == false){
+            
+            let workerID = NSHost.currentHost().name!
+            
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-                object: BasicMessage(status: MessagesHeader.newClientRegistration, value: NSHost.currentHost().name!))
+                object: BasicMessage(status: MessagesHeader.newClientRegistration, value: workerID))
+            let worker = Worker(id: workerID, status: .Aktive)
+            
+            let workerQueue = WorkerQueue.sharedInstance
+            workerQueue.put(worker)
         }
     }
     
