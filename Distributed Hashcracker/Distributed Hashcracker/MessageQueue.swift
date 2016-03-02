@@ -37,9 +37,9 @@ class MessageQueue {
      - returns: first message in list when not empty otherwise nil
     */
     func get() -> Message? {
-        guard let firstElement = messages.first else { return nil }
+        guard messages.count > 0 else { return nil }
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        messages = messages.dropFirst().map { $0 }
+        let firstElement = messages.removeFirst()
         dispatch_semaphore_signal(read_semaphore)
         return firstElement
     }
