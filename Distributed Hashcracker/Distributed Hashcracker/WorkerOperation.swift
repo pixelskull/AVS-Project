@@ -11,12 +11,10 @@ import Starscream
 
 class WorkerOperation:MasterWorkerOperation {
     
-    var algorithm:String = ""
-    var target:String = ""
-    var worker_id:String = ""
-    
-    var crackedPassword:String = ""
-    
+    var algorithm:String?
+    var target:String?
+    var worker:Worker?
+    var crackedPassword:String?
     
     override init() {
         super.init()
@@ -83,6 +81,7 @@ class WorkerOperation:MasterWorkerOperation {
         }
     }
     
+    
     /*
     Worker related Message reactions 
     */
@@ -96,23 +95,16 @@ class WorkerOperation:MasterWorkerOperation {
     func setupConfig(message:ExtendedMessage){
         print("setupConfig")
         
-//        algorithm = "MD5"
-//        target = "Test"
-        
-        let workerQueue = WorkerQueue.sharedInstance
-        
-        worker_id = message.values["worker_id"]!
         algorithm = message.values["algorithm"]!
         target = message.values["target"]!
-        algorithm = message.values["algorithm"]!
+        worker = Worker(id: message.values["worker_id"]!, status: .Aktive)
         
-        let ownClientWorker = Worker(id: worker_id, status: .Aktive)
-        
-        workerQueue.put(ownClientWorker)
+        let workerQueue = WorkerQueue.sharedInstance
+        workerQueue.put(worker!)
         
         //Send finishedWorkMessage
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: BasicMessage(status: MessagesHeader.finishedWork, value: worker_id))
+            object: BasicMessage(status: MessagesHeader.finishedWork, value: worker!.id))
     }
     
     /**
@@ -124,47 +116,29 @@ class WorkerOperation:MasterWorkerOperation {
     func newWorkBlog(message:ExtendedMessage){
         print("newWorkBlog")
         
-        //let passwordArray:[String] = ["Bla", "blub", "test"]
-        
         let workerID = message.values["worker_id"]
+        guard workerID == worker!.id else { return }
+        guard let algo = algorithm,
+            let tar = target,
+            let crackedPW = crackedPassword
+            else { return } /// TODO: hier vielleicht neue setupConfig reagieren
         
         let passwordArray: [String] = (message.values["hashes"]?.componentsSeparatedByString(","))!
         
+        /// TODO: Algorithm from setupConfig
         var hashAlgorithm: HashAlgorithm?
-        
-        switch algorithm {
-        case "MD5":
-            hashAlgorithm = HashMD5()
-        case "SHA-128":
-            hashAlgorithm = HashSHA()
-        case "SHA-256":
-            hashAlgorithm = HashSHA256()
-        default:
-            print("Selected hash algorithm wasn't found: Default hash algorithm MD5 has been set")
-            hashAlgorithm = HashMD5()
-            break
-        }
-        
-        /*
-        var hashedPassword:String = ""
-        var hashAlgorithm: HashAlgorithm?
-        
-        switch algorithm {
-        case "MD5":
-            hashAlgorithm = HashMD5()
+        switch algo {
         case "SHA-128":
             hashAlgorithm = HashSHA()
         case "SHA-256":
             hashAlgorithm = HashSHA256()
         default:
             hashAlgorithm = HashMD5()
-            print("Selected Hashalgorithm not found - Default HashMD5 selected")
             break
         }
-        */
         
-        if(compareHash(hashAlgorithm!, passwordArray: passwordArray, targetHash: target)){
-            let hitTargetHashValues: [String:String] = ["hash": target, "password": crackedPassword, "time_needed": "ka", "worker_id": workerID!]
+        if compareHash(hashAlgorithm!, passwordArray: passwordArray, targetHash: tar) {
+            let hitTargetHashValues: [String:String] = ["hash": tar, "password": crackedPW, "time_needed": "ka", "worker_id": worker!.id]
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                 object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
             
@@ -172,17 +146,9 @@ class WorkerOperation:MasterWorkerOperation {
         }
         else{
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-                object: BasicMessage(status: MessagesHeader.finishedWork, value: workerID!))
+                object: BasicMessage(status: MessagesHeader.finishedWork, value: worker!.id))
             print("The searched password wasn't there -> finishedWorkMessage was send")
         }
-        
-        /*
-        let messageObject = message?.jsonObject()
-        
-        for (key, value) in (messageObject)! {
-        print("Dictionary key \(key) -  Dictionary value \(value)")
-        }
-        */
     }
     
     /**
@@ -193,10 +159,8 @@ class WorkerOperation:MasterWorkerOperation {
      */
     func stillAlive(message:BasicMessage){
         print("stillAlive")
-        let workerQueue = WorkerQueue.sharedInstance
-        let worker_id = workerQueue.getFirstWorker()?.id
         //Send a stillAliveMessage to the master with the worker_id of the client
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker_id!))
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker!.id))
     }
     
     

@@ -22,4 +22,15 @@ class Worker{
         self.id = id
         self.status = status
     }
+    
+    /**
+     checks if given WorkerID ist equal with own WorkerID
+     
+     - parameter workerID: workerID to check (from Message)
+     
+     - returns: true if workerID ist equal to own id
+     */
+    func checkWorkerID(workerID:String) -> Bool {
+        return id == workerID ? true : false
+    }
 }

@@ -199,8 +199,8 @@ class MasterOperation:MasterWorkerOperation {
             object: "Password: " + password!)
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "Time needed: " + time_needed!)
-        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object:
-            "By worker: " + worker_id!)
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "By worker: " + worker_id!)
         
         /*
         let messageObject = message?.jsonObject()
