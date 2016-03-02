@@ -134,11 +134,11 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
         
         guard let message = notification.object as? Message else { return }
 
-        let messageObject = message.jsonObject()
+//        let messageObject = message.jsonObject()
 
-        for (key, value) in (messageObject) {
-            	print("WSBO sendMessage -> Dictionary key \(key) -  Dictionary value \(value)")
-        }
+//        for (key, value) in (messageObject) {
+//            	print("WSBO sendMessage -> Dictionary key \(key) -  Dictionary value \(value)")
+//        }
         
         let jsonStringSendMessage = jsonParser.createJSONStringFromMessage(message)
         socket.writeString(jsonStringSendMessage!)

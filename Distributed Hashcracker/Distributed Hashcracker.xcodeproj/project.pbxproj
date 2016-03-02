@@ -167,7 +167,6 @@
 				50CE1D261C5129BD00A61514 /* MessageQueue.swift */,
 				5086D94A1C5FD680008F7464 /* MessageParser.swift */,
 				50CE1D281C524C2F00A61514 /* Message.swift */,
-				5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */,
 				5088E8AC1C7744170065C39B /* MasterWorkerOperation.swift */,
 				E4A335571C6B4E9B00044D17 /* WorkerOperation.swift */,
 				5088E8AA1C7739200065C39B /* MasterOperation.swift */,
@@ -552,7 +551,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "de.th-koeln.avs.Distributed-Hashcracker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Distributed Hashcracker/Distributed Hashcracker-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Debug;
 		};

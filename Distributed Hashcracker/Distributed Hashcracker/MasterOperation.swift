@@ -24,7 +24,7 @@ class MasterOperation:MasterWorkerOperation {
             name: notificationName,
             object: nil)
         
-         NSTimer.scheduledTimerWithTimeInterval(1.0,
+         NSTimer.scheduledTimerWithTimeInterval(60.0,
             target: self,
             selector: "sendStillAlive",
             userInfo: nil,
@@ -226,7 +226,7 @@ class MasterOperation:MasterWorkerOperation {
         let workerID = message.value
         
         while workBlogQueue.workBlogQueue.count == 0 {
-            sleep(1)
+            print("Es ist momentan kein WorkBlog vorhanden")
         }
         
         if(workBlogQueue.workBlogQueue.count > 0){
@@ -309,9 +309,10 @@ class MasterOperation:MasterWorkerOperation {
         }
         
         func generateWorkBlogs(array:[String], toAppend:[String]) -> [String]{
-            var currendArray:[String] = [String]()
+            var currentArray:[String] = [String]()
             var tmpArray = [String]()
             for char in toAppend {
+                
                 for subset in array.splitBy(100) {
                     tmpArray += subset.map{ $0 + char }
                     if tmpArray.count > 5000 {
@@ -319,19 +320,25 @@ class MasterOperation:MasterWorkerOperation {
                         //print(tmpArray)
                         /// TODO: Append tmpArray to WorBlogQueue
                         
+                        
+                        while(WorkBlogQueue.sharedInstance.workBlogQueue.count > 10){
+                            sleep(1)
+                            print("WorkBlogQueue noch voll")
+                        }
                         let workBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
                         
                         ++workBlogID
                         
                         workBlogQueue.put(workBlog)
                         
-                        currendArray += tmpArray
+                        currentArray += tmpArray
                         tmpArray.removeAll()
+                        
                     }
                 }
-
             }
-            return currendArray
+            currentArray += tmpArray
+            return currentArray
         }
         
         var result = [String]()
