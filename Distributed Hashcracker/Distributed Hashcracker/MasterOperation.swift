@@ -280,15 +280,12 @@ class MasterOperation:MasterWorkerOperation {
         
         var workBlogID:Int = 1
         
+        let workBlogQueue = WorkBlogQueue.sharedInstance
         let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
         
-        var tempArray:[String] = charArray
-        
-        let workBlogQueue = WorkBlogQueue.sharedInstance
-        
         //let newWorkBlogString = "bla,blub,bli,test,Test,foo"
-
-        func appendToArrayFirstTime(array:[String], toAppend:[String]){
+        
+        func appendToArrayFirstTime(array:[String], toAppend:[String]) -> [String]{
             var tmpArray:[String] = [String]()
             
             for char in toAppend {
@@ -298,7 +295,9 @@ class MasterOperation:MasterWorkerOperation {
             
             let firstWorkArray = charArray + tmpArray
             
-            print("First Work Array: \(firstWorkArray)")
+            //print("First Work Array: \(firstWorkArray)")
+            //print("Länge firstWorkArray: \(firstWorkArray.count)")
+            
             
             let firstWorkBlog = WorkBlog(id: String(workBlogID), value: firstWorkArray)
             
@@ -306,43 +305,49 @@ class MasterOperation:MasterWorkerOperation {
             
             workBlogQueue.put(firstWorkBlog)
             
-            print("Länge WorkBlogQueue:  \(workBlogQueue.workBlogQueue.count)")
-            
-            tempArray = firstWorkArray
+            return tmpArray
         }
         
-        func appendToArray(array:[String], toAppend:[String]){
-            var tmpArray:[String] = [String]()
-            
+        func generateWorkBlogs(array:[String], toAppend:[String]) -> [String]{
+            var currendArray:[String] = [String]()
+            var tmpArray = [String]()
             for char in toAppend {
-                
-                if(tmpArray.count <= 6200){
-                    tmpArray += array.map({ return $0 + char })
-                    tempArray = tmpArray
+                for subset in array.splitBy(100) {
+                    tmpArray += subset.map{ $0 + char }
+                    if tmpArray.count > 5000 {
+                        //print(tmpArray.count)
+                        //print(tmpArray)
+                        /// TODO: Append tmpArray to WorBlogQueue
+                        
+                        let workBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
+                        
+                        ++workBlogID
+                        
+                        workBlogQueue.put(workBlog)
+                        
+                        currendArray += tmpArray
+                        tmpArray.removeAll()
+                    }
                 }
-                else{
-//                    tmpArray += array.map({ return $0 + char })
-                    tempArray = tmpArray
-                    //print("New WorkArray")
-                    
-                    let newWorkBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
-                    workBlogQueue.put(newWorkBlog)
-                    
-                    //print("Länge WorkBlogQueue:  \(workBlogQueue.workBlogQueue.count)")
-                    tmpArray = [String]()
-                    ++workBlogID
-                }
-            }
-        }
 
+            }
+            return currendArray
+        }
+        
+        var result = [String]()
+        
         
         for var index = 0; index < 9; ++index{
-            
-            if(index == 0){
-                appendToArrayFirstTime(tempArray, toAppend: charArray)
+            if result.count > 5000 {
+                
             }
-           else{
-                appendToArray(tempArray, toAppend: charArray)
+            if(index == 0){
+                print("Generate passwords with lenght: \(index+1) and \(index+2)")
+                result = appendToArrayFirstTime(charArray, toAppend: charArray)
+            }
+            else{
+                print("Generate passwords with lenght: \(index+2)")
+                result = generateWorkBlogs(result, toAppend: charArray)
             }
         }
         
@@ -368,5 +373,14 @@ class MasterOperation:MasterWorkerOperation {
     
     func stopMasterOperation(notification:NSNotification) {
         run = false
+    }
+}
+
+extension Array {
+    func splitBy(subSize: Int) -> [[Element]] {
+        return 0.stride(to: self.count, by:subSize).map { startIndex in
+            let endIndex = startIndex.advancedBy(subSize, limit: self.count)
+            return Array(self[startIndex..<endIndex])
+        }
     }
 }
