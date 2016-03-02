@@ -104,7 +104,7 @@ class MessageParser {
         let status = jsonObject["status"] as! String
         let value = jsonObject["value"] as! String
         
-        guard status != "" && value != "" else { return nil }
+        guard status != "" else { return nil }
         
         if let messageHeader = getMessageHeaderFromString(status) {
             return BasicMessage(status: messageHeader, value: value)

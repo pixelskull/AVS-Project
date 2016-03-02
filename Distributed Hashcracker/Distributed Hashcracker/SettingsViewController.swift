@@ -22,6 +22,8 @@ class SettingsViewController: NSViewController {
     let queue = NSOperationQueue()
     var task = NSTask()
     
+    var socket:WebSocket?
+    
     private func prepareMasterInterface() {
         serverAdressField.enabled = false
         passwordField.enabled = true
@@ -59,7 +61,9 @@ class SettingsViewController: NSViewController {
                 object: "WorkerOperation finished")
         }
         startBackgroundOperation(workerOperation)
+        
     }
+    
     
     private func startMasterBackgroundOperation() {
         let masterOperation = MasterOperation(targetHash: hashedPassword, selectedAlgorithm: String(hashAlgorithmSelected.titleOfSelectedItem))
@@ -77,7 +81,22 @@ class SettingsViewController: NSViewController {
         } else {
             host = serverAdressField.stringValue
         }
-        let webSocketOperation = WebSocketBackgroundOperation(host: host)
+        
+        let webSocketOperation:WebSocketBackgroundOperation
+        
+        if(isManager.state == NSOnState){
+            webSocketOperation = WebSocketBackgroundOperation(host: host, master: true)
+//        if let url = NSURL(string: host) {
+//            socket = WebSocket(url: url)
+//            socket!.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
+//            socket!.delegate = webSocketOperation
+//            socket!.connect()
+//        } else {
+//            print("error while creating Websocket")
+//        }
+        } else{
+            webSocketOperation = WebSocketBackgroundOperation(host: host, master: false)
+        }
         webSocketOperation.completionBlock = {
             self.notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                 object: "WebsocketOperation finished")
@@ -116,8 +135,6 @@ class SettingsViewController: NSViewController {
                 break
             }
             
-            startWebsocketBackgroundOperation()
-            
             notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                 object: "Hash of the password: " + hashedPassword)
             
@@ -133,8 +150,16 @@ class SettingsViewController: NSViewController {
                 
                 task = NSTask.launchedTaskWithLaunchPath(launchPath, arguments: [serverPath])
                 sleep(2)
+                
                 startMasterBackgroundOperation()
+                
+                //simulated test
+                //startWorkerBackgroundOperation()
             } else { startWorkerBackgroundOperation() }
+            
+            
+            startWebsocketBackgroundOperation()
+    
             
         } else {
             notificationCenter.postNotificationName(Constants.NCValues.stopWebSocket,
