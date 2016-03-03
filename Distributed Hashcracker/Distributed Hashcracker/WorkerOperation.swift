@@ -153,8 +153,6 @@ class WorkerOperation:MasterWorkerOperation {
             print("Found the searched password -> hitTargetHashMessage was send")
         }
         else{
-            notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-                object: BasicMessage(status: MessagesHeader.finishedWork, value: worker.id))
             print("The searched password wasn't there -> finishedWorkMessage was send")
         }
     }
@@ -183,6 +181,10 @@ class WorkerOperation:MasterWorkerOperation {
     
     func compareHash(hashAlgorithm: HashAlgorithm, passwordArray:[String], targetHash: String) -> Bool{
         let worker = WorkerQueue.sharedInstance.getFirstWorker()
+        
+        // <<<<<<<<<< Start time measurement
+        let startTimeMeasurement = NSDate();
+        
         for password in passwordArray{
             
             let hashedPasswordFromArray = hashAlgorithm.hash(string: password)
@@ -190,7 +192,7 @@ class WorkerOperation:MasterWorkerOperation {
             if(hashedPasswordFromArray == targetHash){
                 print("Found the searched password! \(hashedPasswordFromArray) == \(targetHash) -> Password = \(password))")
                 
-                let hitTargetHashValues: [String:String] = ["hash": targetHash, "password": password, "time_needed": "ka", "worker_id": worker!.id]
+                let hitTargetHashValues: [String:String] = ["hash": targetHash, "password": password, /*"time_needed": "ka", */"worker_id": worker!.id]
                 notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                     object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
                 return true
@@ -199,6 +201,18 @@ class WorkerOperation:MasterWorkerOperation {
                 print("\(password) isn't the searched password")
             }
         }
+        // <<<<<<<<<<   end time measurement
+        let endTimeMeasurement = NSDate();
+        // <<<<< Time difference in seconds (double)
+        let timeInterval: Double = endTimeMeasurement.timeIntervalSinceDate(startTimeMeasurement);
+        
+        let hashesPerTime: [String:String] = ["hash_count": String(passwordArray.count), "time_needed": String(timeInterval), /*"time_needed": "ka", */"worker_id": worker!.id]
+        
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+            object: ExtendedMessage(status: MessagesHeader.hashesPerTime, values: hashesPerTime))
+        
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+            object: BasicMessage(status: MessagesHeader.finishedWork, value: worker!.id))
         return false
         
     }

@@ -12,7 +12,7 @@ class MasterOperation:MasterWorkerOperation {
     
     var targetHash:String   = ""
     var selectedAlgorithm:String = ""
-    
+    var startTimePasswordCrack: NSDate = NSDate()
     
     private override init() {
         
@@ -121,6 +121,9 @@ class MasterOperation:MasterWorkerOperation {
     func newClientRegistration(message:BasicMessage){
         print("newClientRegistration")
         
+        // Start time of the password crack
+        startTimePasswordCrack = NSDate()
+        
         let messageObject = message.value
         
         let workerID:String = messageObject
@@ -186,9 +189,14 @@ class MasterOperation:MasterWorkerOperation {
     func hitTargetHash(message:ExtendedMessage){
         print("hitTargetHash")
         
+        //Endtime of the passwordCrack
+        let endTimeMeasurement = NSDate();
+        // <<<<< Time difference in seconds (double)
+        let timeIntervalPasswordCrack: Double = endTimeMeasurement.timeIntervalSinceDate(startTimePasswordCrack);
+        
         let hash = message.values["hash"]
         let password = message.values["password"]
-        let time_needed = message.values["time_needed"]
+        //let time_needed = message.values["time_needed"]
         let worker_id = message.values["worker_id"]
         
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
@@ -198,7 +206,7 @@ class MasterOperation:MasterWorkerOperation {
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "Password: " + password!)
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
-            object: "Time needed: " + time_needed!)
+            object: "Time needed: " + String(timeIntervalPasswordCrack))
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "By worker: " + worker_id!)
         
@@ -242,6 +250,13 @@ class MasterOperation:MasterWorkerOperation {
         }
     }
     
+    /**
+     Reaction of the server on a hashesPerTimeMessage ->
+     - calculate the hashes per second
+     - send a postNotifiaction to the LogViewController to show the result
+     precondition = hashesPerTimeMessage from a client
+     postcondition = display the hashes per second from the client in the LogViewController
+     */
     func hashesPerTime(message:ExtendedMessage){
         print("hashesPerTime")
         
@@ -249,9 +264,13 @@ class MasterOperation:MasterWorkerOperation {
         let time_needed = message.values["time_needed"]
         let worker_id = message.values["worker_id"]
         
+        //calculate the hashes per second
         let hashesPerSecond:Int = Int(hash_count!)! / Int(time_needed!)!
         
-        print("HashesPerTimeMessage -> Worker_ID: \(worker_id) hashesPerSecond: \(hashesPerSecond)")
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "The Worker: \(worker_id) generates and compares \(hashesPerSecond) per second")
+        
+        //print("HashesPerTimeMessage -> Worker_ID: \(worker_id) hashesPerSecond: \(hashesPerSecond)")
         
     }
     
@@ -322,7 +341,6 @@ class MasterOperation:MasterWorkerOperation {
                         
                         
                         while(WorkBlogQueue.sharedInstance.workBlogQueue.count > 10){
-                            sleep(1)
                             print("WorkBlogQueue noch voll")
                         }
                         let workBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
