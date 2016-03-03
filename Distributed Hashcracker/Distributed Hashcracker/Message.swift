@@ -8,11 +8,30 @@
 
 import Foundation
 
+/**
+ types of Messages for better parsing
+ 
+ - Basic:    simple Message with status and one value entry
+ - Extended: complex Message with status and more than one value
+ */
 enum MessageType {
     case Basic
     case Extended
 }
 
+/**
+ Headers for Distributed HashCracker Protocol
+ 
+ - setupConfig:           MessageType for sending needed Information to Worker
+ - newWorkBlog:           MessageType with new Workblog for Worker
+ - newClientRegistration: MessageType for registration of new Client
+ - hitTargetHash:         MessageType to send success of Worker
+ - finishedWork:          MessageType to get more Work from Master
+ - hashesPerTime:         MessageType to inform Master of worker workload
+ - stillAlive:            MessageType to ask Workers if still active
+ - alive:                 MessageType to answer Master that worker is still alive
+ - stopWork:              MessageType to stop Worker when targetHash was found
+ */
 enum MessagesHeader {
     case setupConfig
     case newWorkBlog
@@ -22,6 +41,7 @@ enum MessagesHeader {
     case hashesPerTime
     case stillAlive
     case alive
+    case stopWork
 }
 
 protocol Message {

@@ -49,6 +49,14 @@ class MessageParser {
         }
     }
     
+    /**
+     takes an Object and trys to convert this Object to JSON in String representation
+     
+     - parameter object:        Object to convert
+     - parameter prettyPrinted: prettify the Output (true if wanted)
+     
+     - returns: JSON Object in String representation or nil if not possible
+     */
     private func createJSONString(object:AnyObject, prettyPrinted:Bool = false) -> String? {
         let options:NSJSONWritingOptions = prettyPrinted ? .PrettyPrinted : NSJSONWritingOptions(rawValue: 0)
         
@@ -65,18 +73,33 @@ class MessageParser {
         return nil
     }
     
+    /**
+     takes an JSON Object and returns the Type of the Message .Basic or .Extended
+     
+     - parameter json: JSON Object to check
+     
+     - returns: type of the given Message (.Basic or .Extended)
+     */
     private func findMessageTypeFromJSON(json:JSONObject) -> MessageType {
         switch json["status"] as! String {
         case String(MessagesHeader.finishedWork),
         String(MessagesHeader.alive),
         String(MessagesHeader.stillAlive),
-        String(MessagesHeader.newClientRegistration):
+        String(MessagesHeader.newClientRegistration),
+        String(MessagesHeader.stopWork):
             return MessageType.Basic
         default:
             return MessageType.Extended
         }
     }
     
+    /**
+     takes string representation of Message and evaluates which MessageHeader it has
+     
+     - parameter string: Message in String representation
+     
+     - returns: Value of MessageHeader
+     */
     private func getMessageHeaderFromString(string:String) -> MessagesHeader? {
         switch string {
         case "setupConfig":
@@ -95,11 +118,20 @@ class MessageParser {
             return MessagesHeader.stillAlive
         case "alive":
             return MessagesHeader.alive
+        case "stopWork":
+            return MessagesHeader.stopWork
         default:
             return nil
         }
     }
     
+    /**
+     takes an JSON and trys to create a BasicMessage from contents
+     
+     - parameter jsonObject: JSONObject representation of Message
+     
+     - returns: BasicMessage representation of JSONObject or nil 
+     */
     private func jsonObjectToBasicMessage(jsonObject:JSONObject) -> BasicMessage? {
         let status = jsonObject["status"] as! String
         let value = jsonObject["value"] as! String
@@ -113,6 +145,13 @@ class MessageParser {
         }
     }
     
+    /**
+     takes an JSONObject and trys to create a ExtendedMessage from contents
+     
+     - parameter jsonObject: JSONObject representation of Message
+     
+     - returns: ExtendedMessage representation of JSONObject or nil
+     */
     private func jsonObjectToExtendedMessage(jsonObject:JSONObject) -> ExtendedMessage? {
         let status = jsonObject["status"] as! String
         let valuesString = jsonObject["value"] as! String
