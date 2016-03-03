@@ -165,6 +165,10 @@ class MasterOperation:MasterWorkerOperation {
             object: "Time needed: " + String(timeIntervalPasswordCrack))
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "By worker: " + worker_id!)
+        
+        // stops other worker 
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+            object: BasicMessage(status: .stopWork, value: ""))
     }
     
     /**
