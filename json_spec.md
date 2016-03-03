@@ -23,6 +23,14 @@
 }
 ```
 
+## stop work (.Basic)
+```
+{
+  "status" : "stopWorking",
+  "value" : ""
+}
+```
+
 ## still alive (.Basic)
 ```
 {
