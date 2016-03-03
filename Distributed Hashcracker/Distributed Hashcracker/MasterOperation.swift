@@ -276,7 +276,11 @@ class MasterOperation:MasterWorkerOperation {
         var workBlogID:Int = 1
         
         let workBlogQueue = WorkBlogQueue.sharedInstance
-        let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
+                         "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B",
+                         "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
+                         "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4",
+                         "5", "6", "7", "8", "9", "0"]
         
         func appendToArrayFirstTime(array:[String], toAppend:[String]) -> [String]{
             var tmpArray:[String] = [String]()
@@ -298,7 +302,8 @@ class MasterOperation:MasterWorkerOperation {
                 for subset in array.splitBy(100) {
                     tmpArray += subset.map{ $0 + char }
                     if tmpArray.count > 5000 {
-                        while(WorkBlogQueue.sharedInstance.workBlogQueue.count > 10){
+                        let workerCount = WorkerQueue.sharedInstance.workerQueue.count
+                        while(WorkBlogQueue.sharedInstance.workBlogQueue.count > workerCount){
                             print("WorkBlogQueue noch voll")
                         }
                         let workBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
