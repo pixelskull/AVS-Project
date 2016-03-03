@@ -131,15 +131,7 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
     }
     
     func sendMessage(notification:NSNotification) {
-        
         guard let message = notification.object as? Message else { return }
-
-//        let messageObject = message.jsonObject()
-
-//        for (key, value) in (messageObject) {
-//            	print("WSBO sendMessage -> Dictionary key \(key) -  Dictionary value \(value)")
-//        }
-        
         let jsonStringSendMessage = jsonParser.createJSONStringFromMessage(message)
         socket.writeString(jsonStringSendMessage!)
     }
@@ -157,25 +149,17 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
 
     func websocketDidReceiveMessage(socket: WebSocket, text: String) {
         print("got some text: \(text)")
-        
-        /*ToDo: Überprüfen ob die Message für Client (worker_id from message == NSHost.currentHost().name! && Message.status == message for worker) oder für Server (isManager.state == NSOnState && Message.status == message for master) relevant ist
-        */
-
         if let newMessage = jsonParser.createMessageFromJSONString(text) {
             messageQueue.put(newMessage)
         } else {
             print("failed to parse message: \(text)")
         }
     }
-//    func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-//        print("got some text: \(text)")
-//        if let newMessage = jsonParser.createMessageFromJSONString(text) {
-//            messageQueue.put(newMessage)
-//        }
-//    }
+
     
     func stop(notification:NSNotification) {
         run = false
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "WorkerOperation stopped")
     }
     
     deinit {}

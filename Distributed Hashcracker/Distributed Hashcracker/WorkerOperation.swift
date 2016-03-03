@@ -35,9 +35,7 @@ class WorkerOperation:MasterWorkerOperation {
                     decideWhatToDoExtendedMessage(message as! ExtendedMessage)
                     break
                 }
-            } else{
-                //print("No message in the queue")
-            }
+            } 
         }
         sleep(1)
         run = true
@@ -49,10 +47,12 @@ class WorkerOperation:MasterWorkerOperation {
     
     func decideWhatToDoBasicMessage(message: BasicMessage){
         let messageHeader = message.status
-        
         switch messageHeader {
         case MessagesHeader.stillAlive:
             stillAlive(message)
+            break
+        case MessagesHeader.stopWork:
+            stopWork()
             break
         default:
             print("No matching basic header")
@@ -62,7 +62,6 @@ class WorkerOperation:MasterWorkerOperation {
 
     func decideWhatToDoExtendedMessage(message: ExtendedMessage){
         let messageHeader = message.status
-        
         switch messageHeader {
         case MessagesHeader.setupConfig:
             setupConfig(message)
@@ -91,10 +90,8 @@ class WorkerOperation:MasterWorkerOperation {
         print("setupConfig")
         
         let workerIDFromMessage = message.values["worker_id"]!
-        
         // check if worker is in queue
         guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
-        
         // check if workerID is the id of this worker
         guard worker.checkWorkerID(workerIDFromMessage) else { return }
         
@@ -118,27 +115,16 @@ class WorkerOperation:MasterWorkerOperation {
         print("newWorkBlog")
         
         let workerIDFromMessage = message.values["worker_id"]!
-        
         // check if worker is in queue
         guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
-        
         // check if workerID is the id of this worker
-        print("worker = \(worker)")
-        print("workerIDCheck = \(worker.checkWorkerID(workerIDFromMessage))")
         guard worker.checkWorkerID(workerIDFromMessage) else { return }
-        // check other settings
-        print(worker.algorithm)
-        print(worker.target)
-    
         guard let algo = worker.algorithm,
             let tar = worker.target
-//            let crackedPW = crackedPassword
             else { return } /// TODO: hier vielleicht neue setupConfig reagieren
-        print("nach guards ---------------------------------")
-        let passwordArray: [String] = (message.values["hashes"]?.componentsSeparatedByString(","))!
         
-        /// TODO: Algorithm from setupConfig
-        var hashAlgorithm: HashAlgorithm?
+        let passwordArray: [String] = (message.values["hashes"]?.componentsSeparatedByString(","))!
+        var hashAlgorithm: HashAlgorithm
         switch algo {
         case "SHA-128":
             hashAlgorithm = HashSHA()
@@ -149,7 +135,7 @@ class WorkerOperation:MasterWorkerOperation {
             break
         }
         
-        if compareHash(hashAlgorithm!, passwordArray: passwordArray, targetHash: tar) {
+        if compareHash(hashAlgorithm, passwordArray: passwordArray, targetHash: tar) {
             print("Found the searched password -> hitTargetHashMessage was send")
         }
         else{
@@ -217,8 +203,19 @@ class WorkerOperation:MasterWorkerOperation {
         
     }
     
+    func stopWork() {
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "recieved stopWorkMessage:")
+        
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "  - stop WebsocketOperation")
+        notificationCenter.postNotificationName(Constants.NCValues.stopWebSocket, object: nil)
+        
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "  - stop WorkerOperation")
+        notificationCenter.postNotificationName(Constants.NCValues.stopWorker, object: nil)
+    }
+    
     func stopWorkerOperation(notification:NSNotification) {
         run = false
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "WorkerOperation stopped")
     }
     
 }

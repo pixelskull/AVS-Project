@@ -15,16 +15,13 @@ class MasterOperation:MasterWorkerOperation {
     var startTimePasswordCrack: NSDate = NSDate()
     
     private override init() {
-        
         super.init()
-        
         let notificationName = Constants.NCValues.stopMaster
         notificationCenter.addObserver(self,
             selector: "stopMasterOperation:",
             name: notificationName,
             object: nil)
-        
-         NSTimer.scheduledTimerWithTimeInterval(60.0,
+        NSTimer.scheduledTimerWithTimeInterval(60.0,
             target: self,
             selector: "sendStillAlive",
             userInfo: nil,
@@ -54,9 +51,6 @@ class MasterOperation:MasterWorkerOperation {
                     break
                 }
             }
-//            else{
-//                print("No message in the queue")
-//            }
         }
         sleep(1)
         run = true
@@ -104,6 +98,8 @@ class MasterOperation:MasterWorkerOperation {
     func sendStillAlive() {
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: BasicMessage(status: .stillAlive, value: ""))
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "asked if worker still alive")
     }
     
     
@@ -120,26 +116,10 @@ class MasterOperation:MasterWorkerOperation {
     */
     func newClientRegistration(message:BasicMessage){
         print("newClientRegistration")
-        
         // Start time of the password crack
         startTimePasswordCrack = NSDate()
-        
-        let messageObject = message.value
-        
-        let workerID:String = messageObject
-        
+
         let workerQueue = WorkerQueue.sharedInstance
-        
-        //print("Länge workerQueue: \(workerQueue.workerQueue.count)")
-//        
-//        if(workerQueue.workerQueue.count == 0){
-//            dispatch_async(dispatch_get_main_queue()) {
-//               print("generateNewWorkBlog")
-//                
-//               self.generateNewWorkBlog()
-//            }
-//        }
-//        performSelectorInBackground("generateNewWorkBlog", withObject: nil)
         if workerQueue.workerQueue.count == 0 {
             let queue = dispatch_queue_create("de.th-koeln.DistributedHashCracker", nil)
             dispatch_async(queue) {
@@ -147,20 +127,14 @@ class MasterOperation:MasterWorkerOperation {
                 self.generateNewWorkBlog()
             }
         }
-        //print("it goes on and on and on ... ")
-        
+        let workerID:String = message.value
         let newWorker = Worker(id: workerID, status: .Aktive)
-        
         workerQueue.put(newWorker)
         
         //Send setupConfigurationMessage
         let setupConfigMessageValues: [String:String] = ["algorithm": selectedAlgorithm, "target": targetHash, "worker_id":workerID]
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
-        
-        
-        //print("Send SetupMessage")
-        
     }
     
     /**
@@ -172,12 +146,10 @@ class MasterOperation:MasterWorkerOperation {
      */
     func hitTargetHash(message:ExtendedMessage){
         print("hitTargetHash")
-        
         //Endtime of the passwordCrack
         let endTimeMeasurement = NSDate();
         // <<<<< Time difference in seconds (double)
         let timeIntervalPasswordCrack: Double = endTimeMeasurement.timeIntervalSinceDate(startTimePasswordCrack);
-        
         let hash = message.values["hash"]
         let password = message.values["password"]
         //let time_needed = message.values["time_needed"]
@@ -193,14 +165,6 @@ class MasterOperation:MasterWorkerOperation {
             object: "Time needed: " + String(timeIntervalPasswordCrack))
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "By worker: " + worker_id!)
-        
-        /*
-        let messageObject = message?.jsonObject()
-        
-        for (key, value) in (messageObject)! {
-        print("Dictionary key \(key) -  Dictionary value \(value)")
-        }
-        */
     }
     
     /**
@@ -266,19 +230,14 @@ class MasterOperation:MasterWorkerOperation {
      */
     func hashesPerTime(message:ExtendedMessage){
         print("hashesPerTime")
-        
         let hash_count = message.values["hash_count"]
         let time_needed = message.values["time_needed"]
         let worker_id = message.values["worker_id"]
         
         //calculate the hashes per second
         let hashesPerSecond:Int = Int(hash_count!)! / Int(time_needed!)!
-        
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "The Worker: \(worker_id) generates and compares \(hashesPerSecond) per second")
-        
-        //print("HashesPerTimeMessage -> Worker_ID: \(worker_id) hashesPerSecond: \(hashesPerSecond)")
-        
     }
     
     /**
@@ -289,18 +248,19 @@ class MasterOperation:MasterWorkerOperation {
      */
     func alive(message:BasicMessage){
         print("alive")
-        let messageObject = message.value
-        print("stillAlive message value: " + messageObject)
-        //webSocket.sendMessage(BasicMessage(status: MessagesHeader.stillAlive, value: "worker_id"))
+        if let thisWorker = WorkerQueue.sharedInstance.getFirstWorker() {
+            notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                object: BasicMessage(status: MessagesHeader.stillAlive, value: thisWorker.id))
+            notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "alive Message send")
+        }
     }
     
     /*
     Helper functions
     */
     
-    func getMessageFromQueue() -> Message? {
-        return messageQueue.get()
-    }
+    func getMessageFromQueue() -> Message? { return messageQueue.get() }
     
     func generateNewWorkBlog() {
         
@@ -309,26 +269,16 @@ class MasterOperation:MasterWorkerOperation {
         let workBlogQueue = WorkBlogQueue.sharedInstance
         let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
         
-        //let newWorkBlogString = "bla,blub,bli,test,Test,foo"
+        
         
         func appendToArrayFirstTime(array:[String], toAppend:[String]) -> [String]{
             var tmpArray:[String] = [String]()
             
-            for char in toAppend {
-                tmpArray += array.map({ return $0 + char })
-                
-            }
+            for char in toAppend { tmpArray += array.map({ return $0 + char }) }
             
             let firstWorkArray = charArray + tmpArray
-            
-            //print("First Work Array: \(firstWorkArray)")
-            //print("Länge firstWorkArray: \(firstWorkArray.count)")
-            
-            
             let firstWorkBlog = WorkBlog(id: String(workBlogID), value: firstWorkArray)
-            
-            ++workBlogID
-            
+            workBlogID += 1
             workBlogQueue.put(firstWorkBlog)
             
             return tmpArray
@@ -338,27 +288,18 @@ class MasterOperation:MasterWorkerOperation {
             var currentArray:[String] = [String]()
             var tmpArray = [String]()
             for char in toAppend {
-                
                 for subset in array.splitBy(100) {
                     tmpArray += subset.map{ $0 + char }
                     if tmpArray.count > 5000 {
-                        //print(tmpArray.count)
-                        //print(tmpArray)
-                        /// TODO: Append tmpArray to WorBlogQueue
-                        
-                        
                         while(WorkBlogQueue.sharedInstance.workBlogQueue.count > 10){
                             print("WorkBlogQueue noch voll")
                         }
                         let workBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
-                        
-                        ++workBlogID
-                        
+                        workBlogID += 1
                         workBlogQueue.put(workBlog)
                         
                         currentArray += tmpArray
                         tmpArray.removeAll()
-                        
                     }
                 }
             }
@@ -367,8 +308,6 @@ class MasterOperation:MasterWorkerOperation {
         }
         
         var result = [String]()
-        
-        
         for var index = 0; index < 9; ++index{
             if result.count > 5000 {
                 
@@ -382,10 +321,15 @@ class MasterOperation:MasterWorkerOperation {
                 result = generateWorkBlogs(result, toAppend: charArray)
             }
         }
-        
     }
     
-    //Convert a workBlog to a String for a getWorkMessage
+    /**
+     Convert a workBlog to a String for a getWorkMessage
+     
+     - parameter workBlog: Workblog (Array of Hashes )
+     
+     - returns: String representation of Workblog
+     */
     func convertWorkBlogArrayToString(workBlog:[String]) -> String{
         
         var counter=0
@@ -434,8 +378,14 @@ class MasterOperation:MasterWorkerOperation {
         return nil
     }
     
+    /**
+     stops the MasterOperation with Notification
+     
+     - parameter notification: stopMaster Notifivation
+     */
     func stopMasterOperation(notification:NSNotification) {
         run = false
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "MasterOperation stopped")
     }
 }
 

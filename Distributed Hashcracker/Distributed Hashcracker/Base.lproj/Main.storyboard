@@ -924,6 +924,7 @@
                         <outlet property="isManager" destination="kfF-yf-KQG" id="i6N-jn-FF8"/>
                         <outlet property="passwordField" destination="YgZ-DV-6s5" id="eux-FO-2hu"/>
                         <outlet property="serverAdressField" destination="jXi-Ml-1py" id="aqh-zp-Bi4"/>
+                        <outlet property="startStopButton" destination="zEn-AA-8F5" id="11Y-kw-scH"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
