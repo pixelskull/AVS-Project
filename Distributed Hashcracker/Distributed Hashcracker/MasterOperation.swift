@@ -13,14 +13,19 @@ class MasterOperation:MasterWorkerOperation {
     var targetHash:String   = ""
     var selectedAlgorithm:String = ""
     var startTimePasswordCrack: NSDate = NSDate()
+    var generateLoopRun = true
     
     private override init() {
         super.init()
-        let notificationName = Constants.NCValues.stopMaster
         notificationCenter.addObserver(self,
             selector: "stopMasterOperation:",
-            name: notificationName,
+            name: Constants.NCValues.stopMaster,
             object: nil)
+        notificationCenter.addObserver(self,
+            selector: "",
+            name: Constants.NCValues.stopWorkBlog,
+            object: nil)
+        
         NSTimer.scheduledTimerWithTimeInterval(60.0,
             target: self,
             selector: "sendStillAlive",
@@ -166,7 +171,7 @@ class MasterOperation:MasterWorkerOperation {
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "By worker: " + worker_id!)
         
-        // stops other worker 
+        // stops other worker
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: BasicMessage(status: .stopWork, value: ""))
     }
@@ -273,8 +278,6 @@ class MasterOperation:MasterWorkerOperation {
         let workBlogQueue = WorkBlogQueue.sharedInstance
         let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
         
-        
-        
         func appendToArrayFirstTime(array:[String], toAppend:[String]) -> [String]{
             var tmpArray:[String] = [String]()
             
@@ -312,10 +315,10 @@ class MasterOperation:MasterWorkerOperation {
         }
         
         var result = [String]()
-        for var index = 0; index < 9; ++index{
-            if result.count > 5000 {
-                
-            }
+        var index = 0
+        generateLoop: while true { // for var index = 0; index < 9; ++index {
+            guard generateLoopRun == true else { break generateLoop }
+            index += 1
             if(index == 0){
                 print("Generate passwords with lenght: \(index+1) and \(index+2)")
                 result = appendToArrayFirstTime(charArray, toAppend: charArray)
@@ -389,7 +392,13 @@ class MasterOperation:MasterWorkerOperation {
      */
     func stopMasterOperation(notification:NSNotification) {
         run = false
+        notificationCenter.postNotificationName(Constants.NCValues.stopWorkBlog, object: nil)
         notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "MasterOperation stopped")
+    }
+    
+    func stopWorkBlogGeneration(notification:NSNotification) {
+        generateLoopRun = false
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "WorkBlog generation stopped")
     }
 }
 

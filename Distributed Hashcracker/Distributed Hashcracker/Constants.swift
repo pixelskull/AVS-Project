@@ -18,6 +18,7 @@ struct Constants {
         static let stopMaster    = "stopMaster"
         static let stopWebSocket = "stopWebSocketOperation"
         static let stopWorker    = "stopWorker"
+        static let stopWorkBlog  = "stopWorkBlogGeneration"
         static let updateLog     = "updateLog"
     }
 }
