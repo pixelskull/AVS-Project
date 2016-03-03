@@ -13,25 +13,13 @@ class WorkBlog{
     let id:String
     //    var ip:String
     var value:[String]
+    var inProcessBy:String
     
-    init(id:String, value:[String]){
+    
+    init(id:String, value:[String], inProcessBy:String = "Not in process"){
         self.id = id
         self.value = value
-        
+        self.inProcessBy = inProcessBy
     }
-    
-    func getID() -> String{
-        return id
-    }
-    
-    
-    func getValue() -> [String]{
-        return value
-    }
-    
-    func setValue(newValue:[String]){
-        value = newValue
-    }
-    
     
 }

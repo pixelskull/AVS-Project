@@ -130,7 +130,7 @@ class MasterOperation:MasterWorkerOperation {
         
         let workerQueue = WorkerQueue.sharedInstance
         
-        print("Länge workerQueue: \(workerQueue.workerQueue.count)")
+        //print("Länge workerQueue: \(workerQueue.workerQueue.count)")
 //        
 //        if(workerQueue.workerQueue.count == 0){
 //            dispatch_async(dispatch_get_main_queue()) {
@@ -147,7 +147,7 @@ class MasterOperation:MasterWorkerOperation {
                 self.generateNewWorkBlog()
             }
         }
-        print("it goes on and on and on ... ")
+        //print("it goes on and on and on ... ")
         
         let newWorker = Worker(id: workerID, status: .Aktive)
         
@@ -159,23 +159,7 @@ class MasterOperation:MasterWorkerOperation {
             object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
         
         
-        print("Send SetupMessage")
-        
-        /*
-        let workerQueueLenght = workerQueue.workerQueue.count + 1
-        
-        print("WorkerQueueLenght: \(workerQueue.workerQueue.count)")
-        
-        let workerID = "Worker_" + String(workerQueueLenght)
-        
-        print("WorkerID: " + workerID)
-        
-        let newWorker = Worker(id: workerID, ip: workerIP, status: .Aktive)
-        
-        workerQueue.put(newWorker)
-        
-        print("WorkerQueueLenght after input Worker: \(workerQueue.workerQueue.count)")
-        */
+        //print("Send SetupMessage")
         
     }
     
@@ -233,17 +217,40 @@ class MasterOperation:MasterWorkerOperation {
         
         let workerID = message.value
         
+        //Try to remove the workBlog from the workBlogQueue by the worker how processed the workBlog
+        let removedWorkBlog = workBlogQueue.removeWorkBlogByWorkerID(workerID)
+        
+        if(removedWorkBlog != nil){
+            //WorkBlog was processed by a worker and has been removed from the workBlogQueue
+            print("WorkBlog: \(removedWorkBlog?.id) wurde von \(workerID) bearbeitet und kann aus der Queue gelöscht werden")
+        } else{
+            //There was no assaigned workBlog in the workBlogQueue for the searched worker
+            print("Kein WorkBlog mit: \(removedWorkBlog?.id), \(removedWorkBlog?.inProcessBy), \(workerID) vorhanden")
+        }
+        
+        //Wait until the workBlogQueue got new entries
         while workBlogQueue.workBlogQueue.count == 0 {
             print("Es ist momentan kein WorkBlog vorhanden")
         }
         
         if(workBlogQueue.workBlogQueue.count > 0){
-        let newWorkBlog = convertWorkBlogArrayToString(workBlogQueue.getFirstWorkBlog()!.value)
         
-        //Send setupConfigurationMessage
-        let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
+            //let newWorkBlog = convertWorkBlogArrayToString(workBlogQueue.getFirstWorkBlog()!.value)
+            
+            var nextWorkBlog:WorkBlog? = nil
+            
+            //Check if there is a workBlog in the WorkBlogQueue that is free to compute by a worker
+            while nextWorkBlog == nil{
+                nextWorkBlog = getAndCheckNewWorkBlog(workerID)
+            }
+            
+            //Convert the newWorkBlog into a String
+            let newWorkBlog = convertWorkBlogArrayToString(nextWorkBlog!.value)
+            
+            //Send setupConfigurationMessage
+            let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
+            notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
         }
         else{
             print("Es ist momentan kein WorkBlog vorhanden")
@@ -378,6 +385,7 @@ class MasterOperation:MasterWorkerOperation {
         
     }
     
+    //Convert a workBlog to a String for a getWorkMessage
     func convertWorkBlogArrayToString(workBlog:[String]) -> String{
         
         var counter=0
@@ -394,6 +402,36 @@ class MasterOperation:MasterWorkerOperation {
         }
         
         return workBlogString
+    }
+    
+    /**
+    Get and check a new workBlog of the WorkBlogQueue for a getWorkMessage
+    - Compare if a workBlog isn't in process by a worker
+    - Get a free workBlog and set inProcessBy = workerID of the workBlog
+    */
+    func getAndCheckNewWorkBlog(workerID:String) -> WorkBlog?{
+        
+        let workBlogQueue = WorkBlogQueue.sharedInstance
+        let workerQueue = WorkerQueue.sharedInstance
+        
+        for workBlog in workBlogQueue.workBlogQueue{
+            
+            //WorkBlog isn't in process by a worker
+            if(workBlog.inProcessBy == "Not in process"){
+                
+                workBlog.inProcessBy = workerID
+                return workBlog
+            }
+            else if(workBlog.inProcessBy != "Not in process"){
+                //Check if the worker of the workBlog is still active
+                if(workerQueue.getWorkerByID(workBlog.inProcessBy)?.status == .Inactive){
+                    workBlog.inProcessBy = workerID
+                    return workBlog
+                }
+            }
+            
+        }
+        return nil
     }
     
     func stopMasterOperation(notification:NSNotification) {
