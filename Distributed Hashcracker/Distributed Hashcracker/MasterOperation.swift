@@ -272,17 +272,24 @@ class MasterOperation:MasterWorkerOperation {
     
     func getMessageFromQueue() -> Message? { return messageQueue.get() }
     
+    /**
+     Backgroundoperation for generating new WorkBlogs
+     - Generate new Workblocks with a specific lenght 
+     - Generate so many WorkBlogs like worker are in the workerQueue
+     precondition = a first worker has been registrated by the master
+     */
     func generateNewWorkBlog() {
         
         var workBlogID:Int = 1
-        
         let workBlogQueue = WorkBlogQueue.sharedInstance
+        //Array with characters for the password crack
         let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
                          "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B",
                          "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
                          "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4",
                          "5", "6", "7", "8", "9", "0"]
         
+        //The first WorkBlock includes the passwords with the lenght of one and two characters
         func appendToArrayFirstTime(array:[String], toAppend:[String]) -> [String]{
             var tmpArray:[String] = [String]()
             
@@ -296,14 +303,17 @@ class MasterOperation:MasterWorkerOperation {
             return tmpArray
         }
         
+        //New WorkBlogs with password lenght of 3 till 10 characters
         func generateWorkBlogs(array:[String], toAppend:[String]) -> [String]{
             var currentArray:[String] = [String]()
             var tmpArray = [String]()
             for char in toAppend {
+                //Split the array toAppend
                 for subset in array.splitBy(100) {
                     tmpArray += subset.map{ $0 + char }
                     if tmpArray.count > 5000 {
                         let workerCount = WorkerQueue.sharedInstance.workerQueue.count
+                        //Wait with the generating of a new WorkBlock until the WorkBlogQueue isn't full
                         waitLoop: while(WorkBlogQueue.sharedInstance.workBlogQueue.count > workerCount){
                             print("WorkBlogQueue noch voll")
                             guard generateLoopRun == true else { break waitLoop }

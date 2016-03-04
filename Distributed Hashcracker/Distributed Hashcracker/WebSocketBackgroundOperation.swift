@@ -50,59 +50,6 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
         connect()
         runloop: while true {
             if run == false { break runloop }
-            
-            //sleep(5)
-            
-            /*
-            let newWorkBlog: [String:String] = ["Value1":"Test", "Value2":"Blub", "Value3":"Bla"]
-            let hitTargetHash: [String:String] = ["Value1":"hash", "Value2":"password", "Value3":"time"]
-            let setupConfig: [String:String] = ["algorith":"MD5", "target":"test", "worker_id":"Worker_1"]
-            */
-            /*
-            let newWorkBlog2: [String:String] = ["Value1":"Bla", "Value2":"Bli", "Value3":"Blu"]
-            */
-
-            //Test send alive message
-
-//            let jsonStringFinishedWork = jsonParser.createJSONStringFromMessage(BasicMessage(status: .finishedWork, value: "I have done my work"))
-//            socket.writeString(jsonStringFinishedWork!)
-//            
-//            sleep(5)
-//            
-//            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip04.local"))
-//            socket.writeString(jsonStringNewClient!)
-//
-//            
-//            sleep(5)
-            
-//            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: ""))
-//            socket.writeString(jsonStringNewClient!)
-
-//            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: "Are you alive"))
-//            socket.writeString(jsonStringAlive!)
-//
-            
-//
-//            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip03.local"))
-//            socket.writeString(jsonStringNewClient!)
-//            
-//            let jsonStringStillAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .stillAlive, value: "true"))
-//            socket.writeString(jsonStringStillAlive!)
-//            
-//            let jsonStringSetupConfig = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: .setupConfig, values: setupConfig))
-//            socket.writeString(jsonStringSetupConfig!)
-//            
-//            let jsonStringNewWorkBlog = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: .newWorkBlog, values: newWorkBlog))
-//            socket.writeString(jsonStringNewWorkBlog!)
-//            
-//            let jsonStringHitTargetHash = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: .hitTargetHash, values: hitTargetHash))
-//            socket.writeString(jsonStringHitTargetHash!)
-            
-            /*
-            let jsonStringNewWorkBlog2 = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: MessagesHeader.newWorkBlog, values: newWorkBlog2))
-            socket.writeString(jsonStringNewWorkBlog2!)
-            */
-            
 
             sleep(1)
         }
