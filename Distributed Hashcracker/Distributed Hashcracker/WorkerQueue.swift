@@ -12,6 +12,8 @@ class WorkerQueue {
     
     var workerQueue:[Worker] = [Worker]()
     
+    var activeWorkerQueue:[Worker] = [Worker]()
+    
     static let sharedInstance = WorkerQueue()
     
     var read_semaphore = dispatch_semaphore_create(1)
@@ -69,5 +71,17 @@ class WorkerQueue {
         
         return workerByID
 
+    }
+    
+    
+    /**
+     appends new worker to activeWorkerQueue (Blocking)
+     
+     - parameter message: active Worker to append
+     */
+    func putActiveWorker(worker:Worker) {
+        dispatch_semaphore_wait(write_semaphore, DISPATCH_TIME_FOREVER)
+        activeWorkerQueue.append(worker)
+        dispatch_semaphore_signal(write_semaphore)
     }
 }

@@ -14,6 +14,7 @@ class MasterOperation:MasterWorkerOperation {
     var selectedAlgorithm:String = ""
     var startTimePasswordCrack: NSDate = NSDate()
     var generateLoopRun = true
+    var countOfSendStillAliveMessages:Int = 0
     
     private override init() {
         super.init()
@@ -99,12 +100,47 @@ class MasterOperation:MasterWorkerOperation {
         }
     }
     
-    
+    /** Send a stillAliveMessage in a specific time intervall
+    - Send the stillAliveMessage two times and wait for aliveMessages from the workers
+    - At the
+     
+    */
     func sendStillAlive() {
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: BasicMessage(status: .stillAlive, value: ""))
-        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
-            object: "asked if worker still alive")
+        
+        switch countOfSendStillAliveMessages{
+            case 0:
+                notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                    object: BasicMessage(status: .stillAlive, value: ""))
+                notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                    object: "asked if worker still alive")
+                ++countOfSendStillAliveMessages
+                break
+            case 1:
+                notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                    object: BasicMessage(status: .stillAlive, value: ""))
+                notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                    object: "asked if worker still alive")
+                ++countOfSendStillAliveMessages
+                break
+            case 2:
+                checkActiveWorker()
+                notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                    object: BasicMessage(status: .stillAlive, value: ""))
+                notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                    object: "Checked which workers are still alive and asked again")
+                countOfSendStillAliveMessages = 0
+                break
+            default:
+                notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                    object: BasicMessage(status: .stillAlive, value: ""))
+                notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                    object: "asked if worker still alive")
+                countOfSendStillAliveMessages = 0
+
+            
+        }
+        
+        
     }
     
     
@@ -265,12 +301,27 @@ class MasterOperation:MasterWorkerOperation {
      */
     func alive(message:BasicMessage){
         print("alive")
+        
+        let workerQueue = WorkerQueue.sharedInstance
+        
+        let workerID:String = message.value
+
+        //Put the Worker in the activeWorkerQueue if its not jet in the activeWorkerQueue
+        if(workerQueue.activeWorkerQueue.contains({$0.id == workerID}) == false){
+            //Get the worker from the WorkerQueue by the worker_id from the message
+            let activeWorker:Worker = workerQueue.getWorkerByID(workerID)!
+            //Put the worker in the activeWorkerQueue
+            workerQueue.putActiveWorker(activeWorker)
+        }
+        
+        /*
         if let thisWorker = WorkerQueue.sharedInstance.getFirstWorker() {
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                 object: BasicMessage(status: MessagesHeader.stillAlive, value: thisWorker.id))
             notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                 object: "alive Message send")
         }
+        */
     }
     
     /*
@@ -282,8 +333,8 @@ class MasterOperation:MasterWorkerOperation {
     /**
      Backgroundoperation for generating new WorkBlogs
      - Generate new Workblocks with a specific lenght 
-     - Generate so many WorkBlogs like worker are in the workerQueue
-     precondition = a first worker has been registrated by the master
+     - Generate and save so many WorkBlogs in the cache like workers are in the workerQueue
+     precondition = a worker has been registrated by the master
      */
     func generateNewWorkBlog() {
         
@@ -407,6 +458,39 @@ class MasterOperation:MasterWorkerOperation {
         }
         return nil
     }
+    
+    /**
+     Check which of the worker in the workerQueue is still alive
+     - Worker is in the activeWorkerQueue -> leave Worker.status = .Active
+     - Worker isn't in the activeWorkerQueue -> set Worker.status = .Inactive and check the WorkBlogQueue if there is a WorkBlog inProcess by the inactive worker -> set the WorkBlog.inProcessBy = "Not in process"
+     */
+    func checkActiveWorker(){
+        
+        let workBlogQueue = WorkBlogQueue.sharedInstance
+        let workerQueue = WorkerQueue.sharedInstance
+        
+        for worker in workerQueue.workerQueue{
+            // Check if the worker contains in the activeWorkerQueue
+            if(workerQueue.activeWorkerQueue.contains({ $0.id == worker.id }) == false){
+                // If worker isn't in the activeWorkerQueue -> set worker.status = .Inactive
+                worker.status = .Inactive
+                
+                //Check if there is a WorkBlog in the WorkBlogQueue which is "inProcessBy" the worker
+                for workBlog in workBlogQueue.workBlogQueue{
+                    
+                    //Set the workBlogs of the inactive Worker to "Not in process"
+                    if(workBlog.inProcessBy == worker.id){
+                        workBlog.inProcessBy = "Not in process"
+                    }
+                }
+
+            }
+            
+        }
+        //Remove all worker from the activeWorkerQueue
+        workerQueue.activeWorkerQueue.removeAll()
+    }
+
     
     /**
      stops the MasterOperation with Notification
