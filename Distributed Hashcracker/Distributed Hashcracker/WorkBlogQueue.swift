@@ -49,9 +49,9 @@ class WorkBlogQueue {
      - returns: Worker by from list when not empty otherwise nil
      */
     func getFirstWorkBlog() -> WorkBlog? {
-        guard workBlogQueue.count > 1 else { return nil }
+        guard workBlogQueue.count > 0 else { return nil }
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        let firstWorkBlog = workBlogQueue.removeFirst()
+        let firstWorkBlog = workBlogQueue.first!
         dispatch_semaphore_signal(read_semaphore)
         
         return firstWorkBlog

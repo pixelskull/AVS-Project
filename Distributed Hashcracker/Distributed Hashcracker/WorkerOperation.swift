@@ -13,10 +13,9 @@ class WorkerOperation:MasterWorkerOperation {
     
     override init() {
         super.init()
-        let notificationName = Constants.NCValues.stopWorker
         notificationCenter.addObserver(self,
-            selector: "stopWorkerOperation:",
-            name: notificationName,
+            selector: "stopWorkerOperation",
+            name: Constants.NCValues.stopWorker,
             object: nil)
     }
     
@@ -213,7 +212,7 @@ class WorkerOperation:MasterWorkerOperation {
         notificationCenter.postNotificationName(Constants.NCValues.stopWorker, object: nil)
     }
     
-    func stopWorkerOperation(notification:NSNotification) {
+    func stopWorkerOperation() {
         run = false
         notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "WorkerOperation stopped")
     }

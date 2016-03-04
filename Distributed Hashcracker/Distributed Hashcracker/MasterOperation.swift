@@ -244,7 +244,7 @@ class MasterOperation:MasterWorkerOperation {
         let worker_id = message.values["worker_id"]
         
         //calculate the hashes per second
-        let hashesPerSecond:Int = Int(hash_count!)! / Int(time_needed!)!
+        let hashesPerSecond:Double = Double(hash_count!)! / Double(time_needed!)!
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "The Worker: \(worker_id) generates and compares \(hashesPerSecond) per second")
     }
@@ -323,7 +323,6 @@ class MasterOperation:MasterWorkerOperation {
         var index = 0
         generateLoop: while true { // for var index = 0; index < 9; ++index {
             guard generateLoopRun == true else { break generateLoop }
-            index += 1
             if(index == 0){
                 print("Generate passwords with lenght: \(index+1) and \(index+2)")
                 result = appendToArrayFirstTime(charArray, toAppend: charArray)
@@ -332,6 +331,7 @@ class MasterOperation:MasterWorkerOperation {
                 print("Generate passwords with lenght: \(index+2)")
                 result = generateWorkBlogs(result, toAppend: charArray)
             }
+            index += 1
         }
     }
     
