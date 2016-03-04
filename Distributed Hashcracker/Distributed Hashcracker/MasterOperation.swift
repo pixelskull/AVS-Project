@@ -22,7 +22,7 @@ class MasterOperation:MasterWorkerOperation {
             name: Constants.NCValues.stopMaster,
             object: nil)
         notificationCenter.addObserver(self,
-            selector: "",
+            selector: "stopWorkBlogGeneration:",
             name: Constants.NCValues.stopWorkBlog,
             object: nil)
         
@@ -174,6 +174,7 @@ class MasterOperation:MasterWorkerOperation {
         // stops other worker
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: BasicMessage(status: .stopWork, value: ""))
+        notificationCenter.postNotificationName(Constants.NCValues.stopMaster, object: nil)
     }
     
     /**
@@ -303,8 +304,9 @@ class MasterOperation:MasterWorkerOperation {
                     tmpArray += subset.map{ $0 + char }
                     if tmpArray.count > 5000 {
                         let workerCount = WorkerQueue.sharedInstance.workerQueue.count
-                        while(WorkBlogQueue.sharedInstance.workBlogQueue.count > workerCount){
+                        waitLoop: while(WorkBlogQueue.sharedInstance.workBlogQueue.count > workerCount){
                             print("WorkBlogQueue noch voll")
+                            guard generateLoopRun == true else { break waitLoop }
                         }
                         let workBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
                         workBlogID += 1
