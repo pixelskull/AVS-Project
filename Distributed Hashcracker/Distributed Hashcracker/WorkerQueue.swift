@@ -17,7 +17,6 @@ class WorkerQueue {
     var read_semaphore = dispatch_semaphore_create(1)
     let write_semaphore = dispatch_semaphore_create(1)
     
-    
     /**
      appends new worker to WorkerQueue (Blocking)
      
@@ -51,12 +50,11 @@ class WorkerQueue {
     func getFirstWorker() -> Worker? {
         guard workerQueue.count > 0 else { return nil }
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        let firstWorker = workerQueue.removeFirst()
+        let firstWorker = workerQueue.first!
         dispatch_semaphore_signal(read_semaphore)
         return firstWorker
     }
 
-    
     /**
      delete Worker by ID if WorkerQueue is not empty (Blocking)
      
