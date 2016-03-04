@@ -155,6 +155,9 @@ class MasterOperation:MasterWorkerOperation {
         let endTimeMeasurement = NSDate();
         // <<<<< Time difference in seconds (double)
         let timeIntervalPasswordCrack: Double = endTimeMeasurement.timeIntervalSinceDate(startTimePasswordCrack);
+        //Round timeIntervalPasswordCrack with two decimal places
+        let roudedTimeIntervalPasswordCrack:Double = Double(round(100*timeIntervalPasswordCrack)/100)
+        
         let hash = message.values["hash"]
         let password = message.values["password"]
         //let time_needed = message.values["time_needed"]
@@ -167,7 +170,7 @@ class MasterOperation:MasterWorkerOperation {
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "Password: " + password!)
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
-            object: "Time needed: " + String(timeIntervalPasswordCrack))
+            object: "Time needed: " + String(roudedTimeIntervalPasswordCrack) + " seconds")
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "By worker: " + worker_id!)
         
@@ -246,8 +249,12 @@ class MasterOperation:MasterWorkerOperation {
         
         //calculate the hashes per second
         let hashesPerSecond:Double = Double(hash_count!)! / Double(time_needed!)!
+        
+        //Round hashesPerSecond with two decimal places
+        let roudedHashesPerSecond:Double = Double(round(100*hashesPerSecond)/100)
+        
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
-            object: "The Worker: \(worker_id) generates and compares \(hashesPerSecond) per second")
+            object: "The Worker: \(worker_id) generates and compares \(roudedHashesPerSecond) per second")
     }
     
     /**
