@@ -43,9 +43,9 @@ class WorkerQueue {
     }
     
     /**
-     get Worker by ID if WorkerQueue is not empty (Blocking)
+     get first Worker if WorkerQueue is not empty (Blocking)
      
-     - returns: Worker by from list when not empty otherwise nil
+     - returns: First Worker from list when not empty otherwise nil
      */
     func getFirstWorker() -> Worker? {
         guard workerQueue.count > 0 else { return nil }
@@ -58,7 +58,7 @@ class WorkerQueue {
     /**
      delete Worker by ID if WorkerQueue is not empty (Blocking)
      
-     - returns: Worker by from list when not empty otherwise nil
+     - returns: removed Worker from list when not empty otherwise nil
      */
     func remove(workerID:String) -> Worker? {
         guard let workerByIdIndex = workerQueue.indexOf({$0.id == workerID}) else { return nil }
