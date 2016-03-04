@@ -49,7 +49,7 @@ class WorkerQueue {
      - returns: Worker by from list when not empty otherwise nil
      */
     func getFirstWorker() -> Worker? {
-        guard workerQueue.count > 1 else { return nil }
+        guard workerQueue.count > 0 else { return nil }
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
         let firstWorker = workerQueue.removeFirst()
         dispatch_semaphore_signal(read_semaphore)

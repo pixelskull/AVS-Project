@@ -339,7 +339,6 @@ class MasterOperation:MasterWorkerOperation {
      Convert a workBlog to a String for a getWorkMessage
      
      - parameter workBlog: Workblog (Array of Hashes )
-     
      - returns: String representation of Workblog
      */
     func convertWorkBlogArrayToString(workBlog:[String]) -> String{

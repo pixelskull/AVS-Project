@@ -114,7 +114,6 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
     func websocketDidConnect(socket: WebSocket) { print("websocket is connected")
     
         if(master == false){
-            
             let workerID = NSHost.currentHost().name!
             
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
@@ -123,6 +122,7 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
             
             let workerQueue = WorkerQueue.sharedInstance
             workerQueue.put(worker)
+            
         }
     }
     
