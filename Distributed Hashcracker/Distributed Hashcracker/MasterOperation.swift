@@ -102,8 +102,7 @@ class MasterOperation:MasterWorkerOperation {
     
     /** Send a stillAliveMessage in a specific time intervall
     - Send the stillAliveMessage two times and wait for aliveMessages from the workers
-    - At the
-     
+    - At each third time the master checks which workers are still alive
     */
     func sendStillAlive() {
         
@@ -123,6 +122,7 @@ class MasterOperation:MasterWorkerOperation {
                 ++countOfSendStillAliveMessages
                 break
             case 2:
+                //Check active worker
                 checkActiveWorker()
                 notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                     object: BasicMessage(status: .stillAlive, value: ""))
@@ -136,11 +136,7 @@ class MasterOperation:MasterWorkerOperation {
                 notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                     object: "asked if worker still alive")
                 countOfSendStillAliveMessages = 0
-
-            
         }
-        
-        
     }
     
     
