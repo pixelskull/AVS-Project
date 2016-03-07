@@ -145,9 +145,6 @@ class SettingsViewController: NSViewController {
                 sleep(2)
                 
                 startMasterBackgroundOperation()
-                
-                //simulated test
-                //startWorkerBackgroundOperation()
             } else { startWorkerBackgroundOperation() }
             
             

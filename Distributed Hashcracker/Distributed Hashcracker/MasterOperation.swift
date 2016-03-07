@@ -126,7 +126,7 @@ class MasterOperation:MasterWorkerOperation {
 
         let workerQueue = WorkerQueue.sharedInstance
         if workerQueue.workerQueue.count == 0 {
-            let queue = dispatch_queue_create("de.th-koeln.DistributedHashCracker", nil)
+            let queue = dispatch_queue_create("de.th-koeln.DistributedHashCracker.WorkerQueue", nil)
             dispatch_async(queue) {
                 print("work work work")
                 self.generateNewWorkBlog()
