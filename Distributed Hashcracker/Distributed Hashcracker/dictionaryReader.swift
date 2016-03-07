@@ -8,16 +8,23 @@
 
 import Foundation
 
+class DictionaryAttack{
 
-func arrayFromDictionary(fileName: String) -> [String]? {
-    guard let path = NSBundle.mainBundle().pathForResource(fileName, ofType: "txt") else {
-        return nil
-    }
+    func dictionaryToWorkerQueue(fileName: String) -> [String]? {
+        guard let path = NSBundle.mainBundle().pathForResource(fileName, ofType: "txt") else {
+            return nil
+        }
     
-    do {
-        let content = try String(contentsOfFile:path, encoding: NSUTF8StringEncoding)
-        return content.componentsSeparatedByString("\n")
-    } catch _ as NSError {
+        do {
+            let content = try String(contentsOfFile:path, encoding: NSUTF8StringEncoding)
+            return content.componentsSeparatedByString("\n")
+        } catch _ as NSError {
         return nil
+        }
     }
+
+
+
+
+
 }
