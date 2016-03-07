@@ -21,4 +21,6 @@ struct Constants {
         static let stopWorkBlog  = "stopWorkBlogGeneration"
         static let updateLog     = "updateLog"
     }
+    
+    static let queueID = "de.th-koeln.DistributedHashCracker"
 }

@@ -87,21 +87,23 @@ class WorkerOperation:MasterWorkerOperation {
      */
     func setupConfig(message:ExtendedMessage){
         print("setupConfig")
-        
-        let workerIDFromMessage = message.values["worker_id"]!
-        // check if worker is in queue
-        guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
-        // check if workerID is the id of this worker
-        guard worker.checkWorkerID(workerIDFromMessage) else { return }
-        
-        WorkerQueue.sharedInstance.remove(worker.id)
-        worker.algorithm = message.values["algorithm"]!
-        worker.target = message.values["target"]!
-        WorkerQueue.sharedInstance.put(worker)
-        
-        //Send finishedWorkMessage
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: BasicMessage(status: MessagesHeader.finishedWork, value: worker.id))
+        let queue = dispatch_queue_create("\(Constants.queueID).setupConf", nil)
+        dispatch_async(queue) {
+            let workerIDFromMessage = message.values["worker_id"]!
+            // check if worker is in queue
+            guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
+            // check if workerID is the id of this worker
+            guard worker.checkWorkerID(workerIDFromMessage) else { return }
+            
+            WorkerQueue.sharedInstance.remove(worker.id)
+            worker.algorithm = message.values["algorithm"]!
+            worker.target = message.values["target"]!
+            WorkerQueue.sharedInstance.put(worker)
+            
+            //Send finishedWorkMessage
+            self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                object: BasicMessage(status: MessagesHeader.finishedWork, value: worker.id))
+        }
     }
     
     /**
@@ -112,33 +114,15 @@ class WorkerOperation:MasterWorkerOperation {
      */
     func newWorkBlog(message:ExtendedMessage){
         print("newWorkBlog")
-        
-        let workerIDFromMessage = message.values["worker_id"]!
-        // check if worker is in queue
-        guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
-        // check if workerID is the id of this worker
-        guard worker.checkWorkerID(workerIDFromMessage) else { return }
-        guard let algo = worker.algorithm,
-            let tar = worker.target
-            else { return } /// TODO: hier vielleicht neue setupConfig reagieren
-        
-        let passwordArray: [String] = (message.values["hashes"]?.componentsSeparatedByString(","))!
-        var hashAlgorithm: HashAlgorithm
-        switch algo {
-        case "SHA-128":
-            hashAlgorithm = HashSHA()
-        case "SHA-256":
-            hashAlgorithm = HashSHA256()
-        default:
-            hashAlgorithm = HashMD5()
-            break
-        }
-        
-        if compareHash(hashAlgorithm, passwordArray: passwordArray, targetHash: tar) {
-            print("Found the searched password -> hitTargetHashMessage was send")
-        }
-        else{
-            print("The searched password wasn't there -> finishedWorkMessage was send")
+        if let workerIDFromMessage = message.values["worker_id"],
+            let passwords = message.values["hashes"]?.componentsSeparatedByString(",") {
+                let queue = dispatch_queue_create("\(Constants.queueID).\(workerIDFromMessage)-\(passwords.first!)...", nil)
+                dispatch_async(queue) {
+                    print("working on compareHashes for \(workerIDFromMessage)")
+                    self.computeHashesAsyncForWorker(workerIDFromMessage, passwords: passwords)
+                }
+        } else {
+            print("-> newWorkBlog: Error could not get WorkerID or Password")
         }
     }
     
@@ -151,20 +135,50 @@ class WorkerOperation:MasterWorkerOperation {
     func stillAlive(message:BasicMessage){
         print("stillAlive")
         //Send a stillAliveMessage to the master with the worker_id of the client
-        guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker.id))
+        let queue = dispatch_queue_create("\(Constants.queueID).stillalive", nil)
+        dispatch_async(queue) {
+            guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
+            self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker.id))
+        }
     }
     
     
     /*
     Helper functions
     */
-    
     func getMessageFromQueue() -> Message? {
         return messageQueue.get()
     }
     
-    func compareHash(hashAlgorithm: HashAlgorithm, passwordArray:[String], targetHash: String) -> Bool{
+    func computeHashesAsyncForWorker(workerID:String, passwords:[String]) {
+        // check if worker is in queue
+        guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
+        // check if workerID is the id of this worker
+        guard worker.checkWorkerID(workerID) else { return }
+        guard let algo = worker.algorithm,
+            let tar = worker.target
+            else { return } /// TODO: hier vielleicht neue setupConfig reagieren
+        
+        var hashAlgorithm: HashAlgorithm
+        switch algo {
+        case "SHA-128":
+            hashAlgorithm = HashSHA()
+        case "SHA-256":
+            hashAlgorithm = HashSHA256()
+        default:
+            hashAlgorithm = HashMD5()
+            break
+        }
+        
+        if compareHashes(hashAlgorithm, passwordArray: passwords, targetHash: tar) {
+            print("Found the searched password -> hitTargetHashMessage was send")
+        }
+        else{
+            print("The searched password wasn't there -> finishedWorkMessage was send")
+        }
+    }
+    
+    func compareHashes(hashAlgorithm: HashAlgorithm, passwordArray:[String], targetHash: String) -> Bool{
         let worker = WorkerQueue.sharedInstance.getFirstWorker()
         
         // <<<<<<<<<< Start time measurement
@@ -191,7 +205,7 @@ class WorkerOperation:MasterWorkerOperation {
         // <<<<< Time difference in seconds (double)
         let timeInterval: Double = endTimeMeasurement.timeIntervalSinceDate(startTimeMeasurement);
         
-        let hashesPerTime: [String:String] = ["hash_count": String(passwordArray.count), "time_needed": String(timeInterval), /*"time_needed": "ka", */"worker_id": worker!.id]
+        let hashesPerTime: [String:String] = ["hash_count": String(passwordArray.count), "time_needed": String(timeInterval), "worker_id": worker!.id]
         
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: ExtendedMessage(status: MessagesHeader.hashesPerTime, values: hashesPerTime))
