@@ -87,7 +87,7 @@ class WorkerOperation:MasterWorkerOperation {
      */
     func setupConfig(message:ExtendedMessage){
         print("setupConfig")
-        let queue = dispatch_queue_create("de.th-koeln.DistributedHashCracker.setupConf", nil)
+        let queue = dispatch_queue_create("\(Constants.queueID).setupConf", nil)
         dispatch_async(queue) {
             let workerIDFromMessage = message.values["worker_id"]!
             // check if worker is in queue
@@ -116,7 +116,7 @@ class WorkerOperation:MasterWorkerOperation {
         print("newWorkBlog")
         if let workerIDFromMessage = message.values["worker_id"],
             let passwords = message.values["hashes"]?.componentsSeparatedByString(",") {
-                let queue = dispatch_queue_create("de.th-koeln.DistributedHashCracker.\(workerIDFromMessage)-\(passwords.first!)...", nil)
+                let queue = dispatch_queue_create("\(Constants.queueID).\(workerIDFromMessage)-\(passwords.first!)...", nil)
                 dispatch_async(queue) {
                     print("working on compareHashes for \(workerIDFromMessage)")
                     self.computeHashesAsyncForWorker(workerIDFromMessage, passwords: passwords)
@@ -135,7 +135,7 @@ class WorkerOperation:MasterWorkerOperation {
     func stillAlive(message:BasicMessage){
         print("stillAlive")
         //Send a stillAliveMessage to the master with the worker_id of the client
-        let queue = dispatch_queue_create("de.th-koeln.DistributedHashCracker.stillalive", nil)
+        let queue = dispatch_queue_create("\(Constants.queueID).stillalive", nil)
         dispatch_async(queue) {
             guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
             self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker.id))
@@ -146,7 +146,6 @@ class WorkerOperation:MasterWorkerOperation {
     /*
     Helper functions
     */
-    
     func getMessageFromQueue() -> Message? {
         return messageQueue.get()
     }
@@ -206,7 +205,7 @@ class WorkerOperation:MasterWorkerOperation {
         // <<<<< Time difference in seconds (double)
         let timeInterval: Double = endTimeMeasurement.timeIntervalSinceDate(startTimeMeasurement);
         
-        let hashesPerTime: [String:String] = ["hash_count": String(passwordArray.count), "time_needed": String(timeInterval), /*"time_needed": "ka", */"worker_id": worker!.id]
+        let hashesPerTime: [String:String] = ["hash_count": String(passwordArray.count), "time_needed": String(timeInterval), "worker_id": worker!.id]
         
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: ExtendedMessage(status: MessagesHeader.hashesPerTime, values: hashesPerTime))
