@@ -8,12 +8,13 @@
 
 import Foundation
 
-class BruteForceAttack: AttackStrategy {
+class BruteForceAttack:NSObject, AttackStrategy {
     
     var generateLoopRun = true
     let notificationCenter = NSNotificationCenter.defaultCenter()
     
-    init() {
+    override init() {
+        super.init()
         notificationCenter.addObserver(self,
             selector: "stopWorkBlogGeneration:",
             name: Constants.NCValues.stopWorkBlog,

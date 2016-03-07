@@ -8,12 +8,13 @@
 
 import Foundation
 
-class DictionaryAttack: AttackStrategy {
+class DictionaryAttack:NSObject, AttackStrategy {
 
     var passwords:[String]? //  = [String]()
     var index = 0
     
-    init() {
+    override init() {
+        super.init()
         self.passwords = self.dictionaryToArray("Password")
     }
     
