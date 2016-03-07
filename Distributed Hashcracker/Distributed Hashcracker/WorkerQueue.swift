@@ -12,6 +12,8 @@ class WorkerQueue {
     
     var workerQueue:[Worker] = [Worker]()
     
+    var activeWorkerQueue:[Worker] = [Worker]()
+    
     static let sharedInstance = WorkerQueue()
     
     var read_semaphore = dispatch_semaphore_create(1)
@@ -43,9 +45,9 @@ class WorkerQueue {
     }
     
     /**
-     get Worker by ID if WorkerQueue is not empty (Blocking)
+     get first Worker if WorkerQueue is not empty (Blocking)
      
-     - returns: Worker by from list when not empty otherwise nil
+     - returns: First Worker from list when not empty otherwise nil
      */
     func getFirstWorker() -> Worker? {
         guard workerQueue.count > 0 else { return nil }
@@ -58,7 +60,7 @@ class WorkerQueue {
     /**
      delete Worker by ID if WorkerQueue is not empty (Blocking)
      
-     - returns: Worker by from list when not empty otherwise nil
+     - returns: removed Worker from list when not empty otherwise nil
      */
     func remove(workerID:String) -> Worker? {
         guard let workerByIdIndex = workerQueue.indexOf({$0.id == workerID}) else { return nil }
@@ -69,5 +71,17 @@ class WorkerQueue {
         
         return workerByID
 
+    }
+    
+    
+    /**
+     appends new worker to activeWorkerQueue (Blocking)
+     
+     - parameter message: active Worker to append
+     */
+    func putActiveWorker(worker:Worker) {
+        dispatch_semaphore_wait(write_semaphore, DISPATCH_TIME_FOREVER)
+        activeWorkerQueue.append(worker)
+        dispatch_semaphore_signal(write_semaphore)
     }
 }

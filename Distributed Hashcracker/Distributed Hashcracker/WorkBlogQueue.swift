@@ -30,9 +30,9 @@ class WorkBlogQueue {
     }
     
     /**
-     get Worker by ID if WorkerQueue is not empty (Blocking)
+     get WorkerBlog by ID if WorkerQueue is not empty (Blocking)
      
-     - returns: Worker by ID from list when not empty otherwise nil
+     - returns: WorkerBlog by ID from list when not empty otherwise nil
      */
     func getWorkBlogByID(workBlogID:String) -> WorkBlog? {
         guard let workerByIdIndex = workBlogQueue.indexOf({$0.id == workBlogID}) else { return nil }
@@ -44,9 +44,9 @@ class WorkBlogQueue {
     }
     
     /**
-     get next WorkBlog by ID if WorkerQueue is not empty (Blocking)
+     get first WorkBlog if WorkerQueue is not empty (Blocking)
      
-     - returns: Worker by from list when not empty otherwise nil
+     - returns: first WorkBlog from list when not empty otherwise nil
      */
     func getFirstWorkBlog() -> WorkBlog? {
         guard workBlogQueue.count > 0 else { return nil }
@@ -59,9 +59,9 @@ class WorkBlogQueue {
     
     
     /**
-     delete WorkBlog by ID if WorkBlogQueue is not empty (Blocking)
+     delete WorkBlog by WorkBlogID if WorkBlogQueue is not empty (Blocking)
      
-     - returns: Removed WorkBLog from list by ID when not empty otherwise nil
+     - returns: Removed WorkBLog from list when not empty otherwise nil
      */
     func removeWorkBlogByWorkBlogID(workBlogID:String) -> WorkBlog? {
         guard let workBlogByWorkBlogIdIndex = workBlogQueue.indexOf({$0.id == workBlogID}) else { return nil }
@@ -75,7 +75,7 @@ class WorkBlogQueue {
     }
     
     /**
-     delete WorkBlog by ID if WorkBlogQueue is not empty (Blocking)
+     delete WorkBlog by WorkerID if WorkBlogQueue is not empty (Blocking)
      
      - returns: Removed WorkBLog from list by ID when not empty otherwise nil
      */
