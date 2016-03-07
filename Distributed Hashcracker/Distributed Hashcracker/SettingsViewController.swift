@@ -15,6 +15,7 @@ class SettingsViewController: NSViewController {
     @IBOutlet var serverAdressField: NSTextField!
     @IBOutlet var passwordField: NSTextField!
     @IBOutlet var hashAlgorithmSelected: NSPopUpButton!
+    @IBOutlet var startStopButton: NSButton!
     
     var hashedPassword: String = ""
     var hashAlgorithm: HashAlgorithm?
@@ -86,14 +87,6 @@ class SettingsViewController: NSViewController {
         
         if(isManager.state == NSOnState){
             webSocketOperation = WebSocketBackgroundOperation(host: host, master: true)
-//        if let url = NSURL(string: host) {
-//            socket = WebSocket(url: url)
-//            socket!.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
-//            socket!.delegate = webSocketOperation
-//            socket!.connect()
-//        } else {
-//            print("error while creating Websocket")
-//        }
         } else{
             webSocketOperation = WebSocketBackgroundOperation(host: host, master: false)
         }
@@ -208,6 +201,10 @@ class SettingsViewController: NSViewController {
             object: "terminating server task")
         task.terminate()
         task.waitUntilExit()
+    }
+    
+    func toggleStartStopButton(notification:NSNotification) {
+        startStopButton.state = NSOffState
     }
     
     deinit {

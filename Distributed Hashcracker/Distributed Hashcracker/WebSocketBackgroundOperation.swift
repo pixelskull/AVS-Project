@@ -50,59 +50,6 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
         connect()
         runloop: while true {
             if run == false { break runloop }
-            
-            //sleep(5)
-            
-            /*
-            let newWorkBlog: [String:String] = ["Value1":"Test", "Value2":"Blub", "Value3":"Bla"]
-            let hitTargetHash: [String:String] = ["Value1":"hash", "Value2":"password", "Value3":"time"]
-            let setupConfig: [String:String] = ["algorith":"MD5", "target":"test", "worker_id":"Worker_1"]
-            */
-            /*
-            let newWorkBlog2: [String:String] = ["Value1":"Bla", "Value2":"Bli", "Value3":"Blu"]
-            */
-
-            //Test send alive message
-
-//            let jsonStringFinishedWork = jsonParser.createJSONStringFromMessage(BasicMessage(status: .finishedWork, value: "I have done my work"))
-//            socket.writeString(jsonStringFinishedWork!)
-//            
-//            sleep(5)
-//            
-//            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip04.local"))
-//            socket.writeString(jsonStringNewClient!)
-//
-//            
-//            sleep(5)
-            
-//            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: ""))
-//            socket.writeString(jsonStringNewClient!)
-
-//            let jsonStringAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .alive, value: "Are you alive"))
-//            socket.writeString(jsonStringAlive!)
-//
-            
-//
-//            let jsonStringNewClient = jsonParser.createJSONStringFromMessage(BasicMessage(status: .newClientRegistration, value: "pip03.local"))
-//            socket.writeString(jsonStringNewClient!)
-//            
-//            let jsonStringStillAlive = jsonParser.createJSONStringFromMessage(BasicMessage(status: .stillAlive, value: "true"))
-//            socket.writeString(jsonStringStillAlive!)
-//            
-//            let jsonStringSetupConfig = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: .setupConfig, values: setupConfig))
-//            socket.writeString(jsonStringSetupConfig!)
-//            
-//            let jsonStringNewWorkBlog = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: .newWorkBlog, values: newWorkBlog))
-//            socket.writeString(jsonStringNewWorkBlog!)
-//            
-//            let jsonStringHitTargetHash = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: .hitTargetHash, values: hitTargetHash))
-//            socket.writeString(jsonStringHitTargetHash!)
-            
-            /*
-            let jsonStringNewWorkBlog2 = jsonParser.createJSONStringFromMessage(ExtendedMessage(status: MessagesHeader.newWorkBlog, values: newWorkBlog2))
-            socket.writeString(jsonStringNewWorkBlog2!)
-            */
-            
 
             sleep(1)
         }
@@ -114,7 +61,6 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
     func websocketDidConnect(socket: WebSocket) { print("websocket is connected")
     
         if(master == false){
-            
             let workerID = NSHost.currentHost().name!
             
             notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
@@ -123,6 +69,7 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
             
             let workerQueue = WorkerQueue.sharedInstance
             workerQueue.put(worker)
+            
         }
     }
     
@@ -131,15 +78,7 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
     }
     
     func sendMessage(notification:NSNotification) {
-        
         guard let message = notification.object as? Message else { return }
-
-        let messageObject = message.jsonObject()
-
-        for (key, value) in (messageObject) {
-            	print("WSBO sendMessage -> Dictionary key \(key) -  Dictionary value \(value)")
-        }
-        
         let jsonStringSendMessage = jsonParser.createJSONStringFromMessage(message)
         socket.writeString(jsonStringSendMessage!)
     }
@@ -157,25 +96,17 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
 
     func websocketDidReceiveMessage(socket: WebSocket, text: String) {
         print("got some text: \(text)")
-        
-        /*ToDo: Überprüfen ob die Message für Client (worker_id from message == NSHost.currentHost().name! && Message.status == message for worker) oder für Server (isManager.state == NSOnState && Message.status == message for master) relevant ist
-        */
-
         if let newMessage = jsonParser.createMessageFromJSONString(text) {
             messageQueue.put(newMessage)
         } else {
             print("failed to parse message: \(text)")
         }
     }
-//    func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-//        print("got some text: \(text)")
-//        if let newMessage = jsonParser.createMessageFromJSONString(text) {
-//            messageQueue.put(newMessage)
-//        }
-//    }
+
     
     func stop(notification:NSNotification) {
         run = false
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "WorkerOperation stopped")
     }
     
     deinit {}

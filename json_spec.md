@@ -23,6 +23,14 @@
 }
 ```
 
+## stop work (.Basic)
+```
+{
+  "status" : "stopWorking",
+  "value" : ""
+}
+```
+
 ## still alive (.Basic)
 ```
 {
@@ -47,8 +55,7 @@
   "status" : "hitTargetHash",
   "value" : {
     "hash" : "#HASH_VALUE",
-    "password" : "#PASSWORD"
-    "time_needed" : "#TIME"
+    "password" : "#PASSWORD",
     "worker_id" : "#WORKER_ID"
   }
 }

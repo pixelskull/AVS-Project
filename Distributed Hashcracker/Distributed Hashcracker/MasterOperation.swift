@@ -12,19 +12,22 @@ class MasterOperation:MasterWorkerOperation {
     
     var targetHash:String   = ""
     var selectedAlgorithm:String = ""
-    
+    var startTimePasswordCrack: NSDate = NSDate()
+    var generateLoopRun = true
+    var countOfSendStillAliveMessages:Int = 0
     
     private override init() {
-        
         super.init()
-        
-        let notificationName = Constants.NCValues.stopMaster
         notificationCenter.addObserver(self,
             selector: "stopMasterOperation:",
-            name: notificationName,
+            name: Constants.NCValues.stopMaster,
+            object: nil)
+        notificationCenter.addObserver(self,
+            selector: "stopWorkBlogGeneration:",
+            name: Constants.NCValues.stopWorkBlog,
             object: nil)
         
-         NSTimer.scheduledTimerWithTimeInterval(1.0,
+        NSTimer.scheduledTimerWithTimeInterval(60.0,
             target: self,
             selector: "sendStillAlive",
             userInfo: nil,
@@ -54,9 +57,6 @@ class MasterOperation:MasterWorkerOperation {
                     break
                 }
             }
-//            else{
-//                print("No message in the queue")
-//            }
         }
         sleep(1)
         run = true
@@ -100,10 +100,43 @@ class MasterOperation:MasterWorkerOperation {
         }
     }
     
-    
+    /** Send a stillAliveMessage in a specific time intervall
+    - Send the stillAliveMessage two times and wait for aliveMessages from the workers
+    - At each third time the master checks which workers are still alive
+    */
     func sendStillAlive() {
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: BasicMessage(status: .stillAlive, value: ""))
+        
+        switch countOfSendStillAliveMessages{
+            case 0:
+                notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                    object: BasicMessage(status: .stillAlive, value: ""))
+                notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                    object: "asked if worker still alive")
+                ++countOfSendStillAliveMessages
+                break
+            case 1:
+                notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                    object: BasicMessage(status: .stillAlive, value: ""))
+                notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                    object: "asked if worker still alive")
+                ++countOfSendStillAliveMessages
+                break
+            case 2:
+                //Check active worker
+                checkActiveWorker()
+                notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                    object: BasicMessage(status: .stillAlive, value: ""))
+                notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                    object: "Checked which workers are still alive and asked again")
+                countOfSendStillAliveMessages = 0
+                break
+            default:
+                notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                    object: BasicMessage(status: .stillAlive, value: ""))
+                notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                    object: "asked if worker still alive")
+                countOfSendStillAliveMessages = 0
+        }
     }
     
     
@@ -120,23 +153,10 @@ class MasterOperation:MasterWorkerOperation {
     */
     func newClientRegistration(message:BasicMessage){
         print("newClientRegistration")
-        
-        let messageObject = message.value
-        
-        let workerID:String = messageObject
-        
+        // Start time of the password crack
+        startTimePasswordCrack = NSDate()
+
         let workerQueue = WorkerQueue.sharedInstance
-        
-        print("Länge workerQueue: \(workerQueue.workerQueue.count)")
-//        
-//        if(workerQueue.workerQueue.count == 0){
-//            dispatch_async(dispatch_get_main_queue()) {
-//               print("generateNewWorkBlog")
-//                
-//               self.generateNewWorkBlog()
-//            }
-//        }
-//        performSelectorInBackground("generateNewWorkBlog", withObject: nil)
         if workerQueue.workerQueue.count == 0 {
             let queue = dispatch_queue_create("de.th-koeln.DistributedHashCracker", nil)
             dispatch_async(queue) {
@@ -144,36 +164,14 @@ class MasterOperation:MasterWorkerOperation {
                 self.generateNewWorkBlog()
             }
         }
-        print("it goes on and on and on ... ")
-        
+        let workerID:String = message.value
         let newWorker = Worker(id: workerID, status: .Aktive)
-        
         workerQueue.put(newWorker)
         
         //Send setupConfigurationMessage
         let setupConfigMessageValues: [String:String] = ["algorithm": selectedAlgorithm, "target": targetHash, "worker_id":workerID]
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
-        
-        
-        print("Send SetupMessage")
-        
-        /*
-        let workerQueueLenght = workerQueue.workerQueue.count + 1
-        
-        print("WorkerQueueLenght: \(workerQueue.workerQueue.count)")
-        
-        let workerID = "Worker_" + String(workerQueueLenght)
-        
-        print("WorkerID: " + workerID)
-        
-        let newWorker = Worker(id: workerID, ip: workerIP, status: .Aktive)
-        
-        workerQueue.put(newWorker)
-        
-        print("WorkerQueueLenght after input Worker: \(workerQueue.workerQueue.count)")
-        */
-        
     }
     
     /**
@@ -185,10 +183,16 @@ class MasterOperation:MasterWorkerOperation {
      */
     func hitTargetHash(message:ExtendedMessage){
         print("hitTargetHash")
+        //Endtime of the passwordCrack
+        let endTimeMeasurement = NSDate();
+        // <<<<< Time difference in seconds (double)
+        let timeIntervalPasswordCrack: Double = endTimeMeasurement.timeIntervalSinceDate(startTimePasswordCrack);
+        //Round timeIntervalPasswordCrack with two decimal places
+        let roudedTimeIntervalPasswordCrack:Double = Double(round(100*timeIntervalPasswordCrack)/100)
         
         let hash = message.values["hash"]
         let password = message.values["password"]
-        let time_needed = message.values["time_needed"]
+        //let time_needed = message.values["time_needed"]
         let worker_id = message.values["worker_id"]
         
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
@@ -198,17 +202,14 @@ class MasterOperation:MasterWorkerOperation {
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "Password: " + password!)
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
-            object: "Time needed: " + time_needed!)
+            object: "Time needed: " + String(roudedTimeIntervalPasswordCrack) + " seconds")
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "By worker: " + worker_id!)
         
-        /*
-        let messageObject = message?.jsonObject()
-        
-        for (key, value) in (messageObject)! {
-        print("Dictionary key \(key) -  Dictionary value \(value)")
-        }
-        */
+        // stops other worker
+        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+            object: BasicMessage(status: .stopWork, value: ""))
+        notificationCenter.postNotificationName(Constants.NCValues.stopMaster, object: nil)
     }
     
     /**
@@ -225,34 +226,67 @@ class MasterOperation:MasterWorkerOperation {
         
         let workerID = message.value
         
+        //Try to remove the workBlog from the workBlogQueue by the worker how processed the workBlog
+        let removedWorkBlog = workBlogQueue.removeWorkBlogByWorkerID(workerID)
+        
+        if(removedWorkBlog != nil){
+            //WorkBlog was processed by a worker and has been removed from the workBlogQueue
+            print("WorkBlog: \(removedWorkBlog?.id) wurde von \(workerID) bearbeitet und kann aus der Queue gelöscht werden")
+        } else{
+            //There was no assaigned workBlog in the workBlogQueue for the searched worker
+            print("Kein WorkBlog mit: \(removedWorkBlog?.id), \(removedWorkBlog?.inProcessBy), \(workerID) vorhanden")
+        }
+        
+        //Wait until the workBlogQueue got new entries
         while workBlogQueue.workBlogQueue.count == 0 {
-            sleep(1)
+            print("Es ist momentan kein WorkBlog vorhanden")
         }
         
         if(workBlogQueue.workBlogQueue.count > 0){
-        let newWorkBlog = convertWorkBlogArrayToString(workBlogQueue.getFirstWorkBlog()!.value)
         
-        //Send setupConfigurationMessage
-        let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
+            //let newWorkBlog = convertWorkBlogArrayToString(workBlogQueue.getFirstWorkBlog()!.value)
+            
+            var nextWorkBlog:WorkBlog? = nil
+            
+            //Check if there is a workBlog in the WorkBlogQueue that is free to compute by a worker
+            while nextWorkBlog == nil{
+                nextWorkBlog = getAndCheckNewWorkBlog(workerID)
+            }
+            
+            //Convert the newWorkBlog into a String
+            let newWorkBlog = convertWorkBlogArrayToString(nextWorkBlog!.value)
+            
+            //Send setupConfigurationMessage
+            let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
+            notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
         }
         else{
             print("Es ist momentan kein WorkBlog vorhanden")
         }
     }
     
+    /**
+     Reaction of the server on a hashesPerTimeMessage ->
+     - calculate the hashes per second
+     - send a postNotifiaction to the LogViewController to show the result
+     precondition = hashesPerTimeMessage from a client
+     postcondition = display the hashes per second from the client in the LogViewController
+     */
     func hashesPerTime(message:ExtendedMessage){
         print("hashesPerTime")
-        
         let hash_count = message.values["hash_count"]
         let time_needed = message.values["time_needed"]
         let worker_id = message.values["worker_id"]
         
-        let hashesPerSecond:Int = Int(hash_count!)! / Int(time_needed!)!
+        //calculate the hashes per second
+        let hashesPerSecond:Double = Double(hash_count!)! / Double(time_needed!)!
         
-        print("HashesPerTimeMessage -> Worker_ID: \(worker_id) hashesPerSecond: \(hashesPerSecond)")
+        //Round hashesPerSecond with two decimal places
+        let roudedHashesPerSecond:Double = Double(round(100*hashesPerSecond)/100)
         
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+            object: "The Worker: \(worker_id) generates and compares \(roudedHashesPerSecond) per second")
     }
     
     /**
@@ -263,84 +297,98 @@ class MasterOperation:MasterWorkerOperation {
      */
     func alive(message:BasicMessage){
         print("alive")
-        let messageObject = message.value
-        print("stillAlive message value: " + messageObject)
-        //webSocket.sendMessage(BasicMessage(status: MessagesHeader.stillAlive, value: "worker_id"))
+        
+        let workerQueue = WorkerQueue.sharedInstance
+        
+        let workerID:String = message.value
+
+        //Put the Worker in the activeWorkerQueue if its not jet in the activeWorkerQueue
+        if(workerQueue.activeWorkerQueue.contains({$0.id == workerID}) == false){
+            //Get the worker from the WorkerQueue by the worker_id from the message
+            let activeWorker:Worker = workerQueue.getWorkerByID(workerID)!
+            //Put the worker in the activeWorkerQueue
+            workerQueue.putActiveWorker(activeWorker)
+        }
+        
+        /*
+        if let thisWorker = WorkerQueue.sharedInstance.getFirstWorker() {
+            notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                object: BasicMessage(status: MessagesHeader.stillAlive, value: thisWorker.id))
+            notificationCenter.postNotificationName(Constants.NCValues.updateLog,
+                object: "alive Message send")
+        }
+        */
     }
     
     /*
     Helper functions
     */
     
-    func getMessageFromQueue() -> Message? {
-        return messageQueue.get()
-    }
+    func getMessageFromQueue() -> Message? { return messageQueue.get() }
     
+    /**
+     Backgroundoperation for generating new WorkBlogs
+     - Generate new Workblocks with a specific lenght 
+     - Generate and save so many WorkBlogs in the cache like workers are in the workerQueue
+     precondition = a worker has been registrated by the master
+     */
     func generateNewWorkBlog() {
         
         var workBlogID:Int = 1
-        
         let workBlogQueue = WorkBlogQueue.sharedInstance
-        let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        //Array with characters for the password crack
+        let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
+                         "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B",
+                         "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
+                         "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4",
+                         "5", "6", "7", "8", "9", "0"]
         
-        //let newWorkBlogString = "bla,blub,bli,test,Test,foo"
-        
+        //The first WorkBlock includes the passwords with the lenght of one and two characters
         func appendToArrayFirstTime(array:[String], toAppend:[String]) -> [String]{
             var tmpArray:[String] = [String]()
             
-            for char in toAppend {
-                tmpArray += array.map({ return $0 + char })
-                
-            }
+            for char in toAppend { tmpArray += array.map({ return $0 + char }) }
             
             let firstWorkArray = charArray + tmpArray
-            
-            //print("First Work Array: \(firstWorkArray)")
-            //print("Länge firstWorkArray: \(firstWorkArray.count)")
-            
-            
             let firstWorkBlog = WorkBlog(id: String(workBlogID), value: firstWorkArray)
-            
-            ++workBlogID
-            
+            workBlogID += 1
             workBlogQueue.put(firstWorkBlog)
             
             return tmpArray
         }
         
+        //New WorkBlogs with password lenght of 3 till 10 characters
         func generateWorkBlogs(array:[String], toAppend:[String]) -> [String]{
-            var currendArray:[String] = [String]()
+            var currentArray:[String] = [String]()
             var tmpArray = [String]()
             for char in toAppend {
+                //Split the array toAppend
                 for subset in array.splitBy(100) {
                     tmpArray += subset.map{ $0 + char }
                     if tmpArray.count > 5000 {
-                        //print(tmpArray.count)
-                        //print(tmpArray)
-                        /// TODO: Append tmpArray to WorBlogQueue
-                        
+                        let workerCount = WorkerQueue.sharedInstance.workerQueue.count
+                        //Wait with the generating of a new WorkBlock until the WorkBlogQueue isn't full
+                        waitLoop: while(WorkBlogQueue.sharedInstance.workBlogQueue.count > workerCount){
+                            print("WorkBlogQueue noch voll")
+                            guard generateLoopRun == true else { break waitLoop }
+                        }
                         let workBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
-                        
-                        ++workBlogID
-                        
+                        workBlogID += 1
                         workBlogQueue.put(workBlog)
                         
-                        currendArray += tmpArray
+                        currentArray += tmpArray
                         tmpArray.removeAll()
                     }
                 }
-
             }
-            return currendArray
+            currentArray += tmpArray
+            return currentArray
         }
         
         var result = [String]()
-        
-        
-        for var index = 0; index < 9; ++index{
-            if result.count > 5000 {
-                
-            }
+        var index = 0
+        generateLoop: while true { // for var index = 0; index < 9; ++index {
+            guard generateLoopRun == true else { break generateLoop }
             if(index == 0){
                 print("Generate passwords with lenght: \(index+1) and \(index+2)")
                 result = appendToArrayFirstTime(charArray, toAppend: charArray)
@@ -349,10 +397,16 @@ class MasterOperation:MasterWorkerOperation {
                 print("Generate passwords with lenght: \(index+2)")
                 result = generateWorkBlogs(result, toAppend: charArray)
             }
+            index += 1
         }
-        
     }
     
+    /**
+     Convert a workBlog to a String for a getWorkMessage
+     
+     - parameter workBlog: Workblog (Array of Hashes )
+     - returns: String representation of Workblog
+     */
     func convertWorkBlogArrayToString(workBlog:[String]) -> String{
         
         var counter=0
@@ -371,8 +425,83 @@ class MasterOperation:MasterWorkerOperation {
         return workBlogString
     }
     
+    /**
+    Get and check a new workBlog of the WorkBlogQueue for a getWorkMessage
+    - Compare if a workBlog isn't in process by a worker
+    - Get a free workBlog and set inProcessBy = workerID of the workBlog
+    */
+    func getAndCheckNewWorkBlog(workerID:String) -> WorkBlog?{
+        
+        let workBlogQueue = WorkBlogQueue.sharedInstance
+        let workerQueue = WorkerQueue.sharedInstance
+        
+        for workBlog in workBlogQueue.workBlogQueue{
+            
+            //WorkBlog isn't in process by a worker
+            if(workBlog.inProcessBy == "Not in process"){
+                
+                workBlog.inProcessBy = workerID
+                return workBlog
+            }
+            else if(workBlog.inProcessBy != "Not in process"){
+                //Check if the worker of the workBlog is still active
+                if(workerQueue.getWorkerByID(workBlog.inProcessBy)?.status == .Inactive){
+                    workBlog.inProcessBy = workerID
+                    return workBlog
+                }
+            }
+            
+        }
+        return nil
+    }
+    
+    /**
+     Check which of the worker in the workerQueue is still alive
+     - Worker is in the activeWorkerQueue -> leave Worker.status = .Active
+     - Worker isn't in the activeWorkerQueue -> set Worker.status = .Inactive and check the WorkBlogQueue if there is a WorkBlog inProcess by the inactive worker -> set the WorkBlog.inProcessBy = "Not in process"
+     */
+    func checkActiveWorker(){
+        
+        let workBlogQueue = WorkBlogQueue.sharedInstance
+        let workerQueue = WorkerQueue.sharedInstance
+        
+        for worker in workerQueue.workerQueue{
+            // Check if the worker contains in the activeWorkerQueue
+            if(workerQueue.activeWorkerQueue.contains({ $0.id == worker.id }) == false){
+                // If worker isn't in the activeWorkerQueue -> set worker.status = .Inactive
+                worker.status = .Inactive
+                
+                //Check if there is a WorkBlog in the WorkBlogQueue which is "inProcessBy" the worker
+                for workBlog in workBlogQueue.workBlogQueue{
+                    
+                    //Set the workBlogs of the inactive Worker to "Not in process"
+                    if(workBlog.inProcessBy == worker.id){
+                        workBlog.inProcessBy = "Not in process"
+                    }
+                }
+
+            }
+            
+        }
+        //Remove all worker from the activeWorkerQueue
+        workerQueue.activeWorkerQueue.removeAll()
+    }
+
+    
+    /**
+     stops the MasterOperation with Notification
+     
+     - parameter notification: stopMaster Notifivation
+     */
     func stopMasterOperation(notification:NSNotification) {
         run = false
+        notificationCenter.postNotificationName(Constants.NCValues.stopWorkBlog, object: nil)
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "MasterOperation stopped")
+    }
+    
+    func stopWorkBlogGeneration(notification:NSNotification) {
+        generateLoopRun = false
+        notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "WorkBlog generation stopped")
     }
 }
 
