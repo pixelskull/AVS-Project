@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3B6A0D621C8717990085CF12 /* dictionaryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6A0D611C8717990085CF12 /* dictionaryReader.swift */; };
+		3B6A0D621C8717990085CF12 /* DictionaryAttack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6A0D611C8717990085CF12 /* DictionaryAttack.swift */; };
 		4C3F3EB81C845B6900F837DB /* WorkBlogQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */; };
 		4C3F3EBC1C84602900F837DB /* WorkBlog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EBB1C84602900F837DB /* WorkBlog.swift */; };
 		4C98B1A11C52893800E2641B /* CustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A01C52893800E2641B /* CustomObject.m */; };
@@ -25,6 +25,9 @@
 		501E6E681C1703C70068A44B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 501E6E661C1703C70068A44B /* Main.storyboard */; };
 		501E6E731C1703C70068A44B /* Distributed_HashcrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E721C1703C70068A44B /* Distributed_HashcrackerTests.swift */; };
 		501E6E7E1C1703C70068A44B /* Distributed_HashcrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E7D1C1703C70068A44B /* Distributed_HashcrackerUITests.swift */; };
+		502ED1D21C8DB89500C0FA10 /* BruteforceAttack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502ED1D11C8DB89500C0FA10 /* BruteforceAttack.swift */; };
+		502ED1D41C8DB8BB00C0FA10 /* AttackStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502ED1D31C8DB8BB00C0FA10 /* AttackStrategy.swift */; };
+		502ED1D61C8DB94900C0FA10 /* PasswordDictionary.txt in Resources */ = {isa = PBXBuildFile; fileRef = 502ED1D51C8DB94900C0FA10 /* PasswordDictionary.txt */; };
 		5086D94B1C5FD680008F7464 /* MessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5086D94A1C5FD680008F7464 /* MessageParser.swift */; };
 		5088E8901C74994C0065C39B /* PlotKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5088E88F1C74994C0065C39B /* PlotKit.framework */; };
 		5088E8911C74994C0065C39B /* PlotKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 5088E88F1C74994C0065C39B /* PlotKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -85,7 +88,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3B6A0D611C8717990085CF12 /* dictionaryReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dictionaryReader.swift; sourceTree = "<group>"; };
+		3B6A0D611C8717990085CF12 /* DictionaryAttack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryAttack.swift; sourceTree = "<group>"; };
 		4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkBlogQueue.swift; sourceTree = "<group>"; };
 		4C3F3EBB1C84602900F837DB /* WorkBlog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkBlog.swift; sourceTree = "<group>"; };
 		4C98B19F1C52893800E2641B /* Distributed Hashcracker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Distributed Hashcracker-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -110,6 +113,9 @@
 		501E6E791C1703C70068A44B /* Distributed HashcrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Distributed HashcrackerUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		501E6E7D1C1703C70068A44B /* Distributed_HashcrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Distributed_HashcrackerUITests.swift; sourceTree = "<group>"; };
 		501E6E7F1C1703C70068A44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		502ED1D11C8DB89500C0FA10 /* BruteforceAttack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BruteforceAttack.swift; sourceTree = "<group>"; };
+		502ED1D31C8DB8BB00C0FA10 /* AttackStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttackStrategy.swift; sourceTree = "<group>"; };
+		502ED1D51C8DB94900C0FA10 /* PasswordDictionary.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = PasswordDictionary.txt; sourceTree = "<group>"; };
 		5086D94A1C5FD680008F7464 /* MessageParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageParser.swift; sourceTree = "<group>"; };
 		5088E88F1C74994C0065C39B /* PlotKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PlotKit.framework; sourceTree = "<group>"; };
 		5088E8931C7499F80065C39B /* PlotKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = PlotKit.framework.dSYM; sourceTree = "<group>"; };
@@ -178,7 +184,9 @@
 				5088E8A81C772BED0065C39B /* Constants.swift */,
 				4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */,
 				4C3F3EBB1C84602900F837DB /* WorkBlog.swift */,
-				3B6A0D611C8717990085CF12 /* dictionaryReader.swift */,
+				502ED1D31C8DB8BB00C0FA10 /* AttackStrategy.swift */,
+				3B6A0D611C8717990085CF12 /* DictionaryAttack.swift */,
+				502ED1D11C8DB89500C0FA10 /* BruteforceAttack.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -241,6 +249,7 @@
 		5088E8971C749A3A0065C39B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				502ED1D51C8DB94900C0FA10 /* PasswordDictionary.txt */,
 				5088E8951C749A1D0065C39B /* Starscream.framework.dSYM */,
 				5088E8931C7499F80065C39B /* PlotKit.framework.dSYM */,
 				501E6E641C1703C70068A44B /* Assets.xcassets */,
@@ -366,6 +375,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				502ED1D61C8DB94900C0FA10 /* PasswordDictionary.txt in Resources */,
 				5005DEC51C625CA100D39F2C /* node_server in Resources */,
 				501E6E651C1703C70068A44B /* Assets.xcassets in Resources */,
 				501E6E681C1703C70068A44B /* Main.storyboard in Resources */,
@@ -393,7 +403,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3B6A0D621C8717990085CF12 /* dictionaryReader.swift in Sources */,
+				3B6A0D621C8717990085CF12 /* DictionaryAttack.swift in Sources */,
 				50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */,
 				4C3F3EB81C845B6900F837DB /* WorkBlogQueue.swift in Sources */,
 				4CE7BFD21C6D41A90020482F /* Worker.swift in Sources */,
@@ -403,7 +413,9 @@
 				50E889831C6B6E6000B854D5 /* ChartWindowController.swift in Sources */,
 				501E6E631C1703C70068A44B /* SettingsViewController.swift in Sources */,
 				5088E8A91C772BED0065C39B /* Constants.swift in Sources */,
+				502ED1D21C8DB89500C0FA10 /* BruteforceAttack.swift in Sources */,
 				50E889811C6B500B00B854D5 /* ChartViewController.swift in Sources */,
+				502ED1D41C8DB8BB00C0FA10 /* AttackStrategy.swift in Sources */,
 				5088E8AB1C7739200065C39B /* MasterOperation.swift in Sources */,
 				50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */,
 				4C3F3EBC1C84602900F837DB /* WorkBlog.swift in Sources */,

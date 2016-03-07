@@ -8,29 +8,31 @@
 
 import Foundation
 
-class DictionaryAttack{
+class DictionaryAttack: AttackStrategy {
 
-    var dictionaryWorker = [String]()
+    var passwords:[String]? //  = [String]()
     var index = 0
     
-    func dictionaryToArray(fileName: String) -> [String]? {
-        guard let path = NSBundle.mainBundle().pathForResource(fileName, ofType: "txt") else {
-            return nil
-        }
+    init() {
+        self.passwords = self.dictionaryToArray("Password")
+    }
     
+    private func dictionaryToArray(fileName: String) -> [String]? {
+        guard let path = NSBundle.mainBundle().pathForResource(fileName, ofType: "txt") else { return nil }
         do {
             let passwords = try String(contentsOfFile:path, encoding: NSUTF8StringEncoding)
             return passwords.componentsSeparatedByString("\n")
         } catch _ as NSError {
-        return nil
+            return nil
         }
     }
     
-    func fillDictionary(passwords:[String]){
+    func fillWorkBlogQueue(){
+        if let passwords = passwords {
             for block in passwords.splitBy(1000){
-                dictionaryWorker.append(passwords[index])
                 index+=1
                 WorkBlogQueue.sharedInstance.put(WorkBlog(id: String(index), value: block))
             }
+        }
     }
 }
