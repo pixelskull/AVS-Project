@@ -36,11 +36,14 @@ class WorkerQueue {
      - returns: Worker by from list when not empty otherwise nil
      */
     func getWorkerByID(workerID:String) -> Worker? {
-        guard let workerByIdIndex = workerQueue.indexOf({$0.id == workerID}) else { return nil }
-        
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
+        guard let workerByIdIndex = workerQueue.indexOf({$0.id == workerID}) else {
+            dispatch_semaphore_signal(read_semaphore)
+            return nil
+        }
         let workerByID = workerQueue[workerByIdIndex]
         dispatch_semaphore_signal(read_semaphore)
+        
         return workerByID
     }
     
@@ -50,10 +53,14 @@ class WorkerQueue {
      - returns: First Worker from list when not empty otherwise nil
      */
     func getFirstWorker() -> Worker? {
-        guard workerQueue.count > 0 else { return nil }
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
+        guard workerQueue.count > 0 else {
+            dispatch_semaphore_signal(read_semaphore)
+            return nil
+        }
         let firstWorker = workerQueue.first!
         dispatch_semaphore_signal(read_semaphore)
+        
         return firstWorker
     }
 
@@ -63,14 +70,15 @@ class WorkerQueue {
      - returns: removed Worker from list when not empty otherwise nil
      */
     func remove(workerID:String) -> Worker? {
-        guard let workerByIdIndex = workerQueue.indexOf({$0.id == workerID}) else { return nil }
-        
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
+        guard let workerByIdIndex = workerQueue.indexOf({$0.id == workerID}) else {
+            dispatch_semaphore_signal(read_semaphore)
+            return nil
+        }
         let workerByID = workerQueue.removeAtIndex(workerByIdIndex)
         dispatch_semaphore_signal(read_semaphore)
         
         return workerByID
-
     }
     
     

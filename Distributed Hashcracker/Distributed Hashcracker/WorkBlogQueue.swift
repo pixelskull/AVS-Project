@@ -35,11 +35,14 @@ class WorkBlogQueue {
      - returns: WorkerBlog by ID from list when not empty otherwise nil
      */
     func getWorkBlogByID(workBlogID:String) -> WorkBlog? {
-        guard let workerByIdIndex = workBlogQueue.indexOf({$0.id == workBlogID}) else { return nil }
-        
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
+        guard let workerByIdIndex = workBlogQueue.indexOf({$0.id == workBlogID}) else {
+            dispatch_semaphore_signal(read_semaphore)
+            return nil
+        }
         let workBlogByID = workBlogQueue[workerByIdIndex]
         dispatch_semaphore_signal(read_semaphore)
+        
         return workBlogByID
     }
     
@@ -49,8 +52,11 @@ class WorkBlogQueue {
      - returns: first WorkBlog from list when not empty otherwise nil
      */
     func getFirstWorkBlog() -> WorkBlog? {
-        guard workBlogQueue.count > 0 else { return nil }
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
+        guard workBlogQueue.count > 0 else {
+            dispatch_semaphore_signal(read_semaphore)
+            return nil
+        }
         let firstWorkBlog = workBlogQueue.first!
         dispatch_semaphore_signal(read_semaphore)
         
@@ -64,9 +70,11 @@ class WorkBlogQueue {
      - returns: Removed WorkBLog from list when not empty otherwise nil
      */
     func removeWorkBlogByWorkBlogID(workBlogID:String) -> WorkBlog? {
-        guard let workBlogByWorkBlogIdIndex = workBlogQueue.indexOf({$0.id == workBlogID}) else { return nil }
-        
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
+        guard let workBlogByWorkBlogIdIndex = workBlogQueue.indexOf({$0.id == workBlogID}) else {
+            dispatch_semaphore_signal(read_semaphore)
+            return nil
+        }
         let workBlogByID = workBlogQueue.removeAtIndex(workBlogByWorkBlogIdIndex)
         dispatch_semaphore_signal(read_semaphore)
         
@@ -80,9 +88,11 @@ class WorkBlogQueue {
      - returns: Removed WorkBLog from list by ID when not empty otherwise nil
      */
     func removeWorkBlogByWorkerID(workerID:String) -> WorkBlog? {
-        guard let workBlogByWorkerIdIndex = workBlogQueue.indexOf({$0.inProcessBy == workerID}) else { return nil }
-        
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
+        guard let workBlogByWorkerIdIndex = workBlogQueue.indexOf({$0.inProcessBy == workerID}) else {
+            dispatch_semaphore_signal(read_semaphore)
+            return nil
+        }
         let workBlogByWorkerID = workBlogQueue.removeAtIndex(workBlogByWorkerIdIndex)
         dispatch_semaphore_signal(read_semaphore)
         
