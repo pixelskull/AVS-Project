@@ -23,7 +23,7 @@ class MessageQueue {
     
     static let sharedInstance = MessageQueue()
     
-    var semaphore = dispatch_semaphore_create(1)
+    let semaphore = dispatch_semaphore_create(1)
     
     private init() {}
 

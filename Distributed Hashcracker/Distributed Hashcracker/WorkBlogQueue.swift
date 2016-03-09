@@ -20,7 +20,7 @@ class WorkBlogQueue {
     
     static let sharedInstance = WorkBlogQueue()
     
-    var semaphore = dispatch_semaphore_create(1)
+    let semaphore = dispatch_semaphore_create(1)
     
     
     /**
