@@ -23,8 +23,7 @@ class MessageQueue {
     
     static let sharedInstance = MessageQueue()
     
-    var read_semaphore = dispatch_semaphore_create(1)
-    let write_semaphore = dispatch_semaphore_create(1)
+    var semaphore = dispatch_semaphore_create(1)
     
     private init() {}
 
@@ -34,9 +33,9 @@ class MessageQueue {
      - parameter message: Message to append
     */
     func put(message:Message) {
-        dispatch_semaphore_wait(write_semaphore, DISPATCH_TIME_FOREVER)
-        messages = messagesLens.set([message], messages) //  .append(message)
-        dispatch_semaphore_signal(write_semaphore)
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        messages = messagesLens.set([message], messages) 
+        dispatch_semaphore_signal(semaphore)
     }
     
     /**
@@ -45,15 +44,14 @@ class MessageQueue {
      - returns: first message in list when not empty otherwise nil
     */
     func get() -> Message? {
-        dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        guard messagesLens.get(messages).count > 0 else {
-            dispatch_semaphore_signal(read_semaphore)
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        guard let firstElement = messagesLens.get(messages).first else {
+            dispatch_semaphore_signal(semaphore)
             return nil
         }
-        let firstElement = messagesLens.get(messages).first!
         messages = messagesLens.set([], messages.dropFirst().map{ $0 })
-        dispatch_semaphore_signal(read_semaphore)
-        
+        dispatch_semaphore_signal(semaphore)
+            
         return firstElement
     }
     
@@ -72,8 +70,4 @@ class MessageQueue {
      add notify worker when new Message is appended (not implemented)
     */
     func notify(notificationName:String) {}
-    
-//    deinit {
-//        notificationCenter.removeObserver(self)
-//    }
 }
