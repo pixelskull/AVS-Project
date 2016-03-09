@@ -11,6 +11,12 @@ import Cocoa
 class WorkBlogQueue {
     
     var workBlogQueue:[WorkBlog] = [WorkBlog]()
+    let workBlogQueueLens = Lens<[WorkBlog], [WorkBlog]>(
+        get: { $0 },
+        set: { (newValue, value) in
+            value + newValue
+        }
+    )
     
     static let sharedInstance = WorkBlogQueue()
     
@@ -25,7 +31,8 @@ class WorkBlogQueue {
      */
     func put(newWorkBlog:WorkBlog) {
         dispatch_semaphore_wait(write_semaphore, DISPATCH_TIME_FOREVER)
-        workBlogQueue.append(newWorkBlog)
+//        workBlogQueue.append(newWorkBlog)
+        workBlogQueue = workBlogQueueLens.set([newWorkBlog], workBlogQueue)
         dispatch_semaphore_signal(write_semaphore)
     }
     
@@ -36,11 +43,11 @@ class WorkBlogQueue {
      */
     func getWorkBlogByID(workBlogID:String) -> WorkBlog? {
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        guard let workerByIdIndex = workBlogQueue.indexOf({$0.id == workBlogID}) else {
-            dispatch_semaphore_signal(read_semaphore)
-            return nil
-        }
-        let workBlogByID = workBlogQueue[workerByIdIndex]
+//        guard let workerByIdIndex = workBlogQueue.indexOf({$0.id == workBlogID}) else {
+//            dispatch_semaphore_signal(read_semaphore)
+//            return nil
+//        }
+        let workBlogByID = workBlogQueueLens.get(workBlogQueue).filter{ $0.id == workBlogID }.first// [workerByIdIndex]
         dispatch_semaphore_signal(read_semaphore)
         
         return workBlogByID
@@ -53,11 +60,11 @@ class WorkBlogQueue {
      */
     func getFirstWorkBlog() -> WorkBlog? {
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        guard workBlogQueue.count > 0 else {
-            dispatch_semaphore_signal(read_semaphore)
-            return nil
-        }
-        let firstWorkBlog = workBlogQueue.first!
+//        guard workBlogQueueLens.get(workBlogQueue).count > 0 else {
+//            dispatch_semaphore_signal(read_semaphore)
+//            return nil
+//        }
+        let firstWorkBlog = workBlogQueueLens.get(workBlogQueue).first
         dispatch_semaphore_signal(read_semaphore)
         
         return firstWorkBlog
@@ -71,11 +78,13 @@ class WorkBlogQueue {
      */
     func removeWorkBlogByWorkBlogID(workBlogID:String) -> WorkBlog? {
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        guard let workBlogByWorkBlogIdIndex = workBlogQueue.indexOf({$0.id == workBlogID}) else {
-            dispatch_semaphore_signal(read_semaphore)
-            return nil
-        }
-        let workBlogByID = workBlogQueue.removeAtIndex(workBlogByWorkBlogIdIndex)
+//        guard let workBlogByWorkBlogIdIndex = workBlogQueue.indexOf({$0.id == workBlogID}) else {
+//            dispatch_semaphore_signal(read_semaphore)
+//            return nil
+//        }
+        let tmpQueue = workBlogQueueLens.get(workBlogQueue)
+        let workBlogByID = tmpQueue.filter{ $0.id == workBlogID }.first // .removeAtIndex(workBlogByWorkBlogIdIndex)
+        workBlogQueue = workBlogQueueLens.set([], tmpQueue.filter{ $0.id != workBlogID })
         dispatch_semaphore_signal(read_semaphore)
         
         return workBlogByID
@@ -89,11 +98,13 @@ class WorkBlogQueue {
      */
     func removeWorkBlogByWorkerID(workerID:String) -> WorkBlog? {
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        guard let workBlogByWorkerIdIndex = workBlogQueue.indexOf({$0.inProcessBy == workerID}) else {
-            dispatch_semaphore_signal(read_semaphore)
-            return nil
-        }
-        let workBlogByWorkerID = workBlogQueue.removeAtIndex(workBlogByWorkerIdIndex)
+//        guard let workBlogByWorkerIdIndex = workBlogQueue.indexOf({$0.inProcessBy == workerID}) else {
+//            dispatch_semaphore_signal(read_semaphore)
+//            return nil
+//        }
+        let tmpQueue = workBlogQueueLens.get(workBlogQueue)
+        let workBlogByWorkerID =  tmpQueue.filter{ $0.inProcessBy == workerID }.first // .removeAtIndex(workBlogByWorkerIdIndex)
+        workBlogQueue = workBlogQueueLens.set([], tmpQueue.filter{$0.inProcessBy != workerID })
         dispatch_semaphore_signal(read_semaphore)
         
         return workBlogByWorkerID

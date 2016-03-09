@@ -11,7 +11,15 @@ import Cocoa
 class MessageQueue {
 
 //    let notificationCenter = NSNotificationCenter.defaultCenter()
-    var messages:[Message] = [Message]()
+    var messages = [Message]()
+    let messagesLens = Lens<[Message], [Message]>(
+        get: {
+            $0
+        },
+        set: { (newValue, value) in
+            value + newValue
+        }
+    )
     
     static let sharedInstance = MessageQueue()
     
@@ -27,7 +35,7 @@ class MessageQueue {
     */
     func put(message:Message) {
         dispatch_semaphore_wait(write_semaphore, DISPATCH_TIME_FOREVER)
-        messages.append(message)
+        messages = messagesLens.set([message], messages) //  .append(message)
         dispatch_semaphore_signal(write_semaphore)
     }
     
@@ -38,11 +46,12 @@ class MessageQueue {
     */
     func get() -> Message? {
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        guard messages.count > 0 else {
+        guard messagesLens.get(messages).count > 0 else {
             dispatch_semaphore_signal(read_semaphore)
             return nil
         }
-        let firstElement = messages.removeFirst()
+        let firstElement = messagesLens.get(messages).first!
+        messages = messagesLens.set([], messages.dropFirst().map{ $0 })
         dispatch_semaphore_signal(read_semaphore)
         
         return firstElement
@@ -54,8 +63,8 @@ class MessageQueue {
      - returns: first message in list when not empty otherwise nil
     */
     func poll() -> Message? {
-        guard let firstElement = messages.first else { return nil }
-        messages = messages.dropFirst().map { $0 }
+        guard let firstElement = messagesLens.get(messages).first else { return nil }
+        messages = messagesLens.set([], messages.dropFirst().map { $0 })
         return firstElement
     }
     

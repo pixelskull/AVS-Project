@@ -11,6 +11,12 @@ import Cocoa
 class WorkerQueue {
     
     var workerQueue:[Worker] = [Worker]()
+    let workerQueueLens = Lens<[Worker], [Worker]>(
+        get: { $0 },
+        set: { (newValue, value) in
+            value + newValue
+        }
+    )
     
     var activeWorkerQueue:[Worker] = [Worker]()
     
@@ -26,7 +32,7 @@ class WorkerQueue {
      */
     func put(worker:Worker) {
         dispatch_semaphore_wait(write_semaphore, DISPATCH_TIME_FOREVER)
-        workerQueue.append(worker)
+        workerQueue = workerQueueLens.set([worker], workerQueue) // .append(worker)
         dispatch_semaphore_signal(write_semaphore)
     }
     
@@ -37,11 +43,11 @@ class WorkerQueue {
      */
     func getWorkerByID(workerID:String) -> Worker? {
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        guard let workerByIdIndex = workerQueue.indexOf({$0.id == workerID}) else {
+        guard let workerByIdIndex = workerQueueLens.get(workerQueue).indexOf({$0.id == workerID}) else {
             dispatch_semaphore_signal(read_semaphore)
             return nil
         }
-        let workerByID = workerQueue[workerByIdIndex]
+        let workerByID = workerQueueLens.get(workerQueue)[workerByIdIndex]
         dispatch_semaphore_signal(read_semaphore)
         
         return workerByID
@@ -54,11 +60,11 @@ class WorkerQueue {
      */
     func getFirstWorker() -> Worker? {
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        guard workerQueue.count > 0 else {
+        guard workerQueueLens.get(workerQueue).count > 0 else {
             dispatch_semaphore_signal(read_semaphore)
             return nil
         }
-        let firstWorker = workerQueue.first!
+        let firstWorker = workerQueueLens.get(workerQueue).first!
         dispatch_semaphore_signal(read_semaphore)
         
         return firstWorker
@@ -71,11 +77,12 @@ class WorkerQueue {
      */
     func remove(workerID:String) -> Worker? {
         dispatch_semaphore_wait(read_semaphore, DISPATCH_TIME_FOREVER)
-        guard let workerByIdIndex = workerQueue.indexOf({$0.id == workerID}) else {
-            dispatch_semaphore_signal(read_semaphore)
-            return nil
-        }
-        let workerByID = workerQueue.removeAtIndex(workerByIdIndex)
+//        guard let workerByIdIndex = workerQueueLens.get(workerQueue).indexOf({$0.id == workerID}) else {
+//            dispatch_semaphore_signal(read_semaphore)
+//            return nil
+//        }
+        let workerByID = workerQueueLens.get(workerQueue).filter{ $0.id == workerID }.first // .removeAtIndex(workerByIdIndex)
+        workerQueue = workerQueueLens.set([], workerQueue.filter{  $0.id != workerID })
         dispatch_semaphore_signal(read_semaphore)
         
         return workerByID
@@ -89,7 +96,7 @@ class WorkerQueue {
      */
     func putActiveWorker(worker:Worker) {
         dispatch_semaphore_wait(write_semaphore, DISPATCH_TIME_FOREVER)
-        activeWorkerQueue.append(worker)
+        workerQueue = workerQueueLens.set([worker], workerQueue)
         dispatch_semaphore_signal(write_semaphore)
     }
 }
