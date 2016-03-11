@@ -24,6 +24,7 @@ class MasterOperation:MasterWorkerOperation {
     var startTimePasswordCrack: NSDate = NSDate()
     var generateLoopRun = true
     var countOfSendStillAliveMessages:Int = 0
+    let timer:NSTimer
     
     private override init() {
         super.init()
@@ -32,7 +33,7 @@ class MasterOperation:MasterWorkerOperation {
             name: Constants.NCValues.stopMaster,
             object: nil)
         
-        NSTimer.scheduledTimerWithTimeInterval(60.0,
+        timer = NSTimer.scheduledTimerWithTimeInterval(60.0,
             target: self,
             selector: "sendStillAlive",
             userInfo: nil,
@@ -110,6 +111,10 @@ class MasterOperation:MasterWorkerOperation {
     - At each third time the master checks which workers are still alive
     */
     func sendStillAlive() {
+        guard run else {
+            timer.invalidate()
+            return
+        }
         let queue = dispatch_queue_create("\(Constants.queueID).stillAlive", nil)
         dispatch_async(queue) {
             var logUpdateText:String
