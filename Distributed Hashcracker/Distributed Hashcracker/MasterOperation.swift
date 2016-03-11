@@ -24,10 +24,11 @@ class MasterOperation:MasterWorkerOperation {
     var startTimePasswordCrack: NSDate = NSDate()
     var generateLoopRun = true
     var countOfSendStillAliveMessages:Int = 0
-    let timer:NSTimer
+    var timer:NSTimer = NSTimer()
     
     private override init() {
         super.init()
+        
         notificationCenter.addObserver(self,
             selector: "stopMasterOperation:",
             name: Constants.NCValues.stopMaster,
@@ -38,6 +39,7 @@ class MasterOperation:MasterWorkerOperation {
             selector: "sendStillAlive",
             userInfo: nil,
             repeats: true)
+        
     }
     
     convenience init(targetHash:String, selectedAlgorithm:String) {
