@@ -441,6 +441,7 @@ class MasterOperation:MasterWorkerOperation {
     func stopMasterOperation(notification:NSNotification) {
         run = false
         notificationCenter.postNotificationName(Constants.NCValues.stopWorkBlog, object: nil)
+        notificationCenter.postNotificationName(Constants.NCValues.toggleStartButton, object: nil)
         notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "MasterOperation stopped")
     }
 }

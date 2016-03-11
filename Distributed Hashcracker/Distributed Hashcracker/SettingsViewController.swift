@@ -184,10 +184,14 @@ class SettingsViewController: NSViewController {
         passwordField.enabled = false
         hashAlgorithmSelected.enabled = false
         
-        let notificationName = Constants.NCValues.stopServer
         notificationCenter.addObserver(self,
             selector: "stopServerTask:",
-            name: notificationName,
+            name: Constants.NCValues.stopServer,
+            object: nil)
+        
+        notificationCenter.addObserver(self,
+            selector: "toggleStartStopButton:",
+            name: Constants.NCValues.toggleStartButton,
             object: nil)
     }
     
@@ -201,7 +205,12 @@ class SettingsViewController: NSViewController {
     }
     
     func toggleStartStopButton(notification:NSNotification) {
-        startStopButton.state = NSOffState
+        print("-----------> update UI ")
+        dispatch_async(dispatch_get_main_queue()) {
+            self.startStopButton.state = NSOffState
+            self.view.needsDisplay = true
+            self.view.display()
+        }
     }
     
     deinit {

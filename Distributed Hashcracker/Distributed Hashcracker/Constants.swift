@@ -20,6 +20,7 @@ struct Constants {
         static let stopWorker    = "stopWorker"
         static let stopWorkBlog  = "stopWorkBlogGeneration"
         static let updateLog     = "updateLog"
+        static let toggleStartButton = "toggleStartStopButton"
     }
     
     static let queueID = "de.th-koeln.DistributedHashCracker"

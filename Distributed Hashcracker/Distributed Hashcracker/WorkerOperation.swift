@@ -229,6 +229,7 @@ class WorkerOperation:MasterWorkerOperation {
     func stopWorkerOperation() {
         run = false
         notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "WorkerOperation stopped")
+        notificationCenter.postNotificationName(Constants.NCValues.toggleStartButton, object: nil)
     }
     
 }
