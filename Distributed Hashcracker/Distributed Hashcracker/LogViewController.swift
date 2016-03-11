@@ -40,15 +40,17 @@ class LogViewController: NSViewController {
     }
     
     func updateLogTextField(notification:AnyObject?) {
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        
         guard let message = notification!.object else {
             dispatch_async(dispatch_get_main_queue()) {
+                dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER)
                 self.logTextView = self.logViewLens.set("unrecognized message send \n", self.logTextView)
                 dispatch_semaphore_signal(self.semaphore)
             }
             return
         }
         dispatch_async(dispatch_get_main_queue()) {
+            dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER)
             self.logTextView = self.logViewLens.set("\(message!)\n", self.logTextView)
             dispatch_semaphore_signal(self.semaphore)
         }

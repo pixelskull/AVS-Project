@@ -24,6 +24,7 @@ class MasterOperation:MasterWorkerOperation {
     var startTimePasswordCrack: NSDate = NSDate()
     var generateLoopRun = true
     var countOfSendStillAliveMessages:Int = 0
+    var sendStillAliveMessage = false
     var timer:NSTimer = NSTimer()
     
     private override init() {
@@ -39,6 +40,7 @@ class MasterOperation:MasterWorkerOperation {
             selector: "sendStillAlive",
             userInfo: nil,
             repeats: true)
+        sendStillAliveMessage = true
         
     }
     
@@ -113,7 +115,7 @@ class MasterOperation:MasterWorkerOperation {
     - At each third time the master checks which workers are still alive
     */
     func sendStillAlive() {
-        guard run else {
+        guard self.sendStillAliveMessage else {
             timer.invalidate()
             return
         }
@@ -447,6 +449,7 @@ class MasterOperation:MasterWorkerOperation {
      */
     func stopMasterOperation(notification:NSNotification) {
         run = false
+        sendStillAliveMessage = false
         notificationCenter.postNotificationName(Constants.NCValues.stopWorkBlog, object: nil)
         notificationCenter.postNotificationName(Constants.NCValues.toggleStartButton, object: nil)
         notificationCenter.postNotificationName(Constants.NCValues.updateLog, object: "MasterOperation stopped")
