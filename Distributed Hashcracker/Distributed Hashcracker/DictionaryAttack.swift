@@ -15,7 +15,7 @@ class DictionaryAttack:NSObject, AttackStrategy {
     
     override init() {
         super.init()
-        self.passwords = self.dictionaryToArray("Password")
+        self.passwords = self.dictionaryToArray("PasswordDictionary")
     }
     
     private func dictionaryToArray(fileName: String) -> [String]? {
@@ -23,7 +23,8 @@ class DictionaryAttack:NSObject, AttackStrategy {
         do {
             let passwords = try String(contentsOfFile:path, encoding: NSUTF8StringEncoding)
             return passwords.componentsSeparatedByString("\n")
-        } catch _ as NSError {
+        } catch let er as NSError {
+            print("dictionary failed \(er.description)")
             return nil
         }
     }
