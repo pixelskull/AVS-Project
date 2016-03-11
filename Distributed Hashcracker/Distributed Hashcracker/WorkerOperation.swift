@@ -170,34 +170,40 @@ class WorkerOperation:MasterWorkerOperation {
             break
         }
         
+        compareHashes(hashAlgorithm, passwordArray: passwords, targetHash: tar)
+        
+        /*
         if compareHashes(hashAlgorithm, passwordArray: passwords, targetHash: tar) {
             print("Found the searched password -> hitTargetHashMessage was send")
         }
         else{
             print("The searched password wasn't there -> finishedWorkMessage was send")
         }
+        */
     }
     
-    func compareHashes(hashAlgorithm: HashAlgorithm, passwordArray:[String], targetHash: String) -> Bool{
+    func compareHashes(hashAlgorithm: HashAlgorithm, passwordArray:[String], targetHash: String){
         let worker = WorkerQueue.sharedInstance.getFirstWorker()
         
         // <<<<<<<<<< Start time measurement
         let startTimeMeasurement = NSDate();
         
+        let queue = dispatch_queue_create("\(Constants.queueID).compareHashes", nil)
+        
         for password in passwordArray{
+
+            dispatch_async(queue) {
             
-            let hashedPasswordFromArray = hashAlgorithm.hash(string: password)
+                let hashedPasswordFromArray = hashAlgorithm.hash(string: password)
             
-            if(hashedPasswordFromArray == targetHash){
-                print("Found the searched password! \(hashedPasswordFromArray) == \(targetHash) -> Password = \(password))")
+                if(hashedPasswordFromArray == targetHash){
+                    print("Found the searched password! \(hashedPasswordFromArray) == \(targetHash) -> Password = \(password))")
                 
-                let hitTargetHashValues: [String:String] = ["hash": targetHash, "password": password, /*"time_needed": "ka", */"worker_id": worker!.id]
-                notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-                    object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
-                return true
-            }
-            else{
-                print("\(password) isn't the searched password")
+                    let hitTargetHashValues: [String:String] = ["hash": targetHash, "password": password, /*"time_needed": "ka", */"worker_id": worker!.id]
+                    self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                        object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
+                    //return true
+                }
             }
         }
         // <<<<<<<<<<   end time measurement
@@ -212,7 +218,7 @@ class WorkerOperation:MasterWorkerOperation {
         
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: BasicMessage(status: MessagesHeader.finishedWork, value: worker!.id))
-        return false
+        //return false
         
     }
     

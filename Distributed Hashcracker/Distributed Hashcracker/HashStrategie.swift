@@ -17,7 +17,7 @@ protocol HashAlgorithm {
 class HashMD5: HashAlgorithm {
     
     func hash(string string: String) -> String {
-        print("MD5-Hash")
+        //print("MD5-Hash")
         
         var digest = [UInt8](count: Int(CC_MD5_DIGEST_LENGTH), repeatedValue: 0)
         if let data = string.dataUsingEncoding(NSUTF8StringEncoding) {
@@ -40,7 +40,7 @@ class HashMD5: HashAlgorithm {
 class HashSHA: HashAlgorithm {
     
     func hash(string string: String) -> String {
-        print("SHA-128-Hash")
+        //print("SHA-128-Hash")
         let data = string.dataUsingEncoding(NSUTF8StringEncoding)!
         var digest = [UInt8](count:Int(CC_SHA1_DIGEST_LENGTH), repeatedValue: 0)
         CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
@@ -53,7 +53,7 @@ class HashSHA: HashAlgorithm {
 class HashSHA256: HashAlgorithm {
     
     func hash(string string: String) -> String {
-        print("SHA-256-Hash")
+        //print("SHA-256-Hash")
         let data = string.dataUsingEncoding(NSUTF8StringEncoding)!
         var digest = [UInt8](count: Int(CC_SHA256_DIGEST_LENGTH), repeatedValue: 0)
         CC_SHA256(data.bytes, CC_LONG(data.length), &digest)
