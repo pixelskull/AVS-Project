@@ -32,7 +32,7 @@ class DictionaryAttack:NSObject, AttackStrategy {
         if let passwords = passwords {
             for block in passwords.splitBy(1000){
                 index+=1
-                WorkBlogQueue.sharedInstance.put(WorkBlog(id: String(index), value: block))
+                WorkBlogQueue.sharedInstance.put(WorkBlog(id: "D\(index)", value: block))
             }
         }
     }

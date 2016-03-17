@@ -110,10 +110,11 @@ class WorkerOperation:MasterWorkerOperation {
     func newWorkBlog(message:ExtendedMessage){
         print("newWorkBlog")
         if let workerIDFromMessage = message.values["worker_id"],
-            let passwords = message.values["hashes"]?.componentsSeparatedByString(",") {
+            let passwords = message.values["hashes"]?.componentsSeparatedByString(","),
+            let workBlogId = message.values["workBlog_id"]{
                 let queue = dispatch_queue_create("\(Constants.queueID).\(workerIDFromMessage)-\(passwords.first!)...", nil)
                 dispatch_async(queue) {
-                    self.computeHashesAsyncForWorker(workerIDFromMessage, passwords: passwords)
+                    self.computeHashesAsyncForWorker(workerIDFromMessage, passwords: passwords, workBlogId: workBlogId)
                 }
         } else {
             print("-> newWorkBlog: Error could not get WorkerID or Password")
@@ -144,7 +145,7 @@ class WorkerOperation:MasterWorkerOperation {
         return messageQueue.get()
     }
     
-    func computeHashesAsyncForWorker(workerID:String, passwords:[String]) {
+    func computeHashesAsyncForWorker(workerID:String, passwords:[String], workBlogId:String) {
         // check if worker is in queue
         guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
         // check if workerID is the id of this worker
@@ -164,10 +165,10 @@ class WorkerOperation:MasterWorkerOperation {
             break
         }
         
-        compareHashes(hashAlgorithm, passwordArray: passwords, targetHash: tar)
+        compareHashes(hashAlgorithm, passwordArray: passwords, targetHash: tar, workBlogId: workBlogId)
     }
     
-    func compareHashes(hashAlgorithm: HashAlgorithm, passwordArray:[String], targetHash: String){
+    func compareHashes(hashAlgorithm: HashAlgorithm, passwordArray:[String], targetHash: String, workBlogId:String){
         let worker = WorkerQueue.sharedInstance.getFirstWorker()
         
         // <<<<<<<<<< Start time measurement
@@ -201,8 +202,9 @@ class WorkerOperation:MasterWorkerOperation {
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: ExtendedMessage(status: MessagesHeader.hashesPerTime, values: hashesPerTime))
         
+        let finishedWorkMessageValues: [String:String] = ["worker_id": worker!.id, "workBlog_id": workBlogId]
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: BasicMessage(status: MessagesHeader.finishedWork, value: worker!.id))
+            object: ExtendedMessage(status: MessagesHeader.finishedWork, values: finishedWorkMessageValues))
         //return false
         
     }

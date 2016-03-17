@@ -80,9 +80,6 @@ class MasterOperation:MasterWorkerOperation {
         case MessagesHeader.newClientRegistration:
             newClientRegistration(message)
             break
-        case MessagesHeader.finishedWork:
-            finishedWork(message)
-            break
         case MessagesHeader.alive:
             alive(message)
             break
@@ -100,6 +97,9 @@ class MasterOperation:MasterWorkerOperation {
             break
         case MessagesHeader.hashesPerTime:
             hashesPerTime(message)
+            break
+        case MessagesHeader.finishedWork:
+            finishedWork(message)
             break
         default:
             break
@@ -227,15 +227,16 @@ class MasterOperation:MasterWorkerOperation {
      precondition = finishedWorkMessage from a client
      postcondition = newWorkBlogMessage was send to a client
      */
-    func finishedWork(message:BasicMessage){
+    func finishedWork(message:ExtendedMessage){
         print("finishedWork")
         let queue = dispatch_queue_create("\(Constants.queueID).finishedWork", nil)
         dispatch_async(queue) {
             let workBlogQueue = WorkBlogQueue.sharedInstance
-            let workerID = message.value
+            let workerID = message.values["worker_id"]
+            let workerBlogID = message.values["workBlog_id"]
             
             //Try to remove the workBlog from the workBlogQueue by the worker how processed the workBlog
-            _ = workBlogQueue.removeWorkBlogByWorkerID(workerID)
+            _ = workBlogQueue.removeWorkBlogByWorkBlogID(workerBlogID!)
             
             //Wait until the workBlogQueue got new entries
             while workBlogQueue.workBlogQueue.count == 0 {}
@@ -248,7 +249,7 @@ class MasterOperation:MasterWorkerOperation {
                 
                 //Check if there is a workBlog in the WorkBlogQueue that is free to compute by a worker
                 while nextWorkBlog == nil{
-                    nextWorkBlog = self.getAndCheckNewWorkBlog(workerID)
+                    nextWorkBlog = self.getAndCheckNewWorkBlog(workerID!)
                 }
                 
                 print("Workblog from Password: \(nextWorkBlog!.value.first) to \(nextWorkBlog!.value.last)")
@@ -257,9 +258,9 @@ class MasterOperation:MasterWorkerOperation {
                 let newWorkBlog = self.convertWorkBlogArrayToString(nextWorkBlog!.value)
                 
                 //Send setupConfigurationMessage
-                let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
+                let newWorkBlogMessageValues: [String:String] = ["worker_id": workerID!, "workBlog_id": nextWorkBlog!.id, "hashes": newWorkBlog]
                 self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-                    object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
+                    object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: newWorkBlogMessageValues))
             }
         }
     }

@@ -82,7 +82,7 @@ class MessageParser {
      */
     private func findMessageTypeFromJSON(json:JSONObject) -> MessageType {
         switch json["status"] as! String {
-        case String(MessagesHeader.finishedWork),
+        case
         String(MessagesHeader.alive),
         String(MessagesHeader.stillAlive),
         String(MessagesHeader.newClientRegistration),
