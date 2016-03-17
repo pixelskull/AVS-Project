@@ -96,8 +96,9 @@ class WorkerOperation:MasterWorkerOperation {
             WorkerQueue.sharedInstance.put(worker)
             
             //Send finishedWorkMessage
+            let finishedWorkMessageValues: [String:String] = ["worker_id": worker.id, "workBlog_id": ""]
             self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-                object: BasicMessage(status: MessagesHeader.finishedWork, value: worker.id))
+                object: ExtendedMessage(status: MessagesHeader.finishedWork, values: finishedWorkMessageValues))
         }
     }
     
