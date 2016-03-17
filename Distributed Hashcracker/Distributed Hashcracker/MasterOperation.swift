@@ -228,15 +228,20 @@ class MasterOperation:MasterWorkerOperation {
      postcondition = newWorkBlogMessage was send to a client
      */
     func finishedWork(message:ExtendedMessage){
-        print("finishedWork")
+        
         let queue = dispatch_queue_create("\(Constants.queueID).finishedWork", nil)
         dispatch_async(queue) {
             let workBlogQueue = WorkBlogQueue.sharedInstance
             let workerID = message.values["worker_id"]
             let workerBlogID = message.values["workBlog_id"]
             
+            print("finishedWork \(workerID)")
+            
+            print("WorkBlogQueueLängeVorRemove: \(workBlogQueue.workBlogQueue.count)")
             //Try to remove the workBlog from the workBlogQueue by the worker how processed the workBlog
             _ = workBlogQueue.removeWorkBlogByWorkBlogID(workerBlogID!)
+            
+            print("WorkBlogQueueLängeNachRemove: \(workBlogQueue.workBlogQueue.count)")
             
             //Wait until the workBlogQueue got new entries
             while workBlogQueue.workBlogQueue.count == 0 {}
@@ -374,19 +379,21 @@ class MasterOperation:MasterWorkerOperation {
         
         let workBlogQueue = WorkBlogQueue.sharedInstance
         let workerQueue = WorkerQueue.sharedInstance
-        
+        print("workblogqueue.count: \(workBlogQueue.workBlogQueue.count)")
         for workBlog in workBlogQueue.workBlogQueue{
-            
+            print("iterating workblog \(workBlog.id)")
             //WorkBlog isn't in process by a worker
             if(workBlog.inProcessBy == "Not in process"){
-                
                 workBlog.inProcessBy = workerID
+                
+                print("\(workBlog.id) -> \(workBlog.inProcessBy)")
                 return workBlog
             }
             else if(workBlog.inProcessBy != "Not in process"){
                 //Check if the worker of the workBlog is still active
                 if(workerQueue.getWorkerByID(workBlog.inProcessBy)?.status == .Inactive){
                     workBlog.inProcessBy = workerID
+                    print("\(workBlog.id) -> \(workBlog.inProcessBy)")
                     return workBlog
                 }
             }
