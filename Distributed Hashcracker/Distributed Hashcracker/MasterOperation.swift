@@ -251,6 +251,8 @@ class MasterOperation:MasterWorkerOperation {
                     nextWorkBlog = self.getAndCheckNewWorkBlog(workerID)
                 }
                 
+                print("Workblog from Password: \(nextWorkBlog!.value.first) to \(nextWorkBlog!.value.last)")
+                
                 //Convert the newWorkBlog into a String
                 let newWorkBlog = self.convertWorkBlogArrayToString(nextWorkBlog!.value)
                 
