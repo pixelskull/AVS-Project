@@ -23,8 +23,7 @@ class DictionaryAttack:NSObject, AttackStrategy {
         do {
             let passwords = try String(contentsOfFile:path, encoding: NSUTF8StringEncoding)
             return passwords.componentsSeparatedByString("\n")
-        } catch let er as NSError {
-            print("dictionary failed \(er.description)")
+        } catch {
             return nil
         }
     }

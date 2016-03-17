@@ -20,14 +20,10 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
     let messageQueue = MessageQueue.sharedInstance
     let jsonParser = MessageParser()
    
-    
     init(host:String = "localhost", port:Int = 3000, master:Bool) {
-        
-        print("----"+host+"---")
         socket = WebSocket(url: NSURL(string: "ws://\(host):\(port)")!)
         socket.headers["Sec-WebSocket-Protocol"] = "distributed_hashcracker_protocol"
         self.master = master
-        
         super.init()
         socket.delegate = self
         
@@ -36,14 +32,11 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
             selector: "stop:",
             name: stopWSNotificationName,
             object: nil)
-        
         let sendMessageNotificationName = Constants.NCValues.sendMessage
         notificationCenter.addObserver(self,
             selector: "sendMessage:",
             name: sendMessageNotificationName,
             object: nil)
-        
-        
     }
     
     override func main() {
@@ -58,7 +51,8 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
     
     func connect() { socket.connect() }
     
-    func websocketDidConnect(socket: WebSocket) { print("websocket is connected")
+    func websocketDidConnect(socket: WebSocket) {
+        print("websocket is connected")
     
         if(master == false){
             let workerID = NSHost.currentHost().name!
@@ -84,18 +78,14 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
     }
     
     func websocketDidReceiveData(socket: WebSocket, data: NSData) {
-        print("got some data: \(data.length)")
         let dataString = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
         if let newMessage = jsonParser.createMessageFromJSONString(dataString) {
             messageQueue.put(newMessage)
-        } else {
-            print(NSString(data: data, encoding: NSUTF8StringEncoding))
         }
     }
     
 
     func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-        print("got some text: \(text)")
         if let newMessage = jsonParser.createMessageFromJSONString(text) {
             messageQueue.put(newMessage)
         } else {

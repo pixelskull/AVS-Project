@@ -68,7 +68,7 @@ class MessageParser {
                 return jsonString as String
             }
         } catch {
-            print("error")
+            print("error while creating JSONString")
         }
         return nil
     }

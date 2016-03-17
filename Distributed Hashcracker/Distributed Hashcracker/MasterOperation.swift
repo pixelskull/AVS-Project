@@ -55,14 +55,11 @@ class MasterOperation:MasterWorkerOperation {
             guard run == true else { break runloop }
             
             if let message = getMessageFromQueue() {
-                print("MasterOperation message from queue message type",message.type)
                 switch message.type {
                 case .Basic:
-                    print("I'm a basic message")
                     decideWhatToDoBasicMessage(message as! BasicMessage)
                     break
                 case .Extended:
-                    print("I'm a extended message")
                     decideWhatToDoExtendedMessage(message as! ExtendedMessage)
                     break
                 }
@@ -90,7 +87,6 @@ class MasterOperation:MasterWorkerOperation {
             alive(message)
             break
         default:
-            print("No matching basic header")
             break
         }
     }
@@ -106,7 +102,7 @@ class MasterOperation:MasterWorkerOperation {
             hashesPerTime(message)
             break
         default:
-            print("No matching extended header")
+            break
         }
     }
     
@@ -170,7 +166,6 @@ class MasterOperation:MasterWorkerOperation {
             if workerQueue.workerQueue.count == 0 {
                 let queue = dispatch_queue_create("\(Constants.queueID).WorkerQueue", nil)
                 dispatch_async(queue) {
-                    print("work work work")
                     self.generateNewWorkBlog()
                 }
             }
@@ -240,20 +235,10 @@ class MasterOperation:MasterWorkerOperation {
             let workerID = message.value
             
             //Try to remove the workBlog from the workBlogQueue by the worker how processed the workBlog
-            let removedWorkBlog = workBlogQueue.removeWorkBlogByWorkerID(workerID)
-            
-            if(removedWorkBlog != nil){
-                //WorkBlog was processed by a worker and has been removed from the workBlogQueue
-                print("WorkBlog: \(removedWorkBlog?.id) wurde von \(workerID) bearbeitet und kann aus der Queue gelöscht werden")
-            } else{
-                //There was no assaigned workBlog in the workBlogQueue for the searched worker
-                print("Kein WorkBlog mit: \(removedWorkBlog?.id), \(removedWorkBlog?.inProcessBy), \(workerID) vorhanden")
-            }
+            _ = workBlogQueue.removeWorkBlogByWorkerID(workerID)
             
             //Wait until the workBlogQueue got new entries
-            while workBlogQueue.workBlogQueue.count == 0 {
-                print("Es ist momentan kein WorkBlog vorhanden")
-            }
+            while workBlogQueue.workBlogQueue.count == 0 {}
             
             if(workBlogQueue.workBlogQueue.count > 0){
                 
@@ -273,8 +258,6 @@ class MasterOperation:MasterWorkerOperation {
                 let setupConfigMessageValues: [String:String] = ["worker_id": workerID, "hashes": newWorkBlog]
                 self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                     object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: setupConfigMessageValues))
-            } else{
-                print("Es ist momentan kein WorkBlog vorhanden")
             }
         }
     }

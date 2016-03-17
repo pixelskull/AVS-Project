@@ -49,15 +49,11 @@ wsServer.on('request', function(req) {
 
   connection.on('message', function(message) {
         if (message.type === 'utf8') {
-            console.log("NODE.JS::: Received Message: " + message.utf8Data);
-            //connection.sendUTF(message.utf8Data);
             connections.forEach(function(destination) {
                 destination.sendUTF(message.utf8Data);
             });
         }
         else if (message.type === 'binary') {
-            console.log("NODE.JS::: Received Binary Message of ' + message.binaryData.length + ' bytes");
-            //connection.sendBytes(message.binaryData);
             connections.forEach(function(destination) {
                 destination.sendUTF(message.utf8Data);
             });

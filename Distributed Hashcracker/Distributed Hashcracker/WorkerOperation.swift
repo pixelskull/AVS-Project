@@ -23,14 +23,11 @@ class WorkerOperation:MasterWorkerOperation {
         runloop: while true {
             guard run == true else { break runloop }
             if let message = getMessageFromQueue() {
-                print("WorkerOperation message from queue message type",message.type)
                 switch message.type {
                 case .Basic:
-                    print("I'm a basic message")
                     decideWhatToDoBasicMessage(message as! BasicMessage)
                     break
                 case .Extended:
-                    print("I'm a extended message")
                     decideWhatToDoExtendedMessage(message as! ExtendedMessage)
                     break
                 }
@@ -54,7 +51,6 @@ class WorkerOperation:MasterWorkerOperation {
             stopWork()
             break
         default:
-            print("No matching basic header")
             break
         }
     }
@@ -69,7 +65,6 @@ class WorkerOperation:MasterWorkerOperation {
             newWorkBlog(message)
             break
         default:
-            print("No matching extended header")
             break
         }
     }
@@ -118,7 +113,6 @@ class WorkerOperation:MasterWorkerOperation {
             let passwords = message.values["hashes"]?.componentsSeparatedByString(",") {
                 let queue = dispatch_queue_create("\(Constants.queueID).\(workerIDFromMessage)-\(passwords.first!)...", nil)
                 dispatch_async(queue) {
-                    print("working on compareHashes for \(workerIDFromMessage)")
                     self.computeHashesAsyncForWorker(workerIDFromMessage, passwords: passwords)
                 }
         } else {
@@ -171,15 +165,6 @@ class WorkerOperation:MasterWorkerOperation {
         }
         
         compareHashes(hashAlgorithm, passwordArray: passwords, targetHash: tar)
-        
-        /*
-        if compareHashes(hashAlgorithm, passwordArray: passwords, targetHash: tar) {
-            print("Found the searched password -> hitTargetHashMessage was send")
-        }
-        else{
-            print("The searched password wasn't there -> finishedWorkMessage was send")
-        }
-        */
     }
     
     func compareHashes(hashAlgorithm: HashAlgorithm, passwordArray:[String], targetHash: String){

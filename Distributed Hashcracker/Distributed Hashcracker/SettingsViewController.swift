@@ -197,7 +197,6 @@ class SettingsViewController: NSViewController {
     
     
     func stopServerTask(notification:NSNotification) {
-        print("terminating server task")
         notificationCenter.postNotificationName(Constants.NCValues.updateLog,
             object: "terminating server task")
         task.terminate()

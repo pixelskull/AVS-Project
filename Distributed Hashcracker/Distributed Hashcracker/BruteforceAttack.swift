@@ -57,7 +57,6 @@ class BruteForceAttack:NSObject, AttackStrategy {
                         let workerCount = WorkerQueue.sharedInstance.workerQueue.count
                         //Wait with the generating of a new WorkBlock until the WorkBlogQueue isn't full
                         waitLoop: while(WorkBlogQueue.sharedInstance.workBlogQueue.count > workerCount){
-                            print("WorkBlogQueue noch voll")
                             guard generateLoopRun == true else { break waitLoop }
                         }
                         let workBlog = WorkBlog(id: String(workBlogID), value: tmpArray)
