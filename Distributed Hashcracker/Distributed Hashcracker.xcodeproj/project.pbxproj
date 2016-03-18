@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3B6A0D621C8717990085CF12 /* DictionaryAttack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6A0D611C8717990085CF12 /* DictionaryAttack.swift */; };
+		3B8439671C9C751100DB2212 /* MasterOperationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8439661C9C751100DB2212 /* MasterOperationTest.swift */; };
+		3B8439691C9C752300DB2212 /* WorkerOperationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8439681C9C752300DB2212 /* WorkerOperationTest.swift */; };
 		4C3F3EB81C845B6900F837DB /* WorkBlogQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */; };
 		4C3F3EBC1C84602900F837DB /* WorkBlog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EBB1C84602900F837DB /* WorkBlog.swift */; };
 		4C98B1A11C52893800E2641B /* CustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A01C52893800E2641B /* CustomObject.m */; };
@@ -90,6 +92,8 @@
 
 /* Begin PBXFileReference section */
 		3B6A0D611C8717990085CF12 /* DictionaryAttack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryAttack.swift; sourceTree = "<group>"; };
+		3B8439661C9C751100DB2212 /* MasterOperationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterOperationTest.swift; sourceTree = "<group>"; };
+		3B8439681C9C752300DB2212 /* WorkerOperationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkerOperationTest.swift; sourceTree = "<group>"; };
 		4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkBlogQueue.swift; sourceTree = "<group>"; };
 		4C3F3EBB1C84602900F837DB /* WorkBlog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkBlog.swift; sourceTree = "<group>"; };
 		4C98B19F1C52893800E2641B /* Distributed Hashcracker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Distributed Hashcracker-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -236,6 +240,8 @@
 			children = (
 				501E6E721C1703C70068A44B /* Distributed_HashcrackerTests.swift */,
 				501E6E741C1703C70068A44B /* Info.plist */,
+				3B8439661C9C751100DB2212 /* MasterOperationTest.swift */,
+				3B8439681C9C752300DB2212 /* WorkerOperationTest.swift */,
 			);
 			path = "Distributed HashcrackerTests";
 			sourceTree = "<group>";
@@ -438,6 +444,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				501E6E731C1703C70068A44B /* Distributed_HashcrackerTests.swift in Sources */,
+				3B8439671C9C751100DB2212 /* MasterOperationTest.swift in Sources */,
+				3B8439691C9C752300DB2212 /* WorkerOperationTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
