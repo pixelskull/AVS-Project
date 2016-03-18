@@ -33,4 +33,20 @@ class Distributed_HashcrackerTests: XCTestCase {
         }
     }
     
+    //Produces new Work Packages
+    func testGeneratingCreateWorkerPackages() {
+    
+    }
+    
+    //Find out double "finishedWork" messages from the MasterOperation-Class
+    func testFinishedWork() {
+    
+    }
+    
+    
+    //Find out double "compareHashes" messages from the WorkerOperation-Class
+    func testCompareHashes() {
+        
+    }
+
 }
