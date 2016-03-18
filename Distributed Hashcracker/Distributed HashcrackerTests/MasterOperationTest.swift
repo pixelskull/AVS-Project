@@ -9,6 +9,8 @@
 import XCTest
 
 class MasterOperationTest: XCTestCase {
+    
+    let password = "aaaA"
 
     override func setUp() {
         super.setUp()
