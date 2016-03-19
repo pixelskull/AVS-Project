@@ -109,10 +109,11 @@ class WorkerOperation:MasterWorkerOperation {
      postcondition = calculated and checked hash values -> if(target hash was hit){send hitTargetHashMessage with the hash, the password, the time needed and the worker_id to the server} else {send finishedWorkMessage with the worker_id to the server}
      */
     func newWorkBlog(message:ExtendedMessage){
-        print("newWorkBlog")
+        
         if let workerIDFromMessage = message.values["worker_id"],
             let passwords = message.values["hashes"]?.componentsSeparatedByString(","),
             let workBlogId = message.values["workBlog_id"]{
+                print("newWorkBlog: \(workBlogId)")
                 let queue = dispatch_queue_create("\(Constants.queueID).\(workerIDFromMessage)-\(passwords.first!)...", nil)
                 dispatch_async(queue) {
                     self.computeHashesAsyncForWorker(workerIDFromMessage, passwords: passwords, workBlogId: workBlogId)
@@ -147,6 +148,9 @@ class WorkerOperation:MasterWorkerOperation {
     }
     
     func computeHashesAsyncForWorker(workerID:String, passwords:[String], workBlogId:String) {
+        
+        print("computeHashesAsyncForWorker: \(workBlogId)")
+        
         // check if worker is in queue
         guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
         // check if workerID is the id of this worker
@@ -171,6 +175,8 @@ class WorkerOperation:MasterWorkerOperation {
     
     func compareHashes(hashAlgorithm: HashAlgorithm, passwordArray:[String], targetHash: String, workBlogId:String){
         let worker = WorkerQueue.sharedInstance.getFirstWorker()
+        
+        print("compareHashes: \(workBlogId)")
         
         // <<<<<<<<<< Start time measurement
         let startTimeMeasurement = NSDate();
@@ -202,6 +208,8 @@ class WorkerOperation:MasterWorkerOperation {
         
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
             object: ExtendedMessage(status: MessagesHeader.hashesPerTime, values: hashesPerTime))
+        
+        print("compareHashesSendFinishedWorkMessage: \(workBlogId)")
         
         let finishedWorkMessageValues: [String:String] = ["worker_id": worker!.id, "workBlog_id": workBlogId]
         notificationCenter.postNotificationName(Constants.NCValues.sendMessage,

@@ -233,18 +233,26 @@ class MasterOperation:MasterWorkerOperation {
         dispatch_async(queue) {
             let workBlogQueue = WorkBlogQueue.sharedInstance
             let workerID = message.values["worker_id"]
-            let workerBlogID = message.values["workBlog_id"]
+            let workBlogID = message.values["workBlog_id"]
             
-            print("finishedWork \(workerID)")
+            print("finishedWork - WorkerID: \(workerID) und WorkBlogID: \(workBlogID)")
             
             print("WorkBlogQueueLängeVorRemove: \(workBlogQueue.workBlogQueue.count)")
             //Try to remove the workBlog from the workBlogQueue by the worker how processed the workBlog
-            _ = workBlogQueue.removeWorkBlogByWorkBlogID(workerBlogID!)
+            
+            let resultRemoveWorkBlog = workBlogQueue.removeWorkBlogByWorkBlogID(workBlogID!)
+            
+            if(resultRemoveWorkBlog == nil){
+                print("WorkBlog wurde nicht gelöscht - WorkBlogID \(workBlogID) nicht gefunden!")
+            }
+            else{
+                print("WorkBlog wurde gelöscht - WorkBlogID \(workBlogID)")
+            }
             
             print("WorkBlogQueueLängeNachRemove: \(workBlogQueue.workBlogQueue.count)")
             
             //Wait until the workBlogQueue got new entries
-            while workBlogQueue.workBlogQueue.count == 0 {}
+            while workBlogQueue.workBlogQueue.count == 0 {sleep(1)}
             
             if(workBlogQueue.workBlogQueue.count > 0){
                 
