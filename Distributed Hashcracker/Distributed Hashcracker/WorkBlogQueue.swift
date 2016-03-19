@@ -48,6 +48,16 @@ class WorkBlogQueue {
     }
     
     /**
+     update WorkBlog.inProcessBy by WorkBlogID and workerID
+     */
+    func updateWorkBlogByID(workBlogID:String, workerID:String){
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        let workBlogByID = workBlogQueueLens.get(workBlogQueue).filter{ $0.id == workBlogID }.first
+        workBlogByID?.inProcessBy = workerID
+        dispatch_semaphore_signal(semaphore)
+    }
+    
+    /**
      get first WorkBlog if WorkerQueue is not empty (Blocking)
      
      - returns: first WorkBlog from list when not empty otherwise nil

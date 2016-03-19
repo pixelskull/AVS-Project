@@ -49,6 +49,16 @@ class WorkerQueue {
     }
     
     /**
+     update Worker.status by WorkBlogID and workerID
+     */
+    func updateWorkerByID(workerID:String, status:Worker.Status){
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        let workerByID = workerQueueLens.get(workerQueue).filter{ $0.id == workerID }.first
+        workerByID!.status = status
+        dispatch_semaphore_signal(semaphore)
+    }
+    
+    /**
      get first Worker if WorkerQueue is not empty (Blocking)
      
      - returns: First Worker from list when not empty otherwise nil

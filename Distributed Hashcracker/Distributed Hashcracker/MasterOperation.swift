@@ -19,6 +19,7 @@ extension Array {
 
 class MasterOperation:MasterWorkerOperation {
     
+    let semaphore = dispatch_semaphore_create(1)
     var targetHash:String   = ""
     var selectedAlgorithm:String = ""
     var startTimePasswordCrack: NSDate = NSDate()
@@ -258,9 +259,10 @@ class MasterOperation:MasterWorkerOperation {
                 
                 //let newWorkBlog = convertWorkBlogArrayToString(workBlogQueue.getFirstWorkBlog()!.value)
                 
+                //Check if there is a workBlog in the WorkBlogQueue that is free to compute by a worker
+                
                 var nextWorkBlog:WorkBlog? = nil
                 
-                //Check if there is a workBlog in the WorkBlogQueue that is free to compute by a worker
                 while nextWorkBlog == nil{
                     nextWorkBlog = self.getAndCheckNewWorkBlog(workerID!)
                 }
@@ -392,7 +394,9 @@ class MasterOperation:MasterWorkerOperation {
             print("iterating workblog \(workBlog.id)")
             //WorkBlog isn't in process by a worker
             if(workBlog.inProcessBy == "Not in process"){
-                workBlog.inProcessBy = workerID
+                //workBlog.inProcessBy = workerID
+                
+                workBlogQueue.updateWorkBlogByID(workBlog.id, workerID: workerID)
                 
                 print("\(workBlog.id) -> \(workBlog.inProcessBy)")
                 return workBlog
@@ -400,7 +404,10 @@ class MasterOperation:MasterWorkerOperation {
             else if(workBlog.inProcessBy != "Not in process"){
                 //Check if the worker of the workBlog is still active
                 if(workerQueue.getWorkerByID(workBlog.inProcessBy)?.status == .Inactive){
-                    workBlog.inProcessBy = workerID
+                    //workBlog.inProcessBy = workerID
+                    
+                    workBlogQueue.updateWorkBlogByID(workBlog.id, workerID: workerID)
+                    
                     print("\(workBlog.id) -> \(workBlog.inProcessBy)")
                     return workBlog
                 }
@@ -424,14 +431,18 @@ class MasterOperation:MasterWorkerOperation {
             // Check if the worker contains in the activeWorkerQueue
             if(workerQueue.activeWorkerQueue.contains({ $0.id == worker.id }) == false){
                 // If worker isn't in the activeWorkerQueue -> set worker.status = .Inactive
-                worker.status = .Inactive
+                //worker.status = .Inactive
+                
+                workerQueue.updateWorkerByID(worker.id, status: .Inactive)
                 
                 //Check if there is a WorkBlog in the WorkBlogQueue which is "inProcessBy" the worker
                 for workBlog in workBlogQueue.workBlogQueue{
                     
                     //Set the workBlogs of the inactive Worker to "Not in process"
                     if(workBlog.inProcessBy == worker.id){
-                        workBlog.inProcessBy = "Not in process"
+                        //workBlog.inProcessBy = "Not in process"
+                        
+                        workBlogQueue.updateWorkBlogByID(workBlog.id, workerID: "Not in process")
                     }
                 }
 
