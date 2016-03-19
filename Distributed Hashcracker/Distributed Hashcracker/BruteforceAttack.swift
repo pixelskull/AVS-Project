@@ -38,7 +38,7 @@ class BruteForceAttack:NSObject, AttackStrategy {
             for char in toAppend { tmpArray += array.map({ return $0 + char }) }
             
             let firstWorkArray = charArray + tmpArray
-            let firstWorkBlog = WorkBlog(id: String(workBlogID), value: firstWorkArray)
+            let firstWorkBlog = WorkBlog(id: "B\(workBlogID)", value: firstWorkArray)
             workBlogID += 1
             workBlogQueue.put(firstWorkBlog)
             

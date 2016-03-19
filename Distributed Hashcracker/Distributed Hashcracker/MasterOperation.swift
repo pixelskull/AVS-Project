@@ -52,6 +52,11 @@ class MasterOperation:MasterWorkerOperation {
     }
     
     override func main() {
+        let queue = dispatch_queue_create("\(Constants.queueID).WorkerQueue", nil)
+        dispatch_async(queue) {
+            self.generateNewWorkBlog()
+        }
+        
         runloop: while true {
             guard run == true else { break runloop }
             
@@ -164,12 +169,7 @@ class MasterOperation:MasterWorkerOperation {
             // Start time of the password crack
             self.startTimePasswordCrack = NSDate()
             let workerQueue = WorkerQueue.sharedInstance
-            if workerQueue.workerQueue.count == 0 {
-                let queue = dispatch_queue_create("\(Constants.queueID).WorkerQueue", nil)
-                dispatch_async(queue) {
-                    self.generateNewWorkBlog()
-                }
-            }
+
             let workerID:String = message.value
             let newWorker = Worker(id: workerID, status: .Aktive)
             workerQueue.put(newWorker)
