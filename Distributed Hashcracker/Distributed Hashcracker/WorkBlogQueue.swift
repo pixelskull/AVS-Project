@@ -58,6 +58,33 @@ class WorkBlogQueue {
     }
     
     /**
+     update and get next free WorkBlog.inProcessBy with workerID
+     - returns: WorkBlog if there is a workBlog with .inProcessBy == "Not in process" otherwise nil
+     */
+    func updateAndGetWorkBlog(workerID:String) -> WorkBlog?{
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        let freeWorkBlog = workBlogQueueLens.get(workBlogQueue).filter{ $0.inProcessBy == "Not in process" }.first
+        if(freeWorkBlog != nil){freeWorkBlog!.inProcessBy = workerID}
+        dispatch_semaphore_signal(semaphore)
+        
+        return freeWorkBlog
+    }
+    
+    /**
+     update all WorkBlogs of the inactive Worker by the workerID
+     */
+    func updateAllWorkBlogFromInactiveWorker(workerID:String){
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        for workBlog in workBlogQueueLens.get(workBlogQueue){
+            
+            if(workBlog.inProcessBy == workerID){
+                workBlog.inProcessBy = "Not in process"
+            }
+        }
+        dispatch_semaphore_signal(semaphore)
+    }
+    
+    /**
      get first WorkBlog if WorkerQueue is not empty (Blocking)
      
      - returns: first WorkBlog from list when not empty otherwise nil

@@ -19,6 +19,13 @@ class WorkerQueue {
     )
     
     var activeWorkerQueue:[Worker] = [Worker]()
+    let activeWorkerQueueLens = Lens<[Worker], [Worker]>(
+        get: { $0 },
+        set: { (newValue, value) in
+            value + newValue
+        }
+    )
+    
     
     static let sharedInstance = WorkerQueue()
     
