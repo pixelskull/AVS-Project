@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import Charts
 
 struct HashValue {
     var time:NSDate

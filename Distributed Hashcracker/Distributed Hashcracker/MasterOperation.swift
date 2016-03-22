@@ -127,11 +127,11 @@ class MasterOperation:MasterWorkerOperation {
             switch self.countOfSendStillAliveMessages{
             case 0:
                 logUpdateText = "asked if worker still alive"
-                ++self.countOfSendStillAliveMessages
+                self.countOfSendStillAliveMessages += 1
                 break
             case 1:
                 logUpdateText = "asked if worker still alive"
-                ++self.countOfSendStillAliveMessages
+                self.countOfSendStillAliveMessages += 1
                 break
             case 2:
                 //Check active worker
@@ -370,7 +370,7 @@ class MasterOperation:MasterWorkerOperation {
         for character in workBlog{
             if(counter < workBlog.count){
                 workBlogString = workBlogString + character + ","
-                counter++
+                counter += 1
             }
             else{
                 workBlogString = workBlogString + character

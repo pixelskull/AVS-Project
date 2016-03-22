@@ -35,6 +35,8 @@
 		50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ADD84E1C28777E00E8DC42 /* LogViewController.swift */; };
 		50B5A25D1CA18A2B00D66222 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50B5A25A1CA18A2B00D66222 /* Starscream.framework */; };
 		50B5A25E1CA18A2B00D66222 /* Starscream.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 50B5A25A1CA18A2B00D66222 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		50B5A26F1CA1AF9400D66222 /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50B5A26E1CA1AF9400D66222 /* Charts.framework */; };
+		50B5A2701CA1AF9400D66222 /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 50B5A26E1CA1AF9400D66222 /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CE1D261C5129BD00A61514 /* MessageQueue.swift */; };
 		50CE1D291C524C2F00A61514 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CE1D281C524C2F00A61514 /* Message.swift */; };
 		50E889811C6B500B00B854D5 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E889801C6B500B00B854D5 /* ChartViewController.swift */; };
@@ -79,6 +81,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				50B5A25E1CA18A2B00D66222 /* Starscream.framework in Embed Frameworks */,
+				50B5A2701CA1AF9400D66222 /* Charts.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -121,6 +124,7 @@
 		5088E8AC1C7744170065C39B /* MasterWorkerOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterWorkerOperation.swift; sourceTree = "<group>"; };
 		50ADD84E1C28777E00E8DC42 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		50B5A25A1CA18A2B00D66222 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
+		50B5A26E1CA1AF9400D66222 /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Charts.framework; sourceTree = "<group>"; };
 		50CE1D261C5129BD00A61514 /* MessageQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageQueue.swift; sourceTree = "<group>"; };
 		50CE1D281C524C2F00A61514 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		50E889801C6B500B00B854D5 /* ChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
@@ -135,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50B5A25D1CA18A2B00D66222 /* Starscream.framework in Frameworks */,
+				50B5A26F1CA1AF9400D66222 /* Charts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +163,7 @@
 		50091C4E1C47E5E8003AD5D5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				50B5A26E1CA1AF9400D66222 /* Charts.framework */,
 				50B5A25A1CA18A2B00D66222 /* Starscream.framework */,
 			);
 			name = Frameworks;
