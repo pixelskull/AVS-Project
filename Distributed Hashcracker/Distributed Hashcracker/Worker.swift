@@ -34,6 +34,6 @@ class Worker{
      - returns: true if workerID ist equal to own id
      */
     func checkWorkerID(workerID:String) -> Bool {
-        return id == workerID ? true : false
+        return id == workerID
     }
 }

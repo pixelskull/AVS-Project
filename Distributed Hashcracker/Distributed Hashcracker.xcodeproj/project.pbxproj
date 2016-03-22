@@ -16,8 +16,6 @@
 		4CE7BFD41C6D41C70020482F /* WorkerQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */; };
 		5005DEC51C625CA100D39F2C /* node_server in Resources */ = {isa = PBXBuildFile; fileRef = 5005DEC41C625CA100D39F2C /* node_server */; };
 		5005DEC71C63A3DF00D39F2C /* ServerAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */; };
-		50091C541C47EB6D003AD5D5 /* Starscream.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		50091C551C47EB88003AD5D5 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50091C531C47EB6D003AD5D5 /* Starscream.framework */; };
 		50091C581C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */; };
 		501E6E611C1703C70068A44B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E601C1703C70068A44B /* AppDelegate.swift */; };
 		501E6E631C1703C70068A44B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501E6E621C1703C70068A44B /* SettingsViewController.swift */; };
@@ -29,14 +27,14 @@
 		502ED1D41C8DB8BB00C0FA10 /* AttackStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502ED1D31C8DB8BB00C0FA10 /* AttackStrategy.swift */; };
 		502ED1D61C8DB94900C0FA10 /* PasswordDictionary.txt in Resources */ = {isa = PBXBuildFile; fileRef = 502ED1D51C8DB94900C0FA10 /* PasswordDictionary.txt */; };
 		5086D94B1C5FD680008F7464 /* MessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5086D94A1C5FD680008F7464 /* MessageParser.swift */; };
-		5088E8901C74994C0065C39B /* PlotKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5088E88F1C74994C0065C39B /* PlotKit.framework */; };
-		5088E8911C74994C0065C39B /* PlotKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 5088E88F1C74994C0065C39B /* PlotKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5088E8941C7499F80065C39B /* PlotKit.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5088E8931C7499F80065C39B /* PlotKit.framework.dSYM */; };
 		5088E8961C749A1D0065C39B /* Starscream.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5088E8951C749A1D0065C39B /* Starscream.framework.dSYM */; };
 		5088E8A91C772BED0065C39B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088E8A81C772BED0065C39B /* Constants.swift */; };
 		5088E8AB1C7739200065C39B /* MasterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088E8AA1C7739200065C39B /* MasterOperation.swift */; };
 		5088E8AD1C7744170065C39B /* MasterWorkerOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088E8AC1C7744170065C39B /* MasterWorkerOperation.swift */; };
 		50ADD84F1C28777E00E8DC42 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ADD84E1C28777E00E8DC42 /* LogViewController.swift */; };
+		50B5A25D1CA18A2B00D66222 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50B5A25A1CA18A2B00D66222 /* Starscream.framework */; };
+		50B5A25E1CA18A2B00D66222 /* Starscream.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 50B5A25A1CA18A2B00D66222 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50CE1D271C5129BD00A61514 /* MessageQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CE1D261C5129BD00A61514 /* MessageQueue.swift */; };
 		50CE1D291C524C2F00A61514 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CE1D281C524C2F00A61514 /* Message.swift */; };
 		50E889811C6B500B00B854D5 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E889801C6B500B00B854D5 /* ChartViewController.swift */; };
@@ -63,18 +61,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		50091C4F1C47E5FA003AD5D5 /* Copy Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				5088E8911C74994C0065C39B /* PlotKit.framework in Copy Frameworks */,
-				50091C541C47EB6D003AD5D5 /* Starscream.framework in Copy Frameworks */,
-			);
-			name = "Copy Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		5088E8921C7499A20065C39B /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -84,6 +70,17 @@
 				5088E8941C7499F80065C39B /* PlotKit.framework.dSYM in CopyFiles */,
 				5088E8961C749A1D0065C39B /* Starscream.framework.dSYM in CopyFiles */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50B5A25F1CA18A2C00D66222 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				50B5A25E1CA18A2B00D66222 /* Starscream.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -100,7 +97,6 @@
 		4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkerQueue.swift; sourceTree = "<group>"; };
 		5005DEC41C625CA100D39F2C /* node_server */ = {isa = PBXFileReference; lastKnownFileType = folder; path = node_server; sourceTree = "<group>"; };
 		5005DEC61C63A3DF00D39F2C /* ServerAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerAddress.swift; sourceTree = "<group>"; };
-		50091C531C47EB6D003AD5D5 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
 		50091C571C4937B3003AD5D5 /* WebSocketBackgroundOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketBackgroundOperation.swift; sourceTree = "<group>"; };
 		501E6E5D1C1703C70068A44B /* Distributed Hashcracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Distributed Hashcracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		501E6E601C1703C70068A44B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -118,13 +114,13 @@
 		502ED1D31C8DB8BB00C0FA10 /* AttackStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttackStrategy.swift; sourceTree = "<group>"; };
 		502ED1D51C8DB94900C0FA10 /* PasswordDictionary.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = PasswordDictionary.txt; sourceTree = "<group>"; };
 		5086D94A1C5FD680008F7464 /* MessageParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageParser.swift; sourceTree = "<group>"; };
-		5088E88F1C74994C0065C39B /* PlotKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PlotKit.framework; sourceTree = "<group>"; };
 		5088E8931C7499F80065C39B /* PlotKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = PlotKit.framework.dSYM; sourceTree = "<group>"; };
 		5088E8951C749A1D0065C39B /* Starscream.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = Starscream.framework.dSYM; sourceTree = "<group>"; };
 		5088E8A81C772BED0065C39B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		5088E8AA1C7739200065C39B /* MasterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterOperation.swift; sourceTree = "<group>"; };
 		5088E8AC1C7744170065C39B /* MasterWorkerOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterWorkerOperation.swift; sourceTree = "<group>"; };
 		50ADD84E1C28777E00E8DC42 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
+		50B5A25A1CA18A2B00D66222 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Starscream.framework; sourceTree = "<group>"; };
 		50CE1D261C5129BD00A61514 /* MessageQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageQueue.swift; sourceTree = "<group>"; };
 		50CE1D281C524C2F00A61514 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		50E889801C6B500B00B854D5 /* ChartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
@@ -138,8 +134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5088E8901C74994C0065C39B /* PlotKit.framework in Frameworks */,
-				50091C551C47EB88003AD5D5 /* Starscream.framework in Frameworks */,
+				50B5A25D1CA18A2B00D66222 /* Starscream.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,8 +158,7 @@
 		50091C4E1C47E5E8003AD5D5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5088E88F1C74994C0065C39B /* PlotKit.framework */,
-				50091C531C47EB6D003AD5D5 /* Starscream.framework */,
+				50B5A25A1CA18A2B00D66222 /* Starscream.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -282,8 +276,8 @@
 				501E6E591C1703C70068A44B /* Sources */,
 				501E6E5A1C1703C70068A44B /* Frameworks */,
 				501E6E5B1C1703C70068A44B /* Resources */,
-				50091C4F1C47E5FA003AD5D5 /* Copy Frameworks */,
 				5088E8921C7499A20065C39B /* CopyFiles */,
+				50B5A25F1CA18A2C00D66222 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

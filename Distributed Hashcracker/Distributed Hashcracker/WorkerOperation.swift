@@ -154,7 +154,10 @@ class WorkerOperation:MasterWorkerOperation {
         // check if worker is in queue
         guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
         // check if workerID is the id of this worker
-        guard worker.checkWorkerID(workerID) else { return }
+        guard worker.checkWorkerID(workerID) else {
+            print("refused workblock: \(workBlogId)")
+            return
+        }
         guard let algo = worker.algorithm,
             let tar = worker.target
             else { return } /// TODO: hier vielleicht neue setupConfig reagieren
