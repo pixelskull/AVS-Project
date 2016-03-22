@@ -388,33 +388,46 @@ class MasterOperation:MasterWorkerOperation {
     func getAndCheckNewWorkBlog(workerID:String) -> WorkBlog?{
         
         let workBlogQueue = WorkBlogQueue.sharedInstance
-        let workerQueue = WorkerQueue.sharedInstance
-        print("workblogqueue.count: \(workBlogQueue.workBlogQueue.count)")
-        for workBlog in workBlogQueue.workBlogQueue{
-            print("iterating workblog \(workBlog.id)")
-            //WorkBlog isn't in process by a worker
-            if(workBlog.inProcessBy == "Not in process"){
-                //workBlog.inProcessBy = workerID
-                
-                workBlogQueue.updateWorkBlogByID(workBlog.id, workerID: workerID)
-                
-                print("\(workBlog.id) -> \(workBlog.inProcessBy)")
-                return workBlog
-            }
-            else if(workBlog.inProcessBy != "Not in process"){
-                //Check if the worker of the workBlog is still active
-                if(workerQueue.getWorkerByID(workBlog.inProcessBy)?.status == .Inactive){
-                    //workBlog.inProcessBy = workerID
-                    
-                    workBlogQueue.updateWorkBlogByID(workBlog.id, workerID: workerID)
-                    
-                    print("\(workBlog.id) -> \(workBlog.inProcessBy)")
-                    return workBlog
-                }
-            }
-            
+//        let workerQueue = WorkerQueue.sharedInstance
+//        print("workblogqueue.count: \(workBlogQueue.workBlogQueue.count)")
+        
+        //Check if there is a free WorkBlog (inProcessBy == "Not in process")
+        let newWorkBlog = workBlogQueue.updateAndGetWorkBlog(workerID)
+        
+        //Free workBlog available and return this workBlog
+        if(newWorkBlog != nil){
+            return newWorkBlog
         }
-        return nil
+        else{
+            //No free workBlog and wait 1 second
+            sleep(1)
+            return nil
+        }
+        
+//        for workBlog in workBlogQueue.workBlogQueue{
+//            print("iterating workblog \(workBlog.id)")
+//            //WorkBlog isn't in process by a worker
+//            if(workBlog.inProcessBy == "Not in process"){
+//                //workBlog.inProcessBy = workerID
+//                
+//                workBlogQueue.updateWorkBlogByID(workBlog.id, workerID: workerID)
+//                
+//                print("\(workBlog.id) -> \(workBlog.inProcessBy)")
+//                return workBlog
+//            }
+//            else if(workBlog.inProcessBy != "Not in process"){
+//                //Check if the worker of the workBlog is still active
+//                if(workerQueue.getWorkerByID(workBlog.inProcessBy)?.status == .Inactive){
+//                    //workBlog.inProcessBy = workerID
+//                    
+//                    workBlogQueue.updateWorkBlogByID(workBlog.id, workerID: workerID)
+//                    
+//                    print("\(workBlog.id) -> \(workBlog.inProcessBy)")
+//                    return workBlog
+//                }
+//            }
+//            
+//        }
     }
     
     /**
@@ -427,24 +440,28 @@ class MasterOperation:MasterWorkerOperation {
         let workBlogQueue = WorkBlogQueue.sharedInstance
         let workerQueue = WorkerQueue.sharedInstance
         
-        for worker in workerQueue.workerQueue{
+        for worker in workerQueue.workerQueueLens.get(workerQueue.workerQueue){
             // Check if the worker contains in the activeWorkerQueue
-            if(workerQueue.activeWorkerQueue.contains({ $0.id == worker.id }) == false){
+            if(workerQueue.activeWorkerQueueLens.get(workerQueue.activeWorkerQueue).contains({ $0.id == worker.id }) == false){
                 // If worker isn't in the activeWorkerQueue -> set worker.status = .Inactive
                 //worker.status = .Inactive
                 
+                //Update the status of the worker to .Inactive
                 workerQueue.updateWorkerByID(worker.id, status: .Inactive)
                 
+                //Check if there is a WorkBlog in the WorkBlogQueue which is "inProcessBy" the inactive Worker
+                workBlogQueue.updateAllWorkBlogFromInactiveWorker(worker.id)
+                
                 //Check if there is a WorkBlog in the WorkBlogQueue which is "inProcessBy" the worker
-                for workBlog in workBlogQueue.workBlogQueue{
-                    
-                    //Set the workBlogs of the inactive Worker to "Not in process"
-                    if(workBlog.inProcessBy == worker.id){
-                        //workBlog.inProcessBy = "Not in process"
-                        
-                        workBlogQueue.updateWorkBlogByID(workBlog.id, workerID: "Not in process")
-                    }
-                }
+//                for workBlog in workBlogQueue.workBlogQueue{
+//                    
+//                    //Set the workBlogs of the inactive Worker to "Not in process"
+//                    if(workBlog.inProcessBy == worker.id){
+//                        //workBlog.inProcessBy = "Not in process"
+//                        
+//                        workBlogQueue.updateWorkBlogByID(workBlog.id, workerID: "Not in process")
+//                    }
+//                }
 
             }
             
