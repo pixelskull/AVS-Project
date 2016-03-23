@@ -11,8 +11,13 @@ import XCTest
 class MasterOperationTest: XCTestCase {
     
     let password = "aaaA"
+    var array:[String]?
     let bruteForce = BruteForceAttack()
     let MasterOperation = MasterWorkerOperation()
+    
+    
+    let workBlockQueue = WorkBlogQueue.sharedInstance
+    let workerQueue = WorkerQueue.sharedInstance
  //   var passwords:[String]?
     
     override func setUp() {
@@ -28,9 +33,20 @@ class MasterOperationTest: XCTestCase {
     
     // Use XCTAssert and related functions to verify your tests produce the correct results.
     func testFillWorkerQueue() {
-//    bruteForce.fillWorkBlogQueue();
+        let targetHash = HashSHA().hash(string: password)
         
         
+        let workerOperation = WorkerOperation()
+        workerQueue.put(Worker(id: "eins", status: .Aktive))
+        dispatch_async(dispatch_get_main_queue()) {
+            self.bruteForce.fillWorkBlogQueue()
+        }
+        while true {
+            let workBlock = workBlockQueue.getFirstWorkBlog()
+            workBlockQueue.removeWorkBlogByWorkBlogID(workBlock!.id)
+            let algo:HashAlgorithm = HashSHA()
+            workerOperation.compareHashes(algo, passwordArray: workBlock!.value, targetHash: targetHash, workBlogId: workBlock!.id)
+        }
     }
     
     

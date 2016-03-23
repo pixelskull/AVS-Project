@@ -3,13 +3,25 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		3B6A0D621C8717990085CF12 /* DictionaryAttack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6A0D611C8717990085CF12 /* DictionaryAttack.swift */; };
 		3B8439671C9C751100DB2212 /* MasterOperationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8439661C9C751100DB2212 /* MasterOperationTest.swift */; };
 		3B8439691C9C752300DB2212 /* WorkerOperationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8439681C9C752300DB2212 /* WorkerOperationTest.swift */; };
+		3B84396A1CA02C8C00DB2212 /* WorkerQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE7BFD31C6D41C70020482F /* WorkerQueue.swift */; };
+		3B84396B1CA02C9300DB2212 /* WorkBlogQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */; };
+		3B84396C1CA02C9800DB2212 /* WorkBlog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EBB1C84602900F837DB /* WorkBlog.swift */; };
+		3B84396D1CA02C9F00DB2212 /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FBAAC61C903893007B6F83 /* Lens.swift */; };
+		3B84396E1CA02CAD00DB2212 /* HashStrategie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A31C52895700E2641B /* HashStrategie.swift */; };
+		3B84396F1CA02CB700DB2212 /* MasterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088E8AA1C7739200065C39B /* MasterOperation.swift */; };
+		3B8439701CA02CBB00DB2212 /* MasterWorkerOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088E8AC1C7744170065C39B /* MasterWorkerOperation.swift */; };
+		3B8439711CA02CCC00DB2212 /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE7BFD11C6D41A90020482F /* Worker.swift */; };
+		3B8439721CA02CD100DB2212 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088E8A81C772BED0065C39B /* Constants.swift */; };
+		3B8439731CA02CD900DB2212 /* AttackStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502ED1D31C8DB8BB00C0FA10 /* AttackStrategy.swift */; };
+		3B8439741CA02CDD00DB2212 /* DictionaryAttack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6A0D611C8717990085CF12 /* DictionaryAttack.swift */; };
+		3B8439751CA02CE500DB2212 /* BruteforceAttack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502ED1D11C8DB89500C0FA10 /* BruteforceAttack.swift */; };
 		4C3F3EB81C845B6900F837DB /* WorkBlogQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EB71C845B6900F837DB /* WorkBlogQueue.swift */; };
 		4C3F3EBC1C84602900F837DB /* WorkBlog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3F3EBB1C84602900F837DB /* WorkBlog.swift */; };
 		4C98B1A11C52893800E2641B /* CustomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C98B1A01C52893800E2641B /* CustomObject.m */; };
@@ -360,7 +372,7 @@
 				};
 			};
 			buildConfigurationList = 501E6E581C1703C70068A44B /* Build configuration list for PBXProject "Distributed Hashcracker" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -444,8 +456,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				501E6E731C1703C70068A44B /* Distributed_HashcrackerTests.swift in Sources */,
+				3B84396D1CA02C9F00DB2212 /* Lens.swift in Sources */,
+				3B84396E1CA02CAD00DB2212 /* HashStrategie.swift in Sources */,
+				3B8439701CA02CBB00DB2212 /* MasterWorkerOperation.swift in Sources */,
+				3B8439731CA02CD900DB2212 /* AttackStrategy.swift in Sources */,
 				3B8439671C9C751100DB2212 /* MasterOperationTest.swift in Sources */,
+				3B84396C1CA02C9800DB2212 /* WorkBlog.swift in Sources */,
 				3B8439691C9C752300DB2212 /* WorkerOperationTest.swift in Sources */,
+				3B84396A1CA02C8C00DB2212 /* WorkerQueue.swift in Sources */,
+				3B84396B1CA02C9300DB2212 /* WorkBlogQueue.swift in Sources */,
+				3B8439711CA02CCC00DB2212 /* Worker.swift in Sources */,
+				3B8439751CA02CE500DB2212 /* BruteforceAttack.swift in Sources */,
+				3B84396F1CA02CB700DB2212 /* MasterOperation.swift in Sources */,
+				3B8439721CA02CD100DB2212 /* Constants.swift in Sources */,
+				3B8439741CA02CDD00DB2212 /* DictionaryAttack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
