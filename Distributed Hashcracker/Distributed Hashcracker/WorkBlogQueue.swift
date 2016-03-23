@@ -135,4 +135,19 @@ class WorkBlogQueue {
         return workBlogByWorkerID
         
     }
+    
+    /**
+    WorkBlogQueue length
+     
+     - returns: lenght of the WorkBlogQueue
+     */
+    func getWorkBlogQueueCount() -> Int {
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        let workBlogQueueLenght = workBlogQueueLens.get(workBlogQueue).count
+        dispatch_semaphore_signal(semaphore)
+        
+        return workBlogQueueLenght
+        
+    }
+
 }

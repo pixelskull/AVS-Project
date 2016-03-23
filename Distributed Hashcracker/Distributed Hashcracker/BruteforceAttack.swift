@@ -54,12 +54,18 @@ class BruteForceAttack:NSObject, AttackStrategy {
                 for subset in array.splitBy(100) {
                     tmpArray += subset.map{ $0 + char }
                     if tmpArray.count > 5000 {
-                        let workerCount = WorkerQueue.sharedInstance.workerQueue.count
+                        //let workerCount = WorkerQueue.sharedInstance.workerQueue.count
                         //Wait with the generating of a new WorkBlock until the WorkBlogQueue isn't full
-                        waitLoop: while(WorkBlogQueue.sharedInstance.workBlogQueue.count > (workerCount*2)){
+//                        waitLoop: while(WorkBlogQueue.sharedInstance.workBlogQueue.count > (workerCount*2)){
+//                            guard generateLoopRun == true else { break waitLoop }
+//                            sleep(1)
+//                        }
+                        
+                        waitLoop: while(WorkBlogQueue.sharedInstance.getWorkBlogQueueCount() > (WorkerQueue.sharedInstance.getWorkerQueueCount()*2)){
                             guard generateLoopRun == true else { break waitLoop }
                             sleep(1)
                         }
+                        
                         let workBlog = WorkBlog(id: "B\(workBlogID)", value: tmpArray)
                         workBlogID += 1
                         workBlogQueue.put(workBlog)

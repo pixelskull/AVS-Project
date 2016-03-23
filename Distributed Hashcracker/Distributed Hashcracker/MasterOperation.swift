@@ -258,7 +258,7 @@ class MasterOperation:MasterWorkerOperation {
             print("WorkBlogQueueLängeNachRemove: \(workBlogQueue.workBlogQueue.count)")
             
             //Wait until the workBlogQueue got new entries
-            while workBlogQueue.workBlogQueue.count == 0 {sleep(1)}
+            while workBlogQueue.getWorkBlogQueueCount() == 0 {sleep(1)}
             
             if(workBlogQueue.workBlogQueue.count > 0){
                 
@@ -369,20 +369,22 @@ class MasterOperation:MasterWorkerOperation {
      */
     func convertWorkBlogArrayToString(workBlog:[String]) -> String{
         
-        var counter=0
-        var workBlogString:String = ""
+        return workBlog.joinWithSeparator(",")
         
-        for character in workBlog{
-            if(counter < workBlog.count){
-                workBlogString = workBlogString + character + ","
-                counter++
-            }
-            else{
-                workBlogString = workBlogString + character
-            }
-        }
-        
-        return workBlogString
+//        var counter=0
+//        var workBlogString:String = ""
+//        
+//        for character in workBlog{
+//            if(counter < workBlog.count){
+//                workBlogString = workBlogString + character + ","
+//                counter++
+//            }
+//            else{
+//                workBlogString = workBlogString + character
+//            }
+//        }
+//        
+//        return workBlogString
     }
     
     /**
