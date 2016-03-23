@@ -75,12 +75,18 @@ class WorkBlogQueue {
      */
     func updateAllWorkBlogFromInactiveWorker(workerID:String){
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
-        for workBlog in workBlogQueueLens.get(workBlogQueue){
-            
-            if(workBlog.inProcessBy == workerID){
-                workBlog.inProcessBy = "Not in process"
-            }
-        }
+//        for workBlog in workBlogQueueLens.get(workBlogQueue){
+//            
+//            if(workBlog.inProcessBy == workerID){
+//                workBlog.inProcessBy = "Not in process"
+//            }
+//        }
+        let inactiveWorkBlocks = workBlogQueueLens.get(workBlogQueue).filter{ $0.inProcessBy == workerID }
+        let otherWorkBlocks = workBlogQueueLens.get(workBlogQueue).filter{ $0.inProcessBy != workerID }
+        workBlogQueueLens.set(otherWorkBlocks, inactiveWorkBlocks.map{
+            $0.inProcessBy = "Not in process"
+            return $0
+        })
         dispatch_semaphore_signal(semaphore)
     }
     

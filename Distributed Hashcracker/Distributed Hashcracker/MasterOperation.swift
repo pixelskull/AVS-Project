@@ -171,15 +171,20 @@ class MasterOperation:MasterWorkerOperation {
             let workerQueue = WorkerQueue.sharedInstance
 
             let workerID:String = message.value
-            let newWorker = Worker(id: workerID, status: .Aktive)
-            workerQueue.put(newWorker)
-            
-            //Send setupConfigurationMessage
-            let setupConfigMessageValues: [String:String] = ["algorithm": self.selectedAlgorithm,
-                "target": self.targetHash,
-                "worker_id":workerID]
-            self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-                object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
+            guard let worker = workerQueue.getWorkerByID(workerID) else {
+                let newWorker = Worker(id: workerID, status: .Aktive)
+                workerQueue.put(newWorker)
+                
+                //Send setupConfigurationMessage
+                let setupConfigMessageValues: [String:String] = ["algorithm": self.selectedAlgorithm,
+                    "target": self.targetHash,
+                    "worker_id":workerID]
+                self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                    object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
+                return
+            }
+            guard worker.status == .Inactive else { return }
+            workerQueue.updateWorkerByID(worker.id, status: .Aktive)
         }
     }
     
