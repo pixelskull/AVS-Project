@@ -103,4 +103,18 @@ class WorkerQueue {
         workerQueue = workerQueueLens.set([worker], workerQueue)
         dispatch_semaphore_signal(semaphore)
     }
+    
+    /**
+     WorkBlogQueue length
+     
+     - returns: lenght of the WorkBlogQueue
+     */
+    func getWorkerQueueCount() -> Int {
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        let workerQueueLenght = workerQueueLens.get(workerQueue).count
+        dispatch_semaphore_signal(semaphore)
+        
+        return workerQueueLenght
+        
+    }
 }

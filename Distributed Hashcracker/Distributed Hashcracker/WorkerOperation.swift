@@ -109,14 +109,16 @@ class WorkerOperation:MasterWorkerOperation {
      postcondition = calculated and checked hash values -> if(target hash was hit){send hitTargetHashMessage with the hash, the password, the time needed and the worker_id to the server} else {send finishedWorkMessage with the worker_id to the server}
      */
     func newWorkBlog(message:ExtendedMessage){
-        
         if let workerIDFromMessage = message.values["worker_id"],
             let passwords = message.values["hashes"]?.componentsSeparatedByString(","),
             let workBlogId = message.values["workBlog_id"]{
+                guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
+                guard worker.checkWorkerID(workerIDFromMessage) else { return }
+                
                 print("newWorkBlog: \(workBlogId)")
                 let queue = dispatch_queue_create("\(Constants.queueID).\(workerIDFromMessage)-\(passwords.first!)...", nil)
                 dispatch_async(queue) {
-                    self.computeHashesAsyncForWorker(workerIDFromMessage, passwords: passwords, workBlogId: workBlogId)
+                    self.computeHashesAsyncForWorker(passwords, workBlogId: workBlogId)
                 }
         } else {
             print("-> newWorkBlog: Error could not get WorkerID or Password")
@@ -147,17 +149,13 @@ class WorkerOperation:MasterWorkerOperation {
         return messageQueue.get()
     }
     
-    func computeHashesAsyncForWorker(workerID:String, passwords:[String], workBlogId:String) {
+    func computeHashesAsyncForWorker(passwords:[String], workBlogId:String) {
         
         print("computeHashesAsyncForWorker: \(workBlogId)")
         
         // check if worker is in queue
         guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
         // check if workerID is the id of this worker
-        guard worker.checkWorkerID(workerID) else {
-            print("refused workblock: \(workBlogId)")
-            return
-        }
         guard let algo = worker.algorithm,
             let tar = worker.target
             else { return } /// TODO: hier vielleicht neue setupConfig reagieren

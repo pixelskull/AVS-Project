@@ -171,15 +171,20 @@ class MasterOperation:MasterWorkerOperation {
             let workerQueue = WorkerQueue.sharedInstance
 
             let workerID:String = message.value
-            let newWorker = Worker(id: workerID, status: .Aktive)
-            workerQueue.put(newWorker)
-            
-            //Send setupConfigurationMessage
-            let setupConfigMessageValues: [String:String] = ["algorithm": self.selectedAlgorithm,
-                "target": self.targetHash,
-                "worker_id":workerID]
-            self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-                object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
+            guard let worker = workerQueue.getWorkerByID(workerID) else {
+                let newWorker = Worker(id: workerID, status: .Aktive)
+                workerQueue.put(newWorker)
+                
+                //Send setupConfigurationMessage
+                let setupConfigMessageValues: [String:String] = ["algorithm": self.selectedAlgorithm,
+                    "target": self.targetHash,
+                    "worker_id":workerID]
+                self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                    object: ExtendedMessage(status: MessagesHeader.setupConfig, values: setupConfigMessageValues))
+                return
+            }
+            guard worker.status == .Inactive else { return }
+            workerQueue.updateWorkerByID(worker.id, status: .Aktive)
         }
     }
     
@@ -253,7 +258,7 @@ class MasterOperation:MasterWorkerOperation {
             print("WorkBlogQueueLängeNachRemove: \(workBlogQueue.workBlogQueue.count)")
             
             //Wait until the workBlogQueue got new entries
-            while workBlogQueue.workBlogQueue.count == 0 {sleep(1)}
+            while workBlogQueue.getWorkBlogQueueCount() == 0 {sleep(1)}
             
             if(workBlogQueue.workBlogQueue.count > 0){
                 
@@ -364,20 +369,22 @@ class MasterOperation:MasterWorkerOperation {
      */
     func convertWorkBlogArrayToString(workBlog:[String]) -> String{
         
-        var counter=0
-        var workBlogString:String = ""
+        return workBlog.joinWithSeparator(",")
         
-        for character in workBlog{
-            if(counter < workBlog.count){
-                workBlogString = workBlogString + character + ","
-                counter += 1
-            }
-            else{
-                workBlogString = workBlogString + character
-            }
-        }
-        
-        return workBlogString
+//        var counter=0
+//        var workBlogString:String = ""
+//        
+//        for character in workBlog{
+//            if(counter < workBlog.count){
+//                workBlogString = workBlogString + character + ","
+//                counter++
+//            }
+//            else{
+//                workBlogString = workBlogString + character
+//            }
+//        }
+//        
+//        return workBlogString
     }
     
     /**
