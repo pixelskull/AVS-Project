@@ -204,7 +204,6 @@ class SettingsViewController: NSViewController {
     }
     
     func toggleStartStopButton(notification:NSNotification) {
-        print("-----------> update UI ")
         dispatch_async(dispatch_get_main_queue()) {
             self.startStopButton.state = NSOffState
             self.view.needsDisplay = true

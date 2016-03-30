@@ -84,11 +84,11 @@ class BruteForceAttack:NSObject, AttackStrategy {
         generateLoop: while true { // for var index = 0; index < 9; ++index {
             guard generateLoopRun == true else { break generateLoop }
             if(index == 0){
-                print("Generate passwords with lenght: \(index+1) and \(index+2)")
+//                print("Generate passwords with lenght: \(index+1) and \(index+2)")
                 result = appendToArrayFirstTime(charArray, toAppend: charArray)
             }
             else{
-                print("Generate passwords with lenght: \(index+2)")
+//                print("Generate passwords with lenght: \(index+2)")
                 result = generateWorkBlogs(result, toAppend: charArray)
             }
             index += 1

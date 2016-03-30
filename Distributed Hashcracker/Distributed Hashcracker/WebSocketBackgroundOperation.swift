@@ -52,8 +52,6 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
     func connect() { socket.connect() }
     
     func websocketDidConnect(socket: WebSocket) {
-        print("websocket is connected")
-    
         if(master == false){
             let workerID = NSHost.currentHost().name!
             
