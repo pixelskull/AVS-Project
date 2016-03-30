@@ -185,12 +185,12 @@ class SettingsViewController: NSViewController {
         hashAlgorithmSelected.enabled = false
         
         notificationCenter.addObserver(self,
-            selector: "stopServerTask:",
+            selector: #selector(self.stopServerTask(_:)),
             name: Constants.NCValues.stopServer,
             object: nil)
         
         notificationCenter.addObserver(self,
-            selector: "toggleStartStopButton:",
+            selector: #selector(self.toggleStartStopButton(_:)),
             name: Constants.NCValues.toggleStartButton,
             object: nil)
     }

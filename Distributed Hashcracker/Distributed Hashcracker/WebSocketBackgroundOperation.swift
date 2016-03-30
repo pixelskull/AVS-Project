@@ -29,12 +29,12 @@ class WebSocketBackgroundOperation:NSOperation,  WebSocketDelegate {
         
         let stopWSNotificationName = Constants.NCValues.stopWebSocket
         notificationCenter.addObserver(self,
-            selector: "stop:",
+            selector: #selector(self.stop(_:)),
             name: stopWSNotificationName,
             object: nil)
         let sendMessageNotificationName = Constants.NCValues.sendMessage
         notificationCenter.addObserver(self,
-            selector: "sendMessage:",
+            selector: #selector(self.sendMessage(_:)),
             name: sendMessageNotificationName,
             object: nil)
     }

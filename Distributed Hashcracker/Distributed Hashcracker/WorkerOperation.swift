@@ -14,7 +14,7 @@ class WorkerOperation:MasterWorkerOperation {
     override init() {
         super.init()
         notificationCenter.addObserver(self,
-            selector: "stopWorkerOperation",
+            selector: #selector(self.stopWorkerOperation),
             name: Constants.NCValues.stopWorker,
             object: nil)
     }

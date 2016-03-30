@@ -32,13 +32,13 @@ class MasterOperation:MasterWorkerOperation {
         super.init()
         
         notificationCenter.addObserver(self,
-            selector: "stopMasterOperation:",
+            selector: #selector(self.stopMasterOperation(_:)),
             name: Constants.NCValues.stopMaster,
             object: nil)
         
         timer = NSTimer.scheduledTimerWithTimeInterval(60.0,
             target: self,
-            selector: "sendStillAlive",
+            selector: #selector(self.sendStillAlive),
             userInfo: nil,
             repeats: true)
         sendStillAliveMessage = true

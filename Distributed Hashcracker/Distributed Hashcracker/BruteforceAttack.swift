@@ -16,7 +16,7 @@ class BruteForceAttack:NSObject, AttackStrategy {
     override init() {
         super.init()
         notificationCenter.addObserver(self,
-            selector: "stopWorkBlogGeneration:",
+            selector: #selector(self.stopWorkBlogGeneration(_:)),
             name: Constants.NCValues.stopWorkBlog,
             object: nil)
     }
@@ -60,7 +60,6 @@ class BruteForceAttack:NSObject, AttackStrategy {
 //                            guard generateLoopRun == true else { break waitLoop }
 //                            sleep(1)
 //                        }
-                        
                         waitLoop: while(WorkBlogQueue.sharedInstance.getWorkBlogQueueCount() > (WorkerQueue.sharedInstance.getWorkerQueueCount()*2)){
                             guard generateLoopRun == true else { break waitLoop }
                             sleep(1)

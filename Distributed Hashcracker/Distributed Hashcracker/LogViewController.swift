@@ -36,7 +36,7 @@ class LogViewController: NSViewController {
         logTextView.editable = false
         logTextView = logViewLens.set("Application started \n", logTextView)
         let notificationName = Constants.NCValues.updateLog
-        notificationCenter.addObserver(self, selector: "updateLogTextField:", name: notificationName, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(self.updateLogTextField(_:)), name: notificationName, object: nil)
     }
     
     func updateLogTextField(notification:AnyObject?) {
