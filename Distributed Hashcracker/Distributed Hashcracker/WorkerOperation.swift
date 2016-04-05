@@ -191,15 +191,20 @@ class WorkerOperation:MasterWorkerOperation {
         
         dispatch_async(queue) {
             _ = passwordArray.map { password in
+                let passwordQueue = dispatch_queue_create("\(Constants.queueID).\(password)", nil)
                 
-                let hashedPasswordFromArray = hashAlgorithm.hash(string: password)
-                
-                if(hashedPasswordFromArray == targetHash){
-                    print("Found the searched password! \(hashedPasswordFromArray) == \(targetHash) -> Password = \(password))")
+                dispatch_async(passwordQueue) {
+                    let hashedPasswordFromArray = hashAlgorithm.hash(string: password)
                     
-                    let hitTargetHashValues: [String:String] = ["hash": targetHash, "password": password, "worker_id": worker!.id]
-                    self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-                        object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
+                    if(hashedPasswordFromArray == targetHash){
+                        print("Found the searched password! \(hashedPasswordFromArray) == \(targetHash) -> Password = \(password))")
+                        
+                        let hitTargetHashValues: [String:String] = ["hash": targetHash,
+                                                                    "password": password,
+                                                                    "worker_id": worker!.id]
+                        self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                            object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
+                    }
                 }
             }
             // <<<<<<<<<<   end time measurement
