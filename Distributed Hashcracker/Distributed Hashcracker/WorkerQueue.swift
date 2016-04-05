@@ -100,7 +100,7 @@ class WorkerQueue {
      */
     func putActiveWorker(worker:Worker) {
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
-        workerQueue = activeWorkerQueueLens.set([worker], activeWorkerQueue)
+        activeWorkerQueue = activeWorkerQueueLens.set([worker], activeWorkerQueue)
         dispatch_semaphore_signal(semaphore)
     }
     

@@ -62,7 +62,7 @@ class BruteForceAttack:NSObject, AttackStrategy {
 //                        }
                         waitLoop: while(WorkBlogQueue.sharedInstance.getWorkBlogQueueCount() > (WorkerQueue.sharedInstance.getWorkerQueueCount()*2)){
                             guard generateLoopRun == true else { break waitLoop }
-                            sleep(1)
+                            //sleep(1)
                         }
                         
                         let workBlog = WorkBlog(id: "B\(workBlogID)", value: tmpArray)
