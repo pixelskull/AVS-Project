@@ -53,7 +53,7 @@ class BruteForceAttack:NSObject, AttackStrategy {
                 //Split the array toAppend
                 for subset in array.splitBy(100) {
                     tmpArray += subset.map{ $0 + char }
-                    if tmpArray.count > 5000 {
+                    if tmpArray.count > 10000 {
                         //let workerCount = WorkerQueue.sharedInstance.workerQueue.count
                         //Wait with the generating of a new WorkBlock until the WorkBlogQueue isn't full
 //                        waitLoop: while(WorkBlogQueue.sharedInstance.workBlogQueue.count > (workerCount*2)){

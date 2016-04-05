@@ -53,6 +53,9 @@ class MasterOperation:MasterWorkerOperation {
     
     override func main() {
         let queue = dispatch_queue_create("\(Constants.queueID).WorkerQueue", nil)
+        let highPriority = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)
+        dispatch_set_target_queue(queue, highPriority)
+        
         dispatch_async(queue) {
             self.generateNewWorkBlog()
         }
@@ -71,7 +74,6 @@ class MasterOperation:MasterWorkerOperation {
                 }
             }
         }
-        sleep(1)
         run = true
     }
     
@@ -122,6 +124,7 @@ class MasterOperation:MasterWorkerOperation {
             return
         }
         let queue = dispatch_queue_create("\(Constants.queueID).stillAlive", nil)
+        
         dispatch_async(queue) {
             var logUpdateText:String
             switch self.countOfSendStillAliveMessages{
@@ -165,6 +168,7 @@ class MasterOperation:MasterWorkerOperation {
     func newClientRegistration(message:BasicMessage){
         print("newClientRegistration")
         let queue = dispatch_queue_create("\(Constants.queueID).newClient", nil)
+        
         dispatch_async(queue) {
             // Start time of the password crack
             self.startTimePasswordCrack = NSDate()
@@ -198,6 +202,7 @@ class MasterOperation:MasterWorkerOperation {
     func hitTargetHash(message:ExtendedMessage){
         print("hitTargetHash")
         let queue = dispatch_queue_create("\(Constants.queueID).hitTarget", nil)
+        
         dispatch_async(queue) {
             //Endtime of the passwordCrack
             let endTimeMeasurement = NSDate();
@@ -234,8 +239,8 @@ class MasterOperation:MasterWorkerOperation {
      postcondition = newWorkBlogMessage was send to a client
      */
     func finishedWork(message:ExtendedMessage){
-        
         let queue = dispatch_queue_create("\(Constants.queueID).finishedWork", nil)
+        
         dispatch_async(queue) {
             let workBlogQueue = WorkBlogQueue.sharedInstance
             let workerID = message.values["worker_id"]
@@ -295,6 +300,7 @@ class MasterOperation:MasterWorkerOperation {
     func hashesPerTime(message:ExtendedMessage){
         print("hashesPerTime")
         let queue = dispatch_queue_create("\(Constants.queueID).hashesPerTime", nil)
+        
         dispatch_async(queue) {
             let hash_count = message.values["hash_count"]
             let time_needed = message.values["time_needed"]
@@ -319,6 +325,7 @@ class MasterOperation:MasterWorkerOperation {
     func alive(message:BasicMessage){
         print("alive")
         let queue = dispatch_queue_create("\(Constants.queueID).alive", nil)
+        
         dispatch_async(queue) {
             let workerQueue = WorkerQueue.sharedInstance
             let workerID:String = message.value

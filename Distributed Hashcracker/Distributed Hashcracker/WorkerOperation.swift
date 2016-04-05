@@ -83,6 +83,7 @@ class WorkerOperation:MasterWorkerOperation {
     func setupConfig(message:ExtendedMessage){
         print("setupConfig")
         let queue = dispatch_queue_create("\(Constants.queueID).setupConf", nil)
+        
         dispatch_async(queue) {
             let workerIDFromMessage = message.values["worker_id"]!
             // check if worker is in queue
@@ -110,16 +111,17 @@ class WorkerOperation:MasterWorkerOperation {
      */
     func newWorkBlog(message:ExtendedMessage){
         if let workerIDFromMessage = message.values["worker_id"],
-            let passwords = message.values["hashes"]?.componentsSeparatedByString(","),
-            let workBlogId = message.values["workBlog_id"]{
-                guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
-                guard worker.checkWorkerID(workerIDFromMessage) else { return }
+                let passwords = message.values["hashes"]?.componentsSeparatedByString(","),
+                let workBlogId = message.values["workBlog_id"]{
+            guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
+            guard worker.checkWorkerID(workerIDFromMessage) else { return }
                 
-                print("newWorkBlog: \(workBlogId)")
-                let queue = dispatch_queue_create("\(Constants.queueID).\(workerIDFromMessage)-\(passwords.first!)...", nil)
-                dispatch_async(queue) {
-                    self.computeHashesAsyncForWorker(passwords, workBlogId: workBlogId)
-                }
+            print("newWorkBlog: \(workBlogId)")
+            let queue = dispatch_queue_create("\(Constants.queueID).\(workerIDFromMessage)-\(passwords.first!)...", nil)
+            
+            dispatch_async(queue) {
+                self.computeHashesAsyncForWorker(passwords, workBlogId: workBlogId)
+            }
         } else {
             print("-> newWorkBlog: Error could not get WorkerID or Password")
         }
@@ -135,6 +137,7 @@ class WorkerOperation:MasterWorkerOperation {
         print("stillAlive")
         //Send a stillAliveMessage to the master with the worker_id of the client
         let queue = dispatch_queue_create("\(Constants.queueID).stillalive", nil)
+        
         dispatch_async(queue) {
             guard let worker = WorkerQueue.sharedInstance.getFirstWorker() else { return }
             self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage, object: BasicMessage(status: MessagesHeader.alive, value: worker.id))
@@ -183,40 +186,38 @@ class WorkerOperation:MasterWorkerOperation {
         let startTimeMeasurement = NSDate();
         
         let queue = dispatch_queue_create("\(Constants.queueID).compareHashes", nil)
+        let highPriority = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)
+        dispatch_set_target_queue(queue, highPriority)
         
-        for password in passwordArray{
-
-            dispatch_async(queue) {
-            
+        dispatch_async(queue) {
+            _ = passwordArray.map { password in
+                
                 let hashedPasswordFromArray = hashAlgorithm.hash(string: password)
-            
+                
                 if(hashedPasswordFromArray == targetHash){
                     print("Found the searched password! \(hashedPasswordFromArray) == \(targetHash) -> Password = \(password))")
-                
-                    let hitTargetHashValues: [String:String] = ["hash": targetHash, "password": password, /*"time_needed": "ka", */"worker_id": worker!.id]
+                    
+                    let hitTargetHashValues: [String:String] = ["hash": targetHash, "password": password, "worker_id": worker!.id]
                     self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                         object: ExtendedMessage(status: MessagesHeader.hitTargetHash, values: hitTargetHashValues))
-                    //return true
                 }
             }
+            // <<<<<<<<<<   end time measurement
+            let endTimeMeasurement = NSDate();
+            // <<<<< Time difference in seconds (double)
+            let timeInterval: Double = endTimeMeasurement.timeIntervalSinceDate(startTimeMeasurement);
+            
+            let hashesPerTime: [String:String] = ["hash_count": String(passwordArray.count), "time_needed": String(timeInterval), "worker_id": worker!.id]
+            
+            self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                                                    object: ExtendedMessage(status: MessagesHeader.hashesPerTime, values: hashesPerTime))
+            
+            print("compareHashesSendFinishedWorkMessage: \(workBlogId)")
+            
+            let finishedWorkMessageValues: [String:String] = ["worker_id": worker!.id, "workBlog_id": workBlogId]
+            self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
+                                                    object: ExtendedMessage(status: MessagesHeader.finishedWork, values: finishedWorkMessageValues))
         }
-        // <<<<<<<<<<   end time measurement
-        let endTimeMeasurement = NSDate();
-        // <<<<< Time difference in seconds (double)
-        let timeInterval: Double = endTimeMeasurement.timeIntervalSinceDate(startTimeMeasurement);
-        
-        let hashesPerTime: [String:String] = ["hash_count": String(passwordArray.count), "time_needed": String(timeInterval), "worker_id": worker!.id]
-        
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: ExtendedMessage(status: MessagesHeader.hashesPerTime, values: hashesPerTime))
-        
-        print("compareHashesSendFinishedWorkMessage: \(workBlogId)")
-        
-        let finishedWorkMessageValues: [String:String] = ["worker_id": worker!.id, "workBlog_id": workBlogId]
-        notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
-            object: ExtendedMessage(status: MessagesHeader.finishedWork, values: finishedWorkMessageValues))
-        //return false
-        
     }
     
     func stopWork() {
