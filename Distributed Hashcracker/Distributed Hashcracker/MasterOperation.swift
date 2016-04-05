@@ -331,9 +331,10 @@ class MasterOperation:MasterWorkerOperation {
             let workerID:String = message.value
 
             //Put the Worker in the activeWorkerQueue if its not jet in the activeWorkerQueue
-            if let activeWorker = workerQueue.getWorkerByID(workerID) {
+            if workerQueue.getActiveWorker(workerID) == nil {
                 //Put the worker in the activeWorkerQueue
-                workerQueue.putActiveWorker(activeWorker)
+                let worker = workerQueue.getWorkerByID(workerID)
+                workerQueue.putActiveWorker(worker!)
             }
         }
     }

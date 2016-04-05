@@ -105,6 +105,19 @@ class WorkerQueue {
     }
     
     /**
+     get active worker from activeWorkerQueue (Blocking)
+     
+     - parameter message: get first active Worker from activeWorkerQueue
+     */
+    func getActiveWorker(workerID:String) -> Worker?{
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        let activeWorker = activeWorkerQueueLens.get(activeWorkerQueue).filter{ $0.id == workerID }.first
+        dispatch_semaphore_signal(semaphore)
+        
+        return activeWorker
+    }
+    
+    /**
      WorkBlogQueue length
      
      - returns: lenght of the WorkBlogQueue
