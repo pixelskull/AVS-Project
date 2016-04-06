@@ -130,24 +130,20 @@ class MasterOperation:MasterWorkerOperation {
             switch self.countOfSendStillAliveMessages{
             case 0:
                 logUpdateText = "asked if worker still alive"
-                print("send stillAlive1")
                 self.countOfSendStillAliveMessages += 1
                 break
             case 1:
                 logUpdateText = "asked if worker still alive"
-                print("send stillAlive1")
                 self.countOfSendStillAliveMessages += 1
                 break
             case 2:
                 //Check active worker
                 self.checkActiveWorker()
-                print("send stillAlive3 and checked activeWorker")
                 logUpdateText = "Checked which workers are still alive and asked again"
                 self.countOfSendStillAliveMessages = 0
                 break
             default:
                 logUpdateText = "asked if worker still alive"
-                print("send stillAliveDefault")
                 self.countOfSendStillAliveMessages = 0
             }
             self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
@@ -341,13 +337,9 @@ class MasterOperation:MasterWorkerOperation {
             //Put the Worker in the activeWorkerQueue if its not jet in the activeWorkerQueue
             if workerQueue.getActiveWorker(workerID) == nil {
                 //Put the worker in the activeWorkerQueue
-                
-                print("WorkerID: \(workerID)")
-                
+        
                 let worker = workerQueue.getWorkerByID(workerID)!
-                
-                print("Worker: \(worker)")
-                
+
                 workerQueue.putActiveWorker(worker)
             }
         }
