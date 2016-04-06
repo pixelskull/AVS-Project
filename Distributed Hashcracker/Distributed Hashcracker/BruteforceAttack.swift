@@ -11,7 +11,15 @@ import Foundation
 class BruteForceAttack:NSObject, AttackStrategy {
     
     var generateLoopRun = true
+    var workBlogID:Int = 1
     let notificationCenter = NSNotificationCenter.defaultCenter()
+    
+    //Array with characters for the password crack
+    let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
+                     "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B",
+                     "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
+                     "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4",
+                     "5", "6", "7", "8", "9", "0"]
     
     override init() {
         super.init()
@@ -21,75 +29,59 @@ class BruteForceAttack:NSObject, AttackStrategy {
             object: nil)
     }
     
-    func fillWorkBlogQueue() {
-        var workBlogID:Int = 1
-        let workBlogQueue = WorkBlogQueue.sharedInstance
-        //Array with characters for the password crack
-        let charArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
-            "o", "p", "q", "r", "s", "t", "i", "v", "w", "x", "y", "z", "A", "B",
-            "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
-            "Q", "R", "S", "T", "I", "V", "W", "X", "Y", "Z", "1", "2", "3", "4",
-            "5", "6", "7", "8", "9", "0"]
+    //The first WorkBlock includes the passwords with the lenght of one and two characters
+    func appendToArrayFirstTime(array:[String], toAppend:[String]) -> [String]{
+        var tmpArray:[String] = [String]()
         
-        //The first WorkBlock includes the passwords with the lenght of one and two characters
-        func appendToArrayFirstTime(array:[String], toAppend:[String]) -> [String]{
-            var tmpArray:[String] = [String]()
-            
-            for char in toAppend { tmpArray += array.map({ return $0 + char }) }
-            
-            let firstWorkArray = charArray + tmpArray
-            let firstWorkBlog = WorkBlog(id: "B\(workBlogID)", value: firstWorkArray)
-            workBlogID += 1
-            workBlogQueue.put(firstWorkBlog)
-            
-            return tmpArray
+        _ = toAppend.map{ char in
+            tmpArray += array.map({ return $0 + char })
         }
         
-        //New WorkBlogs with password lenght of 3 till 10 characters
-        func generateWorkBlogs(array:[String], toAppend:[String]) -> [String]{
-            var currentArray:[String] = [String]()
-            var tmpArray = [String]()
-            for char in toAppend {
-                //Split the array toAppend
-                for subset in array.splitBy(100) {
-                    tmpArray += subset.map{ $0 + char }
-                    if tmpArray.count > 10000 {
-                        //let workerCount = WorkerQueue.sharedInstance.workerQueue.count
-                        //Wait with the generating of a new WorkBlock until the WorkBlogQueue isn't full
-//                        waitLoop: while(WorkBlogQueue.sharedInstance.workBlogQueue.count > (workerCount*2)){
-//                            guard generateLoopRun == true else { break waitLoop }
-//                            sleep(1)
-//                        }
-                        waitLoop: while(WorkBlogQueue.sharedInstance.getWorkBlogQueueCount() > (WorkerQueue.sharedInstance.getWorkerQueueCount()*2)){
-                            guard generateLoopRun == true else { break waitLoop }
-                            //sleep(1)
-                        }
-                        
-                        let workBlog = WorkBlog(id: "B\(workBlogID)", value: tmpArray)
-                        workBlogID += 1
-                        workBlogQueue.put(workBlog)
-                        
-                        currentArray += tmpArray
-                        tmpArray.removeAll()
+        let firstWorkArray = charArray + tmpArray
+        let firstWorkBlog = WorkBlog(id: "B\(workBlogID)", value: firstWorkArray)
+        workBlogID += 1
+        
+        let workBlogQueue = WorkBlogQueue.sharedInstance
+        workBlogQueue.put(firstWorkBlog)
+        
+        return tmpArray
+    }
+    
+    //New WorkBlogs with password lenght of 3 till 10 characters
+    func generateWorkBlogs(array:[String], toAppend:[String]) -> [String]{
+        var currentArray:[String] = [String]()
+        var tmpArray = [String]()
+        
+        _ = toAppend.map{ char in
+            _ = array.splitBy(100).map { subset in
+                tmpArray += subset.map{ $0 + char }
+                if tmpArray.count > 10000 {
+                    //Wait with the generating of a new WorkBlock until the WorkBlogQueue isn't full
+                    waitLoop: while(WorkBlogQueue.sharedInstance.getWorkBlogQueueCount() > (WorkerQueue.sharedInstance.getWorkerQueueCount()*2)){
+                        guard generateLoopRun == true else { break waitLoop }
                     }
+                    let workBlog = WorkBlog(id: "B\(workBlogID)", value: tmpArray)
+                    workBlogID += 1
+                    
+                    let workBlogQueue = WorkBlogQueue.sharedInstance
+                    workBlogQueue.put(workBlog)
+                    
+                    currentArray += tmpArray
+                    tmpArray.removeAll()
                 }
             }
-            currentArray += tmpArray
-            return currentArray
         }
-        
+        currentArray += tmpArray
+        return currentArray
+    }
+    
+    func fillWorkBlogQueue() {
         var result = [String]()
         var index = 0
-        generateLoop: while true { // for var index = 0; index < 9; ++index {
+        generateLoop: while true {
             guard generateLoopRun == true else { break generateLoop }
-            if(index == 0){
-//                print("Generate passwords with lenght: \(index+1) and \(index+2)")
-                result = appendToArrayFirstTime(charArray, toAppend: charArray)
-            }
-            else{
-//                print("Generate passwords with lenght: \(index+2)")
-                result = generateWorkBlogs(result, toAppend: charArray)
-            }
+            if(index == 0){ result = appendToArrayFirstTime(charArray, toAppend: charArray) }
+            else{ result = generateWorkBlogs(result, toAppend: charArray) }
             index += 1
         }
     }
