@@ -413,7 +413,7 @@ class MasterOperation:MasterWorkerOperation {
         let workBlogQueue = WorkBlogQueue.sharedInstance
         let workerQueue = WorkerQueue.sharedInstance
         
-        for worker in workerQueue.workerQueueLens.get(workerQueue.workerQueue){
+        _ = workerQueue.workerQueueLens.get(workerQueue.workerQueue).map { worker in
             // Check if the worker contains in the activeWorkerQueue
             if(workerQueue.activeWorkerQueueLens.get(workerQueue.activeWorkerQueue).contains({ $0.id == worker.id }) == false){
                 // If worker isn't in the activeWorkerQueue -> set worker.status = .Inactive
@@ -425,7 +425,7 @@ class MasterOperation:MasterWorkerOperation {
                 //Check if there is a WorkBlog in the WorkBlogQueue which is "inProcessBy" the inactive Worker
                 workBlogQueue.updateAllWorkBlogFromInactiveWorker(worker.id)
             }
-            
+
         }
         //Remove all worker from the activeWorkerQueue
         workerQueue.activeWorkerQueue.removeAll()
