@@ -17,17 +17,29 @@ protocol HashAlgorithm {
 class HashMD5: HashAlgorithm {
     
     func hash(string string: String) -> String {
-        var digest = [UInt8](count: Int(CC_MD5_DIGEST_LENGTH), repeatedValue: 0)
-        if let data = string.dataUsingEncoding(NSUTF8StringEncoding) {
-            CC_MD5(data.bytes, CC_LONG(data.length), &digest)
-        }
+
+        let data = string.dataUsingEncoding(NSUTF8StringEncoding)!
+        var digest = [UInt8](count:Int(CC_MD5_DIGEST_LENGTH), repeatedValue: 0)
+        CC_MD5(data.bytes, CC_LONG(data.length), &digest)
         
-        var digestHex = ""
-        for index in 0..<Int(CC_MD5_DIGEST_LENGTH) {
-            digestHex += String(format: "%02hhx", digest[index])
-        }
+        let hexBytes = digest.map { String(format: "%02hhx", $0) }
+        return hexBytes.joinWithSeparator("")
         
-        return digestHex
+//        var digest = [UInt8](count: Int(CC_MD5_DIGEST_LENGTH), repeatedValue: 0)
+//        
+//        let data = string.dataUsingEncoding(NSUTF8StringEncoding) {
+//            CC_MD5(data.bytes, CC_LONG(data.length), &digest)}
+        
+//        if let data = string.dataUsingEncoding(NSUTF8StringEncoding) {
+//            CC_MD5(data.bytes, CC_LONG(data.length), &digest)
+//        }
+//        
+//        var digestHex = ""
+//        for index in 0..<Int(CC_MD5_DIGEST_LENGTH) {
+//            digestHex += String(format: "%02hhx", digest[index])
+//        }
+//        
+//        return digestHex
     }
     
 }
