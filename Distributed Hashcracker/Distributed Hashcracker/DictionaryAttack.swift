@@ -29,17 +29,11 @@ class DictionaryAttack:NSObject, AttackStrategy {
     }
     
     func fillWorkBlogQueue(){
-        if let passwords = passwords {
+        guard let passwords = passwords else { return }
             
-            _ = passwords.splitBy(10000).map{ block in
-                index+=1
-                WorkBlogQueue.sharedInstance.put(WorkBlog(id: "D\(index)", value: block))
-            }
-            
-//            for block in passwords.splitBy(10000){
-//                index+=1
-//                WorkBlogQueue.sharedInstance.put(WorkBlog(id: "D\(index)", value: block))
-//            }
+        _ = passwords.splitBy(10000).map{ block in
+            index+=1
+            WorkBlogQueue.sharedInstance.put(WorkBlog(id: "D\(index)", value: block))
         }
     }
 }
