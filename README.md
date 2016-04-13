@@ -1,5 +1,5 @@
 #Distributed HashCracker
-This projcets aims a proof-of-concept of using a distributed system to crack an user-entered password. The Distributed HashCracker is developed with Swift 2.1 on Xcode 7.2 and uses an asynchronous message-oriented communication with a Node-Server and Grand Central Dispatch (GCD).  
+This projcets aims a proof-of-concept of using a distributed system to crack an user-entered password. The Distributed HashCracker is developed with Swift 2.2 on Xcode 7.3 and uses an asynchronous message-oriented communication with a Node-Server and Grand Central Dispatch (GCD).  
 To realise the pasword cracking, the Hash of the user-given password is being computed. The Hash is the reference value to find the given password. The distributed system will compute all possible password combinations (Brute Force-Attack) and the belonging hashes. If a computed hash will match the target hash, the target password is identified. 
 
 ##Function
