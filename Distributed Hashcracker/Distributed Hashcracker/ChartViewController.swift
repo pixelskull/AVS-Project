@@ -9,15 +9,13 @@
 import Cocoa
 import Charts
 
-struct HashValue {
-    var time:NSDate
-    var hashes:Int
-}
 
 class ChartViewController: NSViewController, ChartViewDelegate {
     
-    let chart = LineChartView()
+    let chart = BarChartView()
     let data = [1.0, 7.0, 3.0, 5.0, 3.0, 4.0, 2.0]
+    
+    let notificationCenter = NSNotificationCenter.defaultCenter()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,31 +24,44 @@ class ChartViewController: NSViewController, ChartViewDelegate {
         chart.drawGridBackgroundEnabled = false
         view.addSubview(chart)
         
+        setupNotificationObserver()
+        
         setChartData(data)
-//        NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: "update", userInfo: nil, repeats: true)
-//        let notificationName = Constants.NCValues.addHashValue
-//        notificationCenter.addObserver(self, selector: "addHashChartValues:", name: notificationName, object: nil)
+    }
+    
+    func setupNotificationObserver() {
+        notificationCenter.addObserver(self,
+                                       selector: #selector(self.updateBarChart(_:)),
+                                       name: Constants.NCValues.updateChartView,
+                                       object: nil)
+    }
+    
+    func updateBarChart(notification:AnyObject?) {
+        print("updateBarChart")
+        guard let n = notification else { return }
+        if n is ExtendedMessage {
+            let hashes = n.values["hash_count"]
+            let time_needed = n.values["time_needed"]
+            let worker_id = n.values["worker_id"]
+            
+            print(hashes)
+            print(time_needed)
+            print(worker_id)
+        }
     }
     
     func setChartData(data:[Double]) {
-        
         var ydata = [ChartDataEntry]()
         for i in 0..<data.count {
-            ydata.append(ChartDataEntry(value: data[i], xIndex: i))
+            ydata.append(BarChartDataEntry(value: data[i], xIndex: i))
         }
         
-        let dataSet = LineChartDataSet(yVals: ydata, label: "computed hashes")
-        dataSet.cubicIntensity = 0.2
-        dataSet.drawCubicEnabled = true
-        dataSet.drawCirclesEnabled = false
-        dataSet.lineWidth = 1.0
-        dataSet.setColor(NSColor.redColor())
-        dataSet.fillColor = NSColor.redColor()
-        dataSet.drawFilledEnabled = true
-        dataSet.fillAlpha = 0.6
-        dataSet.drawHorizontalHighlightIndicatorEnabled = false
+        let dataSet = BarChartDataSet(yVals: ydata, label: "hashes per second")
+        let chartData = BarChartData(xVals: ["pip1", "pip2", "pip3", "pip4", "pip5", "pip6", "pip7"], dataSet: dataSet)
         
-        let chartData = LineChartData(xVals: ["1", "2", "3", "4", "5", "6", "7"], dataSet: dataSet)
+        dataSet.colors = ChartColorTemplates.joyful() // thx Bob Ross
+        dataSet.highlightAlpha = 0.5
+        
         
         chart.data = chartData
     }

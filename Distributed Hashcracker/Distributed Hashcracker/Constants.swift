@@ -12,15 +12,16 @@ struct Constants {
     
     /// internal notificationnames for use in NotificationCenter
     struct NCValues {
-        static let addHashValue  = "newHashValues"
-        static let sendMessage   = "sendMessage"
-        static let stopServer    = "stopServerTask"
-        static let stopMaster    = "stopMaster"
-        static let stopWebSocket = "stopWebSocketOperation"
-        static let stopWorker    = "stopWorker"
-        static let stopWorkBlog  = "stopWorkBlogGeneration"
-        static let updateLog     = "updateLog"
+        static let addHashValue      = "newHashValues"
+        static let sendMessage       = "sendMessage"
+        static let stopServer        = "stopServerTask"
+        static let stopMaster        = "stopMaster"
+        static let stopWebSocket     = "stopWebSocketOperation"
+        static let stopWorker        = "stopWorker"
+        static let stopWorkBlog      = "stopWorkBlogGeneration"
+        static let updateLog         = "updateLog"
         static let toggleStartButton = "toggleStartStopButton"
+        static let updateChartView   = "updateChartView"
     }
     
     static let queueID = "de.th-koeln.DistributedHashCracker"

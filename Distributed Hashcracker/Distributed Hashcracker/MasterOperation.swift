@@ -317,6 +317,9 @@ class MasterOperation:MasterWorkerOperation {
             let roudedHashesPerSecond:Double = Double(round(100*hashesPerSecond)/100)
             self.notificationCenter.postNotificationName(Constants.NCValues.updateLog,
                 object: "The worker: \(worker_id) generates and compares \(roudedHashesPerSecond) per second")
+            
+            self.notificationCenter.postNotificationName(Constants.NCValues.updateChartView,
+                                                         object: message)
         }
     }
     
