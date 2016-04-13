@@ -38,7 +38,7 @@ class BruteForceAttack:NSObject, AttackStrategy {
         }
         
         let firstWorkArray = charArray + tmpArray
-        let firstWorkBlog = WorkBlog(id: "B\(workBlogID)", value: firstWorkArray)
+        let firstWorkBlog = WorkBlog(id: "B\(workBlogID)", value: firstWorkArray.joinWithSeparator(","))
         workBlogID += 1
         
         let workBlogQueue = WorkBlogQueue.sharedInstance
@@ -55,16 +55,19 @@ class BruteForceAttack:NSObject, AttackStrategy {
         _ = toAppend.map{ char in
             _ = array.splitBy(100).map { subset in
                 tmpArray += subset.map{ $0 + char }
-                if tmpArray.count > 10000 {
+                if tmpArray.count > 7000 {
                     //Wait with the generating of a new WorkBlock until the WorkBlogQueue isn't full
                     waitLoop: while(WorkBlogQueue.sharedInstance.getWorkBlogQueueCount() > (WorkerQueue.sharedInstance.getWorkerQueueCount()*2)){
                         guard generateLoopRun == true else { break waitLoop }
                     }
-                    let workBlog = WorkBlog(id: "B\(workBlogID)", value: tmpArray)
+                    let workBlog = WorkBlog(id: "B\(workBlogID)", value: tmpArray.joinWithSeparator(","))
                     workBlogID += 1
                     
-                    let workBlogQueue = WorkBlogQueue.sharedInstance
-                    workBlogQueue.put(workBlog)
+                    let queue = dispatch_queue_create("\(Constants.queueID).saveWorkBlock", nil)
+                    dispatch_async(queue) {
+                        let workBlogQueue = WorkBlogQueue.sharedInstance
+                        workBlogQueue.put(workBlog)
+                    }
                     
                     currentArray += tmpArray
                     tmpArray.removeAll()

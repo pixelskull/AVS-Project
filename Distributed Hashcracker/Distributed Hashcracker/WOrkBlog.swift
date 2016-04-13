@@ -12,11 +12,11 @@ class WorkBlog{
     
     let id:String
     //    var ip:String
-    var value:[String]
+    var value:String
     var inProcessBy:String
     
     
-    init(id:String, value:[String], inProcessBy:String = "Not in process"){
+    init(id:String, value:String, inProcessBy:String = "Not in process"){
         self.id = id
         self.value = value
         self.inProcessBy = inProcessBy

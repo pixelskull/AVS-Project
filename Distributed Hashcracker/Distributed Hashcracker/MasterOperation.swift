@@ -248,23 +248,21 @@ class MasterOperation:MasterWorkerOperation {
             
 //            print("finishedWork - WorkerID: \(workerID) und WorkBlogID: \(workBlogID)")
             
-            print("WorkBlogQueueLängeVorRemove: \(workBlogQueue.workBlogQueue.count)")
+//            print("WorkBlogQueueLängeVorRemove: \(workBlogQueue.workBlogQueue.count)")
             //Try to remove the workBlog from the workBlogQueue by the worker how processed the workBlog
             
-            let resultRemoveWorkBlog = workBlogQueue.removeWorkBlogByWorkBlogID(workBlogID!)
+            _ = workBlogQueue.removeWorkBlogByWorkBlogID(workBlogID!)
             
-            if(resultRemoveWorkBlog == nil){
-                print("WorkBlog wurde nicht gelöscht - WorkBlogID \(workBlogID) nicht gefunden!")
-            }
-            else{
-                print("WorkBlog wurde gelöscht - WorkBlogID \(workBlogID)")
-            }
-            
-            print("WorkBlogQueueLängeNachRemove: \(workBlogQueue.workBlogQueue.count)")
+//            if(resultRemoveWorkBlog == nil){
+//                print("WorkBlog wurde nicht gelöscht - WorkBlogID \(workBlogID) nicht gefunden!")
+//            }
+//            else{
+//                print("WorkBlog wurde gelöscht - WorkBlogID \(workBlogID)")
+//            }
+//            print("WorkBlogQueueLängeNachRemove: \(workBlogQueue.workBlogQueue.count)")
             
             //Wait until the workBlogQueue got new entries
             //while workBlogQueue.getWorkBlogQueueCount() == 0 {sleep(1)}
-            
             waitLoop: while(workBlogQueue.getWorkBlogQueueCount() == 0){
                 guard self.generateLoopRun == true else { break waitLoop }
             }
@@ -284,10 +282,9 @@ class MasterOperation:MasterWorkerOperation {
 //                print("Workblog from Password: \(nextWorkBlog!.value.first) to \(nextWorkBlog!.value.last)")
                 
                 //Convert the newWorkBlog into a String
-                let newWorkBlog = self.convertWorkBlogArrayToString(nextWorkBlog!.value)
-                
+//                let newWorkBlog = self.convertWorkBlogArrayToString(nextWorkBlog!.value)
                 //Send setupConfigurationMessage
-                let newWorkBlogMessageValues: [String:String] = ["worker_id": workerID!, "workBlog_id": nextWorkBlog!.id, "hashes": newWorkBlog]
+                let newWorkBlogMessageValues: [String:String] = ["worker_id": workerID!, "workBlog_id": nextWorkBlog!.id, "hashes": nextWorkBlog!.value]
                 self.notificationCenter.postNotificationName(Constants.NCValues.sendMessage,
                     object: ExtendedMessage(status: MessagesHeader.newWorkBlog, values: newWorkBlogMessageValues))
             }
