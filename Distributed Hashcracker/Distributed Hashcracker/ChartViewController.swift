@@ -13,8 +13,6 @@ import Charts
 class ChartViewController: NSViewController, ChartViewDelegate {
     
     let chart = BarChartView()
-    let data = [1.0, 7.0, 3.0, 5.0, 3.0, 4.0, 2.0]
-    
     let notificationCenter = NSNotificationCenter.defaultCenter()
 
     override func viewDidLoad() {
@@ -25,8 +23,7 @@ class ChartViewController: NSViewController, ChartViewDelegate {
         view.addSubview(chart)
         
         setupNotificationObserver()
-        
-        setChartData(data)
+        setupChart()
     }
     
     func setupNotificationObserver() {
@@ -39,30 +36,63 @@ class ChartViewController: NSViewController, ChartViewDelegate {
     func updateBarChart(notification:AnyObject?) {
         print("updateBarChart")
         guard let n = notification else { return }
-        if n is ExtendedMessage {
-            let hashes = n.values["hash_count"]
-            let time_needed = n.values["time_needed"]
-            let worker_id = n.values["worker_id"]
+        print(notification)
+        if let message = n.object as? ExtendedMessage {
+            print("notification is ExtendedMessage")
             
-            print(hashes)
-            print(time_needed)
-            print(worker_id)
+            let hashes = Double(message.values["hash_count"]!)
+            let time_needed = Double(message.values["time_needed"]!)
+            let worker_id = message.values["worker_id"]!
+            
+            let workerLabel = worker_id.characters.split{ $0 == "." }.map{ String($0) }.first
+            
+            let executionFunction:(String, Double, Double) -> Void?
+            let xValsForWorker = chart.data!.xVals.filter({$0 == workerLabel})
+            switch xValsForWorker.count {
+            case 0:
+                executionFunction = appendNewDataSetForWorker
+                break
+            default:
+                executionFunction = editExistingDataSetForWorker
+                break
+            }
+            executionFunction(workerLabel!, hashes!, time_needed!)
+//            chart.layer?.setNeedsDisplay()
+//            chart.animate(yAxisDuration: 0.1)
+//            chart.animate(yAxisDuration: 0.1)
         }
     }
     
-    func setChartData(data:[Double]) {
-        var ydata = [ChartDataEntry]()
-        for i in 0..<data.count {
-            ydata.append(BarChartDataEntry(value: data[i], xIndex: i))
-        }
+    func appendNewDataSetForWorker(workerLabel: String, hashes:Double, time_needed:Double) {
+        print("appendNewData")
+        guard let data = chart.data else { return }
         
-        let dataSet = BarChartDataSet(yVals: ydata, label: "hashes per second")
-        let chartData = BarChartData(xVals: ["pip1", "pip2", "pip3", "pip4", "pip5", "pip6", "pip7"], dataSet: dataSet)
+        let newDataPoint = BarChartDataEntry(value: (hashes / time_needed), xIndex: data.xVals.count)
+//        let newDataSet = BarChartDataSet(yVals: [newDataPoint], label: "hashes per second")
+//        newDataSet.colors = ChartColorTemplates.joyful()
+        let existingDataSet = data.getDataSetByIndex(0) as! BarChartDataSet
+        existingDataSet.addEntry(newDataPoint)
+        chart.data = BarChartData(xVals: [workerLabel], dataSet: existingDataSet)
+        print("data Appended")
+    }
+    
+    func editExistingDataSetForWorker(workerLabel:String, hashes:Double, time_needed:Double) {
+        print("editExistingData")
+        guard let data = chart.data else { return }
         
-        dataSet.colors = ChartColorTemplates.joyful() // thx Bob Ross
-        dataSet.highlightAlpha = 0.5
+        let dataSet = data.getDataSetByIndex(0) as! BarChartDataSet
         
+        let entryIndex = data.xVals.indexOf { $0 == workerLabel}!
+        dataSet.removeEntry(xIndex: entryIndex)
+        dataSet.addEntry(BarChartDataEntry(value: (hashes / time_needed), xIndex: entryIndex))
         
-        chart.data = chartData
+        print("data edited")
+    }
+    
+    func setupChart() {
+        let dataSet = BarChartDataSet(yVals: [], label: "hashes per second")
+        dataSet.colors = ChartColorTemplates.joyful()
+        chart.data = BarChartData(xVals: [nil], dataSet: dataSet)
+        chart.descriptionText = ""
     }
 }
