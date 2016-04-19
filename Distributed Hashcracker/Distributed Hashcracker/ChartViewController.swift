@@ -57,6 +57,12 @@ class ChartViewController: NSViewController, ChartViewDelegate {
                 break
             }
             executionFunction(workerLabel!, hashes!, time_needed!)
+            
+            //Update chart view
+            chart.notifyDataSetChanged()
+            chart.data?.notifyDataChanged()
+            chart.barData?.notifyDataChanged()
+            
 //            chart.layer?.setNeedsDisplay()
 //            chart.animate(yAxisDuration: 0.1)
 //            chart.animate(yAxisDuration: 0.1)
