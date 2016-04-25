@@ -31,6 +31,18 @@ class Distributed_HashcrackerUITests: XCTestCase {
     func testExample() {
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let window = XCUIApplication().windows["Window"]
+        window.checkBoxes["this Mac"].click()
+        
+        let textField = window.groups.childrenMatchingType(.TextField).elementBoundByIndex(1)
+        textField.rightClick()
+        textField.typeText("Foob")
+        textField.typeKey(XCUIKeyboardKeyEscape, modifierFlags:.None)
+        textField.typeText("Foobar")
+        window.checkBoxes["Start"].click()
+        window.click()
+        
     }
     
 }
