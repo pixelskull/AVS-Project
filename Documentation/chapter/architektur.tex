@@ -7,8 +7,9 @@ De Kommunikation wird nachrichtenbasiert umgesetzt. Dies bedeutet, dass die Komp
 
 \section{Brute Force-Algorithmus}
 \label{ideeBruteForce}
-Grundlegend ist das Ziel des Projektes das Entschlüsseln eines vorgegebenen Passwortes. Das zu entschlüsselnde Passwort wird vor der Berechnung vom Benutzer eingetragen. Das eingetragene Passwort wird dann durch eine Hashfunktion geleitet. Der entstandene Hash wird gespeichert und dient als Zielbedingung der folgenden Berechnung. \\
-Nun beginnt der eigentliche Angriff. Zu Beginn wird eine sogenannte \enquote{Dictionary-Attack} vorgenommen. Dies bedeutet, dass ein Wörterbuch mit häufig genutzten Passwörtern als Basis des Angriffs genutzt wird. Durch die vorangestellte Attacke auf Basis von häufig benutzten Passwörtern wird die Wahrscheinlichkeit, das gesuchte Passwort effizient zu identifizieren, deutlich erhöht. Der folgende Auszug aus der Passwortliste (des Dictionary) verdeutlicht das Prinzip dieser Angriffsmethode. \\
+Primäres Ziel des Projektes ist das Entschlüsseln eines vorgegebenen Passwortes. Das zu entschlüsselnde Passwort wird vor der Berechnung vom Benutzer eingegeben. Das eingetragene Passwort wird dann durch eine Hashfunktion geleitet. Der entstandene Hash wird gespeichert und dient als Zielbedingung der folgenden Berechnung. \\
+Nun beginnt der eigentliche Angriff. Zu Beginn wird eine sogenannte \enquote{Dictionary-Attack} vorgenommen. Dies bedeutet, dass ein Wörterbuch mit häufig genutzten Passwörtern als Basis des Angriffs genutzt wird. Die eingetragenen Passwörter werden ebenfalls der Reihe nach gehasht und der berechnete Hash mit dem Zielhash verglichen. \\
+ Durch die vorangestellte Attacke auf Basis von häufig benutzten Passwörtern wird die Effizienz des verteilten Systems verbessert. Der folgende Auszug aus der Passwortliste  verdeutlicht das Prinzip eines Dictionaries. \\
 \texttt{Dictionary:}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 	LOVE123
@@ -36,8 +37,8 @@ Nun beginnt der eigentliche Angriff. Zu Beginn wird eine sogenannte \enquote{Dic
 
 
 
-Bleibt die Dictionary-Attack erfolglos, werden alle möglichen Zeichenkombinationen untersucht. \\
-Die erste Idee war es, dass der steuernde Rechner alle möglichen Passwörter in einem Array ablegen wird. Das Muster der möglichen Passwörter sollte wie folgt aufgebaut werden: 
+Bleibt die Dictionary-Attack erfolglos, wir der BruteForce-Angriff durchgeführt. \\
+Die erste Idee war es, dass der steuernde Rechner alle möglichen Passwörter berechnet und in einem Array ablegen wird. Dabei sollten die Passwörter eine statische Länge besitzen. Das Muster der möglichen Passwörter sollte wie folgt aufgebaut werden: \\
 \texttt{Muster der zu berechnenden Passwörter:}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 	Array passwordsUPPER = 
@@ -68,12 +69,16 @@ Die erste Idee war es, dass der steuernde Rechner alle möglichen Passwörter in
 	]
 \end{lstlisting}
 
-Die exemplarische Darstellung soll die geplante Aufteilung verdeutlichen. Die hier dargestellte feste Länge der Passwörter auf 6 Zeichen dient als Beispiel. In der Praxis werden alle möglichen Passwörter probiert, begonnen mit Passwörtern der Länge = 1. Wird kein Passwort ermittelt, so werden Passwörter der Länge n+1 erzeugt.  \\
+Die exemplarische Darstellung soll die geplante Aufteilung verdeutlichen. Die hier dargestellte feste Länge der Passwörter auf 6 Zeichen dient als Beispiel. \\
 
+In der Praxis werden alle möglichen Passwörter probiert, begonnen mit Passwörtern der Länge = 1. Wird kein Passwort ermittelt, so werden Passwörter der Länge n+1 erzeugt. Abbildung \ref{fig:schemaBruteForce} stellt das Konzept zur Berechnung aller möglichen Passwörter dar. Der genaue Algorithmus dazu wird in Kapitel \ref{implementation} ausführlicher beschrieben. \\
+Die berechneten Passwörter sollen dann in eine Warteschlange geschrieben werden, sodass die Cluster des verteilten Systems sich \enquote{Arbeitspakete} holen können. Ein solches Arbeitspaket beinhaltet eine Sammlung von Passwörtern, zu diesen das verteilte System die Hashes berechnet und mit dem Zielhash vergleicht.\\
+ Berechnet ein Worker einen Hash, der mit dem Zielhash überein stimmt, so ist das gesuchte Passwort identifiziert. Ist 
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=1.0\textwidth]{images/SchaubildAlgorithmBreitensuche.pdf}
 	\caption{Darstellung der Suchstrategie, die der Brute-Force Algorithmus zum Ermitteln des Passwortes benutzt.}
-	\label{fig:showcase}
+	\label{fig:schemaBruteForce}
 \end{figure}
 
+\section{Architektur des verteilten Systems}
