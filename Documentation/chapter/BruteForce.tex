@@ -104,10 +104,12 @@ Zum Auswerten der ausgeführten Tätigkeiten übermittelt der Worker zur Identif
 Der Worker meldet mit dieser Nachricht, dass er dem verteilten System weiterhin zur Verfügung steht. Zur Identifikation antwortet der Worker auf die Nachricht 
 \emph{stillAlive} mit seiner Worker-ID. Erfolgt auf die genannte Anfrage keine Antwort, dann entfernt der Master den nicht antwortenden Worker aus dem Array verfügbarer Komponenten.\\
 
-\section{Benutzeroberfläche}
-
 Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{MD5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.
 
+\section{Benutzeroberfläche}
+Nachfolgend wird die Benutzeroberfläche und somit die Interaktion mit dem verteilten System beschrieben. Da primär die Funktionalität der Anwendung im Fokus des Projekts steht, besteht die Benutzeroberfläche aus nur wenigen Interaktionselementen. 
+
+\subsection{Master und Worker}
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/WindowMaster.png}
@@ -121,7 +123,14 @@ Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schlie�
 	\centering
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/WindowWorker.png}
 		\caption{Benutzeroberfläche der implementierten Anwendung als Worker der verteilten Anwendung}
-	\label{fig:WindowMaster}
+	\label{fig:WindowWorker}
 \end{figure}
 
-%TODO Screenshot von den Charts bzw. der Auswertung des Angriffs
+\subsection{Auswertung des Angriffs}
+
+\begin{figure}[!ht]
+	\centering
+		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/chartView.png}
+		\caption{Grafische Darstellung der Quantität an erzeugten Hashes pro Sekunde}
+	\label{fig:WindowMaster}
+\end{figure}
