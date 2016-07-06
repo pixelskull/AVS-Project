@@ -4,9 +4,10 @@ In diesem Kapitel wird die Konzeption des Brute Force-Angriffs beschrieben. Auf 
 \section{Nachrichtenstruktur}
 Da unsere Implementation auf einer nachrichtenbasierten Kommunikation basieren wird, ist der Entwurf eigener Nachrichtenstrukturen notwendig. Die Nachrichtenstrukturen übertragen alle projektrelevanten Informationen zwischen dem Master und dem Worker oder den Workern. Zur Strukturierung fiel die Wahl auf das Nachrichtenaustauschformat \enquote{JavaScript Object Notation} oder kurz \emph{JSON}, da dieses Format sehr leichtgewichtig und sehr gut anpassbar ist. \\
 %TODO WORKER_ID == Hostname/IP
-Nachfolgend werden die entwickelten Nachrichtenstrukturen und deren Inhalt detailliert beschrieben. Die Nachrichten werden, je nach Senderichtung, in \emph{Nachrichten zum Worker} und \emph{Nachrichten zum Master} unterteilt. 
+Nachfolgend werden die entwickelten Nachrichtenstrukturen und deren Inhalt detailliert beschrieben. Dabei wird zwischen \emph{Basic Messages} und \emph{Extended Messages} unterschieden. 
+%TODO Basic und extended Messages erklären
 
-\subsubsection{Nachrichten zum Worker}
+\subsubsection{Basic Messages}
 Hier werden die Strukturen beschrieben, welche vom steuernden Rechner (Master) zu einem der Worker gesendet werden.\\
 
 \texttt{SetupAndConfig}
@@ -45,7 +46,7 @@ Diese Nachricht übermittelt dem Worker eine Anzahl neuer Passwörter, von denen
 Mit Hilfe dieser Nachricht fragt der Master an, ob die angesprochenen Worker noch verfügbar sind. Wenn diese nicht antworten, werden sie aus dem Array der verfügbaren Worker entfernt.
 
 
-\subsubsection{Nachrichten zum Master}
+\subsubsection{Extended Messages}
 Folgende Nachrichten werden von den Workern an die Master gesendet. \\
 
 \texttt{newClientRegistration}
