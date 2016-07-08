@@ -126,13 +126,16 @@ Nach Aktivierung des Start-Buttons steht der Master dem verteilten System zur Ve
 \subsection{Worker}
 \label{WorkerGUI}
 Nachdem ein Master festgelegt wurde, können beliebig viele Rechner als Worker benutzt werden. Die Rechner müssen sich lediglich im gleichen Netz befinden. \\
-Standardmäßig ist die Anwendung nach dem Start als Worker konfiguriert. Dies ist beispielsweise daran zu erkennen, dass die Möglichkeiten zum Eintragen eines Passwortes oder die Auswahl eines Hash-Algorithmus deaktiviert sind (zu erkennen auf Abbildung \ref{fig:WindowWorker}). 
+Standardmäßig ist die Anwendung nach dem Start als Worker konfiguriert. Dies ist beispielsweise daran zu erkennen, dass die Möglichkeiten zum Eintragen eines Passwortes oder die Auswahl eines Hash-Algorithmus deaktiviert sind (zu erkennen auf Abbildung \ref{fig:WindowWorker}). \\
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/WindowWorker.png}
 		\caption{Benutzeroberfläche der implementierten Anwendung als Worker der verteilten Anwendung}
 	\label{fig:WindowWorker}
 \end{figure}
+Damit der Worker mit der Berechnung beginnen kann, muss diesem die Adresse des Masters mitgeteilt werden. Diese kann aus der Anwendung des Masters entnommen werden. Im aktuellen Beispiel würde die Adresse \emph{127.0.0.1}, entnommen aus Abbildung \ref{fig:WindowMaster}, eingetragen werden.\\
+Nach der Eintragung der Adresse des Masters kann die Passwortberechnung durch Betätigung des \emph{Start}-Buttons gestartet werden. 
+
 
 
 \subsection{Auswertung des Angriffs}
