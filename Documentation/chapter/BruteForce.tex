@@ -7,7 +7,7 @@ Da unsere Implementation auf einer nachrichtenbasierten Kommunikation basieren w
 Nachfolgend werden die entwickelten Nachrichtenstrukturen und deren Inhalt detailliert beschrieben. Dabei wird zwischen \emph{Basic Messages} und \emph{Extended Messages} unterschieden. 
 %TODO Basic und extended Messages erklären
 
-\subsubsection{Basic Messages}
+\subsubsection{Nachrichten vom Master zum Worker}
 Hier werden die Strukturen beschrieben, welche vom steuernden Rechner (Master) zu einem der Worker gesendet werden.\\
 
 \texttt{SetupAndConfig}
@@ -46,7 +46,7 @@ Diese Nachricht übermittelt dem Worker eine Anzahl neuer Passwörter, von denen
 Mit Hilfe dieser Nachricht fragt der Master an, ob die angesprochenen Worker noch verfügbar sind. Wenn diese nicht antworten, werden sie aus dem Array der verfügbaren Worker entfernt.
 
 
-\subsubsection{Extended Messages}
+\subsubsection{Nachrichten vom Worker an Master}
 Folgende Nachrichten werden von den Workern an die Master gesendet. \\
 
 \texttt{newClientRegistration}
@@ -107,24 +107,33 @@ Der Worker meldet mit dieser Nachricht, dass er dem verteilten System weiterhin 
 Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{MD5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.
 
 \section{Benutzeroberfläche}
-Nachfolgend wird die Benutzeroberfläche und somit die Interaktion mit dem verteilten System beschrieben. Da primär die Funktionalität der Anwendung im Fokus des Projekts steht, besteht die Benutzeroberfläche aus nur wenigen Interaktionselementen. 
+Nachfolgend wird die Benutzeroberfläche sowie die Interaktion mit dem verteilten System beschrieben. Da primär die Funktionalität der Anwendung im Fokus des Projekts steht, besteht die Benutzeroberfläche aus nur wenigen Interaktionselementen. \\
+Die Anwendung wird auf allen Rechnern gestartet, die zum verteilten System zusammengefasst werden müssen. Je nachdem, ob der Rechner als Master oder Worker verwendet werden soll, unterscheidet sich die weitere Interaktion. Die unterschiedlichen Interaktionsmöglichkeiten werden in den folgenden Abschnitten beschrieben. 
 
-\subsection{Master und Worker}
+\subsection{Master}
+Durch Aktivierung des Feldes \enquote{this Mac} im Bereich \emph{Communication Manager} delegiert man den aktuellen Rechner als Master des verteilten Systems. Es gilt zu beachten, dass nur ein Master im verteilten System bestimmt wird. Nachdem diese Option gewählt wurde, wird im Feld \emph{Server Adress} die Adresse des aktuellen Rechners angezeigt. Diese Adresse wird den Workern mitgeteilt (siehe Abschnitt \ref{WorkerGUI}). Auf Abbildung \ref{fig:WindowMaster} lautet die Adresse beispielsweise \emph{127.0.0.1}. \\
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/WindowMaster.png}
 		\caption{Benutzeroberfläche der implementierten Anwendung als Master der verteilten Anwendung}
 	\label{fig:WindowMaster}
 \end{figure}
+Nach der Konfiguration als Master wird das Passwort festgelegt, welches entschlüsselt werden soll. Dazu wird im Feld \emph{Password to Crack} das gewünschte Passwort eingetragen werden. Abschließend kann der Hash-Algorithmus ausgewählt werden, mit dem die Hashes erzeugt werden. Die Vorgehensweise zur Entschlüsselung ändert sich dadurch nicht, die Option zur Wahl verschiedener Hash-Algorithmen dient primär zur Messung von Geschwindigkeitsunterschieden. \\
+
+Nach Aktivierung des Start-Buttons steht der Master dem verteilten System zur Verfügung.   
 
 
-
+\subsection{Worker}
+\label{WorkerGUI}
+Nachdem ein Master festgelegt wurde, können beliebig viele Rechner als Worker benutzt werden. Die Rechner müssen sich lediglich im gleichen Netz befinden. \\
+Standardmäßig ist die Anwendung nach dem Start als Worker konfiguriert. Dies ist beispielsweise daran zu erkennen, dass die Möglichkeiten zum Eintragen eines Passwortes oder die Auswahl eines Hash-Algorithmus deaktiviert sind (zu erkennen auf Abbildung \ref{fig:WindowWorker}). 
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/WindowWorker.png}
 		\caption{Benutzeroberfläche der implementierten Anwendung als Worker der verteilten Anwendung}
 	\label{fig:WindowWorker}
 \end{figure}
+
 
 \subsection{Auswertung des Angriffs}
 
