@@ -72,8 +72,6 @@ Die erste Idee war es, dass der steuernde Rechner alle möglichen Passwörter be
 Die exemplarische Darstellung soll die geplante Aufteilung verdeutlichen. Die hier dargestellte feste Länge der Passwörter auf 6 Zeichen dient als Beispiel. \\
 
 In der Praxis werden alle möglichen Passwörter probiert, begonnen mit Passwörtern der Länge = 1. Wird kein Passwort ermittelt, so werden Passwörter der Länge n+1 erzeugt. Abbildung \ref{fig:schemaBruteForce} stellt das Konzept zur Berechnung aller möglichen Passwörter dar. Der genaue Algorithmus dazu wird in Kapitel \ref{implementation} ausführlicher beschrieben. \\
-Die berechneten Passwörter sollen dann in eine Warteschlange geschrieben werden, sodass die Cluster des verteilten Systems sich \enquote{Arbeitspakete} holen können. Ein solches Arbeitspaket beinhaltet eine Sammlung von Passwörtern, zu diesen das verteilte System die Hashes berechnet und mit dem Zielhash vergleicht.\\
- Berechnet ein Worker einen Hash, der mit dem Zielhash überein stimmt, so ist das gesuchte Passwort identifiziert. Ist 
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=1.0\textwidth]{images/SchaubildAlgorithmBreitensuche.pdf}
@@ -81,4 +79,16 @@ Die berechneten Passwörter sollen dann in eine Warteschlange geschrieben werden
 	\label{fig:schemaBruteForce}
 \end{figure}
 
+Die berechneten Passwörter sollen dann in eine Warteschlange geschrieben werden, sodass die Cluster des verteilten Systems sich \enquote{Arbeitspakete} holen können. Ein solches Arbeitspaket beinhaltet eine Sammlung von Passwörtern, zu diesen das verteilte System die Hashes berechnet und mit dem Zielhash vergleicht.\\
+ Berechnet ein Worker einen Hash, der mit dem Zielhash überein stimmt, so ist das gesuchte Passwort identifiziert. Ist 
+
+
 \section{Architektur des verteilten Systems}
+Das verteilte System wird so konzipiert, dass die vier in Kapitel \ref{allgemeineAnforderungen} genannten Anforderungen umgesetzt werden können. Um dies zu realisieren, wird mit einer nachrichtenbasierten Architektur geplant. Die Rechner des verteilten Systems können so miteinander kommunizieren, ohne dass eine restriktive Anordnung notwendig ist. Dadurch wird die Skalierbarkeit sichergestellt. \\
+Außerdem wird durch die nachrichtenbasierte Architektur sichergestellt, dass die Ressourcen innerhalb des verteilten Systems leicht verfügbar sind. \\
+Im verteilten System übernimmt der Master die Verantwortlichkeit für die Kommunikation, sodass die Skalierbarkeit weiter verbessert wird. Es wird lediglich ein Master im System benötigt, die Menge der Worker ist irrelevant. Konkret wird der Master die Funktion des Webservers beinhalten, welcher für die Steuerung des Nachrichtenversands innerhalb des verteilten Systems verantwortlich ist. \\
+Die Nachrichten werden entweder in einer Warteschlange gesammelt und aus dieser entnommen, oder direkt an den Zielrechner geleitet. Die Wahl des Nachrichtenversands ist abhängig davon, welchen Inhalt die Nachricht aufweist.
+
+In den folgenden Skizzen sind die Planungen auf konzeptioneller Ebene zusammengefasst.
+
+\includepdf[pages={1,2,3,4}]{images/systemarchitektur.pdf}
