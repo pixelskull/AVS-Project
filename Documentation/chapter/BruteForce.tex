@@ -139,10 +139,21 @@ Nach der Eintragung der Adresse des Masters kann die Passwortberechnung durch Be
 
 
 \subsection{Auswertung des Angriffs}
+Nach dem Start des Angriffs sind mehrere Beobachtungsmöglichkeiten gegeben. Die erste Möglichkeit ist das Beobachten des Logs. Dieses ist erreichbar, indem das Feld \emph{Log} ausgewählt wird.\\
+Das Log stellt Informationen zu verschiedenen Ereignissen bereit. Im aktuellen Beispiel kann aus Abbildung \ref{fig:logView} entnommen werden, dass die Anwendung gestartet und der MD5-Hash-Algorithmus gewählt wurde. Zudem wird der Hash des eingegebenen Passwortes angegeben. Die Information \enquote{showing ChartView} bedeutet, dass die grafische Auswertung des Angriffs aufgerufen wurde.
+
+\begin{figure}[!ht]
+	\centering
+		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/logView.png}
+		\caption{Log-Ansicht nach dem Start des BruteForce-Angriffs}
+	\label{fig:logView}
+\end{figure}
 
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/chartView.png}
 		\caption{Grafische Darstellung der Quantität an erzeugten Hashes pro Sekunde}
-	\label{fig:WindowMaster}
+	\label{fig:chartView}
 \end{figure}
+
+Die grafische Auswertung des Angriffs ist auf Abbildung \ref{fig:chartView} dargestellt. Die Tabelle stellt in Echtzeit Informationen darüber bereit, wieviele Hashes pro Sekunde durch die jeweiligen Worker erzeugt werden. Auf Grafik \ref{fig:chartView} berechnet aktuell ein Worker 14.012 Hashes pro Sekunde. Die Balken in der Tabelle zeigen den aktuellen Status der jeweiligen Worker an. Das bedeutet, dass bei Hinzufügen weiterer Worker zum System analog dazu weitere Balken in der Tabelle angezeigt werden würden. 
