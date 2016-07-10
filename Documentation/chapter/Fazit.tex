@@ -12,7 +12,12 @@ Danach werden in Kapitel \ref{implementation} Details zur Implementation beschri
 
 \section{Ausblick}
 \label{ausblick}
-%neue Techniken aus Swift 3. Beispielsweise wird durch mallocs verursachtes Problem wahrscheinlich effektiver verhindert, welches während Implementation aufgetreten ist. Maschinenlernen nutzen, um häufig benutzte Passworte zu erkennen und damit Effizienz zu steigern. Automatisierte Auswertung der Angriffsperformance.
+Verteilte Systeme unterliegen dank ständiger Weiterentwicklung von Konzepten und Techniken einem gewissen Alterungsprozess. Aus diesem Grund bietet auch die implementierte BruteForce-Attacke einige Ansatzpunkte zur Weiterentwicklung. \\
+Eine mögliche Optimierung ist die Anpassung an neue Features der genutzten Programmiersprache \emph{Swift}. \emph{Swift} ist quelloffen verfügbar und besitzt somit implizit eine große Gruppe an Entwicklern. Die Weiterentwicklung der Programmiersprache kann damit auch Optimierungspotenzial für den Quellcode dieses Projekts bieten. \\
+Ein weiterer Aspekt für eine Fortsetzung des Projekts ist die Nutzung von maschinenbasiertem Lernen. Mit Hilfe von maschinenbasiertem Lernen kann beispielsweise das benutzte Wörterbuch der Dictionary Attack mit weiteren häufig genutzten Passwörtern erweitert werden. Ergänzend könnten Passwörter entfernt werden, welche aktuell seltener eingesetzt werden.\\
+ Aber auch der BruteForce-Angriff könnte von maschinenbasiertem Lernen profitieren. Durch eine Analyse, welche der erzeugten Passwörter besonders häufig zum Erfolg führen, kann der Algorithmus diese Passwörter priorisiert einsetzen. Dadurch würde eine Effektivitätssteigerung des Algorithmus erzielt werden. \\
+Eine hybride Lösung wäre auch möglich. Der Angriff könnte optimiert werden, indem ein Wörterbuch mit den Passwörtern erstellt werden, die bei einem BruteForce-Angriff häufigen Erfolg erzielen. Damit würde sich der Angriff durch maschinenbasiertes Lernen ständig an aktuelle \enquote{Trends} im Bezug auf häufig gewählte Passwörter anpassen können. \\
+Zudem könnte eine automatisierte Auswertung Informationen zur Untersuchung der Angriffsperformance bieten. Dabei könnte beispielsweise untersucht werden, wie stark sich die genutzten Hash-Algorithmen in der Geschwindigkeit unterscheiden. Mit einer Auswertung könnten auch indirekte Schlüsse auf die Sicherheit bestimmter Passwörter gezogen werden. 
 
 \section{Kritische Würdigung}
 \label{kritik}
