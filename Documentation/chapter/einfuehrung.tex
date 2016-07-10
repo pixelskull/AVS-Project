@@ -1,13 +1,21 @@
 \chapter{Einführung}
 Das Projekt wird im Rahmen des Moduls \enquote{Architektur verteilter Systeme} im Masterstudiengang Computer Science, Fachrichtung Software Engineering, durchgeführt.  Das Ziel ist die Implementierung einer verteilten Architektur. Die notwendige Hardware wird von der Hochschule zur Verfügung gestellt, welche detailliert in Kapitel \ref{technischeVoraussetzungen} beschrieben wird.
 Die Entwicklung der Software ist Kernbestandteil dieses Projekts. 
+
+ \section{Vorgehen}
+Um grundlegende Kenntnisse im Bereich der verteilten Systeme zu erhalten, soll das Projekt mit einer Literaturrecherche beginnen. Dabei soll eine Literaturauswahl getroffen werden, auf Basis derer genügend Fachkenntnisse gewonnen werden können. \\
+Danach soll die Projektidee konkretisiert und anschließend definiert werden, welche in Abschnitt \ref{Projektidee} ausführlicher beschrieben wird.\\
+Nach der Definition der Projektidee soll die Konzeption des geplanten verteilten Systems geschehen. Das entstehende Konzept soll die Grundlagen für die folgende Implementation bereitstellen. \\
+Der Kern des Projektes wird nach der Konzeption die nachfolgende Implementation darstellen, bei der die theoretischen Überlegungen in die Praxis umgesetzt werden. \\
+Zum Abschluss der Dokumentation sollen die durchgeführten Aktionen zusammengefasst werden. Darüber hinaus sollen diese kritisch reflektiert werden, um so eine bessere Einordnung des Gesamtprojekts zu gewährleisten. Abschließend sollen in einem Ausblick mögliche Zukunftsperspektiven und Ansatzpunkte für die Fortsetzung dieses Projekts gegeben werden. 
+
 \section{Projektidee}
+\label{Projektidee}
 Zu Beginn des Projektes wurde ein Problem definiert, das auf Basis einer einer verteilten Architektur gelöst werden kann. Das Projektteam entschied sich für ein Problem aus dem Fachgebiet der IT-Sicherheit.\\
-Die Wahl fiel auf die Implementation eines BruteForce-Angriffs. Konkret bedeutet dies, dass durch Ausprobieren aller möglichen Kombinationen versucht wird ein Passwort zu entschlüsseln. Durch die hohe Rechenleistung eines verteilten Systems bietet dieses eine ideale Grundlage für die Durchführung eines BruteForce-Angriffs.\\
+Die Wahl fiel auf die Implementation eines BruteForce-Angriffs. Konkret bedeutet dies, dass durch Ausprobieren aller möglichen Zeichenkombinationen versucht wird ein Passwort zu entschlüsseln. Durch die hohe Rechenleistung eines verteilten Systems bietet dieses eine ideale Grundlage für die Durchführung eines BruteForce-Angriffs.\\
  Das zu entschlüsselnde Passwort wird zu Beginn vom Benutzer eingetragen und in Form eines Hashes hinterlegt. Der Hash stellt die Zielbedingung für die geplante Anwendung dar. Nun soll die verteilte Architektur die möglichen Passworte bzw. deren Hashes berechnen. Sobald ein berechneter Hash mit dem Zielhash übereinstimmt, ist das vorgegebene Passwort entschlüsselt. Weitere Details dazu werden in Kapitel \ref{ideeBruteForce} erläutert. \\
  
- \section{Vorgehen}
- %TODO geplantes Vorgehen beschreiben
+
 
 \section{Allgemeine Anforderungen}
 \label{allgemeineAnforderungen}
