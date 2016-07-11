@@ -1,7 +1,7 @@
 \chapter{Konzeption}
 \label{Konzeption}
 Nachfolgend wird die Konzeption des Projekts beschrieben. 
-De Kommunikation wird nachrichtenbasiert umgesetzt. Dies bedeutet, dass die Komponenten des verteilten Systems kommunizieren, indem sie sich Nachrichten übermitteln können. Die Steuerung der Kommunikation wird primär von den als Master 
+Die Kommunikation wird nachrichtenbasiert umgesetzt. Dies bedeutet, dass die Komponenten des verteilten Systems kommunizieren, indem sie sich Nachrichten übermitteln können. Die Steuerung der Kommunikation wird primär von den als Master 
 (siehe \ref{glossar}) ausgewählten Komponenten umgesetzt. Als Provider wird ein angepasster Webserver eingesetzt, die Verbindung der einzelnen Komponenten zueinander geschieht über WebSockets. Der Webserver basiert auf dem Javascript-Framework Node.js. \\
 
 
@@ -79,7 +79,7 @@ In der Praxis werden alle möglichen Passwörter probiert, begonnen mit Passwör
 	\label{fig:schemaBruteForce}
 \end{figure}
 
-Die berechneten Passwörter sollen dann in eine Warteschlange geschrieben werden, sodass die Cluster des verteilten Systems sich \enquote{Arbeitspakete} holen können. Ein solches Arbeitspaket beinhaltet eine Sammlung von Passwörtern, zu diesen das verteilte System die Hashes berechnet und mit dem Zielhash vergleicht.\\
+Die berechneten Passwörter sollen dann in eine Warteschlange geschrieben werden, sodass die Worker des verteilten Systems sich \enquote{Arbeitspakete} holen können. Ein solches Arbeitspaket beinhaltet eine Sammlung von Passwörtern. Die Worker berechnen dann die Hashes der Passwörter und vergleichen diese mit dem Zielhash.\\
  Berechnet ein Worker einen Hash, der mit dem Zielhash überein stimmt, so ist das gesuchte Passwort identifiziert.  
 
 
@@ -87,7 +87,7 @@ Die berechneten Passwörter sollen dann in eine Warteschlange geschrieben werden
 Das verteilte System wird so konzipiert, dass die vier in Kapitel \ref{allgemeineAnforderungen} genannten Anforderungen umgesetzt werden können. Um dies zu realisieren, wird mit einer nachrichtenbasierten Architektur geplant. Die Rechner des verteilten Systems können so miteinander kommunizieren, ohne dass eine restriktive Anordnung notwendig ist. Dadurch wird die Skalierbarkeit sichergestellt. \\
 Außerdem wird durch die nachrichtenbasierte Architektur sichergestellt, dass die Ressourcen innerhalb des verteilten Systems leicht verfügbar sind. \\
 Im verteilten System übernimmt der Master die Verantwortlichkeit für die Kommunikation, sodass die Skalierbarkeit weiter verbessert wird. Es wird lediglich ein Master im System benötigt, die Menge der Worker ist irrelevant. Konkret wird der Master die Funktion des Webservers beinhalten, welcher für die Steuerung des Nachrichtenversands innerhalb des verteilten Systems verantwortlich ist. Die Verbindungen werden mit Hilfe von Websockets aufgebaut.\\
-Die Nachrichten werden entweder in einer Warteschlange gesammelt und aus dieser entnommen, oder direkt an den Zielrechner geleitet. Die Wahl des Nachrichtenversands ist abhängig davon, welchen Inhalt die Nachricht aufweist.
+Die Nachrichten werden versandt und in einer Warteschlange (MessageQueue) gespeichert. Somit haben alle Rechner des verteilten Systems Zugriff auf alle Nachrichten. Je nach Inhalt der Nachricht (z.B. \enquote{Nachricht an Worker}) wird entschieden, wer die jeweiligen Nachrichten erhalten oder verarbeiten soll. 
 
 In den folgenden Skizzen sind die Planungen auf konzeptioneller Ebene zusammengefasst.
 

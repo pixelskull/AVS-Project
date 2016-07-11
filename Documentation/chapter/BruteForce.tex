@@ -2,7 +2,7 @@
 \label{implementation}
 In diesem Kapitel wird die Implementation des Projekts beschrieben. Auf Basis der beschriebenen Konzeption wird im Anschluss die Implementation erfolgen. 
 \section{Nachrichtenstruktur}
-Da die Implementation auf einer nachrichtenbasierten Kommunikation basieren wird, ist der Entwurf eigener Nachrichtenstrukturen notwendig. Die Nachrichtenstrukturen übertragen stellen die zwischen dem Master und den Workern bereit. \\
+Da die Implementation auf einer nachrichtenbasierten Kommunikation basieren wird, ist der Entwurf eigener Nachrichtenstrukturen notwendig. Die Nachrichtenstrukturen übertragen stellen die zwischen dem Master und den Workern bereit. Konkret handelt es sich bei der gewählten Architektur nach \citep{tanenbaum} um eine \emph{Message-Queue-Architektur}. \\
 Zur Strukturierung fiel die Wahl auf das Nachrichtenaustauschformat \enquote{JavaScript Object Notation} oder kurz \emph{JSON}, da dieses Format sehr leichtgewichtig und vollständig anpassbar ist. \\
 Als Kommunikationsplattform wird ein Node-Server benutzt, da dieser für den vorgesehenen Bereich schnell einsetzbar und mit dem JSON-Format kompatibel ist. Der Node-Server ist für die Verteilung der Nachrichten zwischen den Rechnern des verteilten Systems verantwortlich. \\
 
@@ -23,7 +23,7 @@ Hier werden die Strukturen beschrieben, welche vom steuernden Rechner (Master) z
   }
 }
 \end{lstlisting}
-Ein im Cluster neu hinzugefügter Worker erhält seine Konfigurationsparameter, damit dieser mit dem Berechnen beginnen kann. 
+Ein im Cluster neu hinzugefügter Worker erhält seine Konfigurationsparameter, damit dieser als Worker im verteilten System genutzt werden kann. 
 Der Wert \textbf{algorithm} übergibt die ID des Hash-Algorithmus, welcher in der aktuellen Passwortberechnung benutzt wird. \textbf{Target} übermittelt den Hash des Zielpasswortes. Anhand des Hashes kann ein Worker bestimmen, ob das Zielpasswort berechnet wurde. Die \textbf{workerID} ist eine vom Master vergebene, fortlaufende Nummer und dient der Identifizierung der Worker.\\
 
 \texttt{getWork}
@@ -45,7 +45,7 @@ Diese Nachricht übermittelt dem Worker eine Anzahl neuer Passwörter, von denen
   "value" : ""
 }
 \end{lstlisting}
-Mit Hilfe dieser Nachricht fragt der Master an, ob die angesprochenen Worker noch verfügbar sind. Wenn diese nicht antworten, werden sie aus dem Array der verfügbaren Worker entfernt.
+Mit Hilfe dieser Nachricht fragt der Master an, ob die angesprochenen Worker noch verfügbar sind. Wenn diese nicht antworten, werden sie der Liste der verfügbaren Worker (Worker Queue) entfernt. 
 
 
 \subsection{Nachrichten vom Worker an den Master}
@@ -54,8 +54,8 @@ Folgende Nachrichten werden von den Workern an die Master gesendet. \\
 \texttt{newClientRegistration}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 {
-  	"status" : "newClientRegistration",
-	"worker" : "#WORKER_ID"
+  "status" : "newClientRegistration",
+  "worker" : "#WORKER_ID"
 }
 \end{lstlisting}
 Der Worker beantragt eine ID, um sich im Cluster identifizieren zu können.\\
@@ -71,8 +71,7 @@ Der Worker beantragt eine ID, um sich im Cluster identifizieren zu können.\\
     "worker_id" : "#WORKER_ID"
   }
 }\end{lstlisting}
-Diese Nachricht wird vom Worker versendet, wenn der berechnete Hash dem Zielhash entspricht und somit das Passwort berechnet wurde. Es werden der berechnete Hash und das zugehörige Passwort übertragen. Zudem wird die Zeit, die die Berechnung in Anspruch genommen hat, übertragen. Die Zeit kann für spätere Erweiterungen des Projekts genutzt werden, beispielsweise zum Vergleich verschiedener Hash-Algorithmen.\\
-%TODO Beschreibung fertigstellen.
+Diese Nachricht wird vom Worker versendet, wenn der berechnete Hash dem Zielhash entspricht und somit das Passwort berechnet wurde. Es werden der berechnete Hash und das zugehörige Passwort übertragen. Zudem wird die Zeit, die der Worker für die Berechnung in Anspruch genommen hat, übertragen. Die Zeit kann für spätere Erweiterungen des Projekts genutzt werden, beispielsweise zum Vergleich verschiedener Hash-Algorithmen. Allerdings gilt es zu beachten, dass sich die Zeit nur auf einen Worker bezieht. Eine globale Betrachtung der Berechnungszeit kann damit ungenau sein. \\
 
 \texttt{finishedWork}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -81,7 +80,7 @@ Diese Nachricht wird vom Worker versendet, wenn der berechnete Hash dem Zielhash
   "value" : "#WORKER_ID"
 }
 \end{lstlisting}
-Mit dieser Nachricht teilt der Worker mit, dass alle möglichen Passworte des aktuellen Arbeitspakets berechnet worden sind. Falls bei der Berechnung der Zielhash bzw. das Zielpasswort berechnet worden ist, wird zusätzlich die Nachricht \enquote{finishedWork} versandt. Ansonsten erhält der Worker ein neues Arbeitspaket aus dem Nachrichtenstrom. \\
+Mit dieser Nachricht teilt der Worker mit, dass alle möglichen Passworte des aktuellen Arbeitspakets berechnet worden sind. Falls bei der Berechnung der Zielhash bzw. das Zielpasswort berechnet worden ist, wird zusätzlich die Nachricht \enquote{finishedWork} versandt. Ist das Zielpasswort noch nicht ermittelt worden, erhält der Worker ein neues Arbeitspaket, da der Master nach Erhalt der Nachricht \enquote{finished work} den Worker in den \emph{idle}-Zustand versetzt. \\
 
 \texttt{HashesPerTime}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -104,7 +103,7 @@ Zum Auswerten der ausgeführten Tätigkeiten übermittelt der Worker zur Identif
 }
 \end{lstlisting}
 Der Worker meldet mit dieser Nachricht, dass er dem verteilten System weiterhin zur Verfügung steht. Zur Identifikation antwortet der Worker auf die Nachricht 
-\emph{stillAlive} mit seiner Worker-ID. Erfolgt auf die genannte Anfrage keine Antwort, dann entfernt der Master den nicht antwortenden Worker aus dem Array verfügbarer Komponenten.\\
+\emph{stillAlive} mit seiner Worker-ID. Erfolgt auf die genannte Anfrage keine Antwort, dann entfernt der Master den nicht antwortenden Worker aus dem Array verfügbarer Worke.\\
 
 Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{MD5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.
 
@@ -113,7 +112,7 @@ Nachfolgend wird die Benutzeroberfläche sowie die Interaktion mit dem verteilte
 Die Anwendung wird auf allen Rechnern gestartet, die zum verteilten System zusammengefasst werden müssen. Je nachdem, ob der Rechner als Master oder Worker verwendet werden soll, unterscheidet sich die weitere Interaktion. Die unterschiedlichen Interaktionsmöglichkeiten werden in den folgenden Abschnitten beschrieben. 
 
 \subsection{Master}
-Durch Aktivierung des Feldes \enquote{this Mac} im Bereich \emph{Communication Manager} delegiert man den aktuellen Rechner als Master des verteilten Systems. Es gilt zu beachten, dass nur ein Master im verteilten System bestimmt wird. Nachdem diese Option gewählt wurde, wird im Feld \emph{Server Adress} die Adresse des aktuellen Rechners angezeigt. Diese Adresse wird den Workern mitgeteilt (siehe Abschnitt \ref{WorkerGUI}). Auf Abbildung \ref{fig:WindowMaster} lautet die Adresse beispielsweise \emph{127.0.0.1}. \\
+Durch Aktivierung des Feldes \enquote{this Mac} im Bereich \emph{Communication Manager} delegiert man den aktuellen Rechner als Master des verteilten Systems. Es gilt zu beachten, dass nur ein Master im verteilten System bestimmt wird. Nachdem diese Option gewählt wurde, wird im Feld \emph{Server Adress} die Adresse des aktuellen Rechners angezeigt. Diese Adresse wird den Workern mitgeteilt (siehe Abschnitt \ref{WorkerGUI}). Auf Abbildung \ref{fig:WindowMaster} lautet die Adresse beispielsweise \emph{127.0.0.1}, da auf dem Rechner kein Domain-Name hinterlegt worden ist. \\
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=0.6\textwidth]{images/WindowMaster.png}
@@ -158,4 +157,4 @@ Das Log stellt Informationen zu verschiedenen Ereignissen bereit. Im aktuellen B
 	\label{fig:chartView}
 \end{figure}
 
-Die grafische Auswertung des Angriffs ist auf Abbildung \ref{fig:chartView} dargestellt. Die Tabelle stellt in Echtzeit Informationen darüber bereit, wieviele Hashes pro Sekunde durch die jeweiligen Worker erzeugt werden. Auf Grafik \ref{fig:chartView} berechnet aktuell ein Worker 14.012 Hashes pro Sekunde. Die Balken in der Tabelle zeigen den aktuellen Status der jeweiligen Worker an. Das bedeutet, dass bei Hinzufügen weiterer Worker zum System analog dazu weitere Balken in der Tabelle angezeigt werden würden. 
+Die grafische Auswertung des Angriffs ist auf Abbildung \ref{fig:chartView} dargestellt. Die Tabelle stellt in Echtzeit Informationen darüber bereit, wieviele Hashes pro Sekunde durch die jeweiligen Worker erzeugt werden. Auf Grafik \ref{fig:chartView} berechnet aktuell ein Worker 14.012 Hashes pro Sekunde. Die Diagramme zeigen den aktuellen Status der jeweiligen Worker an. Das bedeutet, dass bei Hinzufügen weiterer Worker zum System analog dazu weitere Diagramme angezeigt werden würden. 
