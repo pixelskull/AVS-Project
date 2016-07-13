@@ -1,7 +1,7 @@
 \chapter{Implementation}
 \label{implementation}
 In diesem Kapitel wird die Implementation des Projekts beschrieben. Auf Basis der beschriebenen Konzeption wird im Anschluss die Implementation erfolgen. 
-\section{Nachrichtenstruktur}
+\section{Kommunikation}
 Da die Implementation auf einer nachrichtenbasierten Kommunikation basieren wird, ist der Entwurf eigener Nachrichtenstrukturen notwendig. Die Nachrichtenstrukturen übertragen stellen die zwischen dem Master und den Workern bereit. Konkret handelt es sich bei der gewählten Architektur nach \citep{tanenbaum} um eine \emph{Message-Queue-Architektur}. \\
 Zur Strukturierung fiel die Wahl auf das Nachrichtenaustauschformat \enquote{JavaScript Object Notation} oder kurz \emph{JSON}, da dieses Format sehr leichtgewichtig und vollständig anpassbar ist. \\
 Als Kommunikationsplattform wird ein Node-Server benutzt, da dieser für den vorgesehenen Bereich schnell einsetzbar und mit dem JSON-Format kompatibel ist. Der Node-Server ist für die Verteilung der Nachrichten zwischen den Rechnern des verteilten Systems verantwortlich. \\
@@ -9,8 +9,112 @@ Als Kommunikationsplattform wird ein Node-Server benutzt, da dieser für den vor
 Nachfolgend werden die entwickelten Nachrichtenstrukturen und deren Inhalt beschrieben. Zum besseren Verständnis werden die Nachrichten in die Senderichtungen zum Worker oder zum Master strukturiert. \\
 Auf programmatischer Ebene wird zudem zwischen \emph{Basic Messages} und \emph{Extended Messages} unterschieden. Basic Messages beinhalten den Status des sendenden Rechners und maximal einen weiteren Wert, während Extended Messages neben dem Status mehrere Werte beinhalten. Durch diese Strukturierung ist ein effizienteres Messageparsing möglich. 
 
+\subsection{Asynchrone Kommunikation}
+Die Kommunikation innerhalb des verteilten Systems wird durch den Master sichergestellt. Konkret werden die Nachrichten durch den NODE-Server an alle Rechner des verteilten Systems (Broadcast) versendet. Dies bedeutet, dass jeder Rechner alle Nachrichten erhält und lokal zur Verfügung stehen. Damit die jeweiligen Rechner die Nachrichten zuordnen können, werden die Funktionen \emph{decideWhatToDoBasicMessage} und \emph{decideWhatToDoExtendedMessage} implementiert. Diese unterscheiden, wie der Name bereits vermuten lässt, zwischen \emph{Basic Messages} und \emph{Extended Messages}. Aber auch bei Master und Worker sind die Funktionen unterschiedlich implementiert, da diese unterschiedlich auf die Nachrichten reagieren. \\
+Die Funktionen treffen ihre Entscheidungen auf Basis des Nachrichtenheaders sowie des Ziels der Nachricht, wie in den folgenden Codefragmenten zu erkennen ist. 
+\newpage
+
+\texttt{Klasse MasterOperation.swift}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+func decideWhatToDoBasicMessage(message:BasicMessage){
+	let messageHeader = message.status
+        
+    switch messageHeader {
+        case MessagesHeader.newClientRegistration:
+            newClientRegistration(message)
+            break
+        case MessagesHeader.alive:
+            alive(message)
+            break
+        default:
+            break
+    }
+}
+
+
+func decideWhatToDoExtendedMessage(message:ExtendedMessage){
+    let messageHeader = message.status
+        
+    switch messageHeader {
+        case MessagesHeader.hitTargetHash:
+            hitTargetHash(message)
+            break
+        case MessagesHeader.hashesPerTime:
+            hashesPerTime(message)
+            break
+        case MessagesHeader.finishedWork:
+            finishedWork(message)
+            break
+        default:
+            break
+    }
+}
+\end{lstlisting}
+
+\newpage
+
+\texttt{Klasse WorkerOperation.swift}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+func decideWhatToDoBasicMessage(message:BasicMessage){
+   let messageHeader = message.status
+        switch messageHeader {
+        case MessagesHeader.stillAlive:
+            stillAlive(message)
+            break
+        case MessagesHeader.stopWork:
+            stopWork()
+            break
+        default:
+            break
+    }
+}
+
+func decideWhatToDoExtendedMessage(message:ExtendedMessage){
+    let messageHeader = message.status
+    
+    switch messageHeader {
+        case MessagesHeader.setupConfig:
+            setupConfig(message)
+            break
+        case MessagesHeader.newWorkBlog:
+            newWorkBlog(message)
+            break
+        default:
+            break
+     }
+}
+\end{lstlisting}
+
+Dieses Vorgehen hat den Vorteil, dass die Verarbeitung der Nachrichten asynchron geschehen kann. Durch das asynchrone Vorgehen kann die Performance des verteilten Systems deutlich gesteigert werden, da die Rechner unabhängig voneinander reagieren können. \\
+Die Nachrichten werden in Warteschlangen (Queues) gespeichert. Durch den Einsatz von \emph{GrandCentralDispatch (GCD)}\footnote{\url{https://developer.apple.com/library/ios/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html}} wird die Verteilung von Threads auf verschiedene Prozessorkerne vom Betriebssystem übernommen. Durch diese Abstraktion ist für den Entwickler eine effektivere Verteilung von Threads möglich. Da die Erstellung von Queues von Grand Central Dispatch übernommen wird, ist die Verteilung im verteilten System effizient möglich. Das GCD legt die Queues in Threads ab und übernimmt die Verteilung. \\
+Um die Performance weiter zu steigen, sollen die erstellten Threads eine hohe Priorität erhalten, um vom Betriebssystem bevorzugt bearbeitet zu werden. Die Zuweisung einer hohen Priorität unter GCD ist allerdings nur über einen Umweg möglich, da hohe Prioritäten nur für bestimmte Systemdienste vorgesehen sind. Mit folgendem Programmcode können die Nachrichten-Warteschlangen dennoch mit einer hohen Priorität versehen werden:
+
+
+\texttt{Klasse WorkerOperation.swift}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+  let queue = dispatch_queue_create
+  ("\(Constants.queueID).compareHashes", nil)
+  
+  let highPriority = 
+  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)
+  
+  dispatch_set_target_queue(queue, highPriority)
+  
+  
+  
+  dispatch_async(queue) {
+     _ = passwordArray.map { password in
+     
+     let passwordQueue = 
+     dispatch_queue_create("\(Constants.queueID).
+     \(password)", nil)
+\end{lstlisting}
+
+Des weiteren wird die Parallelisierung weiter ausgebaut, indem die Queues, in denen sich die Passwortblöcke befinden, auf den Workern aufgeteilt werden. Ein Beispiel dazu lässt sich ebenfalls aus dem Programmcode entnehmen. 
+
 \subsection{Nachrichten vom Master an Worker}
-Hier werden die Strukturen beschrieben, welche vom steuernden Rechner (Master) zu einem der Worker gesendet werden.\\
+%TODO Evaluieren
+In diesem Abschnitt werden die Strukturen beschrieben, welche vom steuernden Rechner (Master) zu einem der Worker gesendet werden.\\
 
 \texttt{SetupAndConfig}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -36,7 +140,7 @@ Der Wert \textbf{algorithm} übergibt die ID des Hash-Algorithmus, welcher in de
   }
 }\end{lstlisting}
 Diese Nachricht übermittelt dem Worker eine Anzahl neuer Passwörter, von denen dieser die Hashes berechnen wird.\\
- %TODO Beschreibung fertigstellen.
+
 
 \texttt{stillAlive}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -106,6 +210,15 @@ Der Worker meldet mit dieser Nachricht, dass er dem verteilten System weiterhin 
 \emph{stillAlive} mit seiner Worker-ID. Erfolgt auf die genannte Anfrage keine Antwort, dann entfernt der Master den nicht antwortenden Worker aus dem Array verfügbarer Worke.\\
 
 Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{MD5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.
+
+
+\section{Asynchrone Berechnung}
+Damit die Ressourcen des verteilten Systems möglichst effektiv genutzt werden können, wird ein asynchrones Konzept verfolgt. 
+%TODO ist das in der Kommunikation schon erklärt?
+
+\subsection{Lenses}
+
+
 
 \section{Benutzeroberfläche}
 Nachfolgend wird die Benutzeroberfläche sowie die Interaktion mit dem verteilten System beschrieben. Da primär die Funktionalität der Anwendung im Fokus des Projekts steht, besteht die Benutzeroberfläche aus nur wenigen Interaktionselementen. \\
