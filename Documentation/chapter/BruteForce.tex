@@ -110,7 +110,18 @@ Um die Performance weiter zu steigen, sollen die erstellten Threads eine hohe Pr
      \(password)", nil)
 \end{lstlisting}
 
-Des weiteren wird die Parallelisierung weiter ausgebaut, indem die Queues, in denen sich die Passwortblöcke befinden, auf den Workern aufgeteilt werden. Ein Beispiel dazu lässt sich ebenfalls aus dem Programmcode entnehmen. 
+Des weiteren wird die Parallelisierung weiter ausgebaut, indem die Queues, in denen sich die Passwortblöcke befinden, auf den Workern aufgeteilt werden. Ein Beispiel dazu lässt sich ebenfalls aus dem Programmcode entnehmen. \\
+
+\begin{figure}[!ht]
+	\centering
+		%[natürliche Breite in Pixeln, natürliche Höhe in Pixeln, Abhängigkeit von der Textbreite]
+		\includegraphics[natwidth=1200pt, natheight=349pt, width=1.0\textwidth]{images/screenshot_cpu.png}
+	\caption{Verlauf der CPU-Auslastung während der Laufzeit, gemessen in Xcode mit zwei Prozessorkernen.}
+	\label{fig:screenshotCPU}
+\end{figure}
+
+
+Grafik \ref{fig:screenshotCPU} zeigt, dass die zwei verfügbaren Prozessorkerne (ein Kern entspricht einer Auslastung von 100\%) mit der implementierten Verteilungsstrategie effektiv genutzt werden. Zur Messung wurde die Entwicklungsumgebung \emph{Xcode} genutzt. 
 
 \subsection{Nachrichten vom Master an Worker}
 %TODO Evaluieren
@@ -212,12 +223,8 @@ Der Worker meldet mit dieser Nachricht, dass er dem verteilten System weiterhin 
 Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{MD5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.
 
 
-\section{Asynchrone Berechnung}
-Damit die Ressourcen des verteilten Systems möglichst effektiv genutzt werden können, wird ein asynchrones Konzept verfolgt. 
-%TODO ist das in der Kommunikation schon erklärt?
-
 \subsection{Lenses}
-
+%TODO hier oder an anderer Stelle erklaeren
 
 
 \section{Benutzeroberfläche}
