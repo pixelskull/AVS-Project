@@ -223,8 +223,16 @@ Der Worker meldet mit dieser Nachricht, dass er dem verteilten System weiterhin 
 Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{MD5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.
 
 
-\subsection{Lenses}
-%TODO hier oder an anderer Stelle erklaeren
+\section{Speichermanagement}
+%TODO Lenses und erklären, warum immer genau pakete= worker x 2
+
+\begin{figure}[!ht]
+	\centering
+		%[natürliche Breite in Pixeln, natürliche Höhe in Pixeln, Abhängigkeit von der Textbreite]
+		\includegraphics[natwidth=1200pt, natheight=349pt, width=1.0\textwidth]{images/screenshot_ram.png}
+	\caption{Verlauf der Arbeitsspeicher-Auslastung während der Laufzeit, gemessen in Xcode.}
+	\label{fig:screenshot_ram}
+\end{figure}
 
 
 \section{Benutzeroberfläche}
