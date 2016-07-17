@@ -10,6 +10,7 @@ Die Kommunikation wird nachrichtenbasiert umgesetzt. Dies bedeutet, dass die Kom
 Primäres Ziel des Projektes ist das Entschlüsseln eines vorgegebenen Passwortes. Das zu entschlüsselnde Passwort wird vor der Berechnung vom Benutzer eingegeben. Das eingetragene Passwort wird dann durch eine Hashfunktion geleitet. Der entstandene Hash wird gespeichert und dient als Zielbedingung der folgenden Berechnung. \\
 Nun beginnt der eigentliche Angriff. Zu Beginn wird eine sogenannte \enquote{Dictionary-Attack} vorgenommen. Dies bedeutet, dass ein Wörterbuch mit häufig genutzten Passwörtern als Basis des Angriffs genutzt wird. Die eingetragenen Passwörter werden ebenfalls der Reihe nach gehasht und der berechnete Hash mit dem Zielhash verglichen. \\
  Durch die vorangestellte Attacke auf Basis von häufig benutzten Passwörtern wird die Effizienz des verteilten Systems verbessert. Der folgende Auszug aus der Passwortliste  verdeutlicht das Prinzip eines Dictionaries. \\
+ \newpage
 \texttt{Dictionary:}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 	LOVE123
@@ -39,6 +40,7 @@ Nun beginnt der eigentliche Angriff. Zu Beginn wird eine sogenannte \enquote{Dic
 
 Bleibt die Dictionary-Attack erfolglos, wir der BruteForce-Angriff durchgeführt. \\
 Die erste Idee war es, dass der steuernde Rechner alle möglichen Passwörter berechnet und in einem Array ablegen wird. Dabei sollten die Passwörter eine statische Länge besitzen. Das Muster der möglichen Passwörter sollte wie folgt aufgebaut werden: \\
+
 \texttt{Muster der zu berechnenden Passwörter:}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 	Array passwordsUPPER = 
@@ -82,6 +84,7 @@ In der Praxis werden alle möglichen Passwörter probiert, begonnen mit Passwör
 Die berechneten Passwörter sollen dann in eine Warteschlange geschrieben werden, sodass die Worker des verteilten Systems sich \enquote{Arbeitspakete} holen können. Ein solches Arbeitspaket beinhaltet eine Sammlung von Passwörtern. Die Worker berechnen dann die Hashes der Passwörter und vergleichen diese mit dem Zielhash.\\
  Berechnet ein Worker einen Hash, der mit dem Zielhash überein stimmt, so ist das gesuchte Passwort identifiziert.  
 
+\newpage
 
 \section{Architektur des verteilten Systems}
 Das verteilte System wird so konzipiert, dass die vier in Kapitel \ref{allgemeineAnforderungen} genannten Anforderungen umgesetzt werden können. Um dies zu realisieren, wird mit einer nachrichtenbasierten Architektur geplant. Die Rechner des verteilten Systems können so miteinander kommunizieren, ohne dass eine restriktive Anordnung notwendig ist. Dadurch wird die Skalierbarkeit sichergestellt. \\
