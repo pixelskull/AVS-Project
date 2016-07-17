@@ -1,7 +1,9 @@
 \chapter{Fazit und Ausblick}
 Das abschließende Kapitel fasst das Projekt zusammen und gibt somit einen Überblick Über die durchgeführten Tätigkeiten.\\
  Außerdem wird ein Ausblick gegeben, der Ideen zu möglichen Fortsetzungen dieses Projekts bietet. \\
- Abschließend wird das durchgeführte Projekt kritisch reflektiert. Dadurch soll die Einordnung des Gesamtprojekts verbessert werden.
+ Abschließend wird das durchgeführte Projekt kritisch reflektiert. Dadurch soll die Einordnung des Gesamtprojekts verbessert werden.\\
+ 
+Das verteilte System wird auf der Entwickler-Plattform \emph{Github} zur Verfügung gestellt und ist unter der Adresse \url{https://github.com/pixelskull/AVS-Project} aufrufbar.
 
 \section{Zusammenfassung des Projekts}
 Vor der eigentlichen Durchführung des Projekts wurde eine Literaturrecherche durchgeführt. Die Recherche hatte zwei Ziele: Zum einen wurde Fachliteratur ermittelt, um notwendige Kenntnisse zu verteilten Systemen zu gewinnen. Zum anderen brachte die Recherche den Vorteil, dass der Prozess der Ideenfindung verbessert wurde. Bei der Literaturrecherche stellte sich heraus, dass das Buch \citep{tanenbaum} eines der Standardwerke im Bereich der verteilten Systeme darstellt. Aus diesem Grund wurde das buch primäre Wissensquelle für dieses Projekt ausgewählt. \\
@@ -15,16 +17,19 @@ Danach werden in Kapitel \ref{implementation} Details zur Implementation beschri
 Verteilte Systeme unterliegen dank ständiger Weiterentwicklung von Konzepten und Techniken einem gewissen Alterungsprozess. Aus diesem Grund bietet auch die implementierte BruteForce-Attacke einige Ansatzpunkte zur Weiterentwicklung. \\
 Eine mögliche Optimierung ist die Anpassung an neue Features der genutzten Programmiersprache \emph{Swift}. \emph{Swift} ist quelloffen verfügbar und besitzt somit implizit eine große Gruppe an Entwicklern. Die Weiterentwicklung der Programmiersprache kann damit auch Optimierungspotenzial für den Quellcode dieses Projekts bieten. \\
 Ein weiterer Aspekt für eine Fortsetzung des Projekts ist die Nutzung von maschinenbasiertem Lernen. Mit Hilfe von maschinenbasiertem Lernen kann beispielsweise das benutzte Wörterbuch der Dictionary Attack mit weiteren häufig genutzten Passwörtern erweitert werden. Ergänzend könnten Passwörter entfernt werden, welche aktuell seltener eingesetzt werden.\\
+
  Aber auch der BruteForce-Angriff könnte von maschinenbasiertem Lernen profitieren. Durch eine Analyse, welche der erzeugten Passwörter besonders häufig zum Erfolg führen, kann der Algorithmus diese Passwörter priorisiert einsetzen. Dadurch würde eine Effektivitätssteigerung des Algorithmus erzielt werden. \\
+ 
 Eine hybride Lösung wäre auch möglich. Der Angriff könnte optimiert werden, indem ein Wörterbuch mit den Passwörtern erstellt werden, die bei einem BruteForce-Angriff häufigen Erfolg erzielen. Damit würde sich der Angriff durch maschinenbasiertes Lernen ständig an aktuelle \enquote{Trends} im Bezug auf häufig gewählte Passwörter anpassen können. \\
 Zudem könnte eine automatisierte Auswertung Informationen zur Untersuchung der Angriffsperformance bieten. Dabei könnte beispielsweise untersucht werden, wie stark sich die genutzten Hash-Algorithmen in der Geschwindigkeit unterscheiden. Mit einer Auswertung könnten auch indirekte Schlüsse auf die Sicherheit bestimmter Passwörter gezogen werden. 
 
 \section{Kritische Würdigung}
 \label{kritik}
-%Tests nur rudimentär. 
-%.map nicht so genutzt, wie man es tun sollte. Liefert aber bessere Performance.
-%Node Server nur single thread, deswegen würde anderer Server evtl. mehr Performance bieten können
+Primär werden verschiedene Details der Implementierung als verbesserungswürdig angesehen. \\
+Ein Beispiel dazu ist die Nutzung der Methode \emph{.map} bei der Ausgabe von Arrays. Normalerweise wird diese Methode in der funktionalen Programmierung benutzt, um über ein Clousure Werte aus einem Array abzurufen. Bei der Implementierung wurde die Methode zweckentfremdet, um Werte aus einem Array aufzurufen. Die Entscheidung für diese missbräuchliche Nutzung ist gefallen, weil der Zugriff auf Arrays damit performanter erfolgen kann, als es mit alternativen Methoden der Fall wäre. \\
+
+Weitere Verbesserungsmöglichkeiten sehen die Projektteilnehmer in der Auswahl des Kommunikations-Servers. Der ausgewählte Node-Server liefert zwar die für dieses Projekt notwendige Funktionalität, allerdings läuft dieser nur in einem Thread. Ein multithread-fähiger Kommunikationsserver könnte besonders innerhalb eines verteilten Systems sinnvoll eingesetzt werden. Somit könnte durch Einsatz eines alternativen Servers die Performance des verteilten Systems weiter gesteigert werden. \\
+
+Als letzten verbesserungswürdigen Punkt wird angemerkt, dass keine Tests implementiert worden sind. Durch automatisierte Tests können Fehler schnell entdeckt und somit die Qualität des Codes verbessert werden. Allerdings ist das Testen eines verteilten Systems schwieriger zu realisieren, als es bei einer lokalen Anwendung der Fall ist. Aus diesem Grund und dem Mangel an Kenntnissen wurde in diesem Projekt auf die Implementation von Tests verzichtet. 
 
 
-
-%TODO Link zu Github zum Projekt
