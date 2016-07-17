@@ -6,6 +6,9 @@ Da die Implementation auf einer nachrichtenbasierten Kommunikation basieren wird
 Zur Strukturierung fiel die Wahl auf das Nachrichtenaustauschformat \enquote{JavaScript Object Notation} oder kurz \emph{JSON}, da dieses Format sehr leichtgewichtig und vollständig anpassbar ist. \\
 Als Kommunikationsplattform wird ein Node-Server benutzt, da dieser für den vorgesehenen Bereich schnell einsetzbar und mit dem JSON-Format kompatibel ist. Der Node-Server ist für die Verteilung der Nachrichten zwischen den Rechnern des verteilten Systems verantwortlich. \\
 
+Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{MD5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.\\
+
+
 Nachfolgend werden die entwickelten Nachrichtenstrukturen und deren Inhalt beschrieben. Zum besseren Verständnis werden die Nachrichten in die Senderichtungen zum Worker oder zum Master strukturiert. \\
 Auf programmatischer Ebene wird zudem zwischen \emph{Basic Messages} und \emph{Extended Messages} unterschieden. Basic Messages beinhalten den Status des sendenden Rechners und maximal einen weiteren Wert, während Extended Messages neben dem Status mehrere Werte beinhalten. Durch diese Strukturierung ist ein effizienteres Messageparsing möglich. 
 
@@ -125,14 +128,14 @@ Grafik \ref{fig:screenshotCPU} zeigt, dass die zwei verfügbaren Prozessorkerne 
 \subsection{Lenses}
 Threadsicherheit bedeutet, dass Softwarekomponenten problemlos von verschiedenen Bereichen genutzt werden können, ohne dass es dabei Nebeneffekte auftreten. Damit ist Threadsicherheit implizit wichtiger Bestandteil eines verteilten Systems. \\
 Die Arbeitspakete (\emph{Work Blogs}) werden in \emph{WorkBlogQueues} gespeichert. Diese Queues beinhalten Arrays. Da Arrays in der Programmiersprache \emph{Swift} standardmäßig nicht threadsicher sind, werden sogenannte \emph{Lenses} eingesetzt. \\
-Eine Lense stellt Getter- und Setter-Methoden zur Verfügung. 
+Lenses stellen Getter- und Setter-Methoden zur Verfügung. 
 
 \texttt{Klasse Lens}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 struct Lens<Whole, Part> 
 {
 	let get : Whole -> Part
-    let set: (Part, Whole) -> Whole
+	let set: (Part, Whole) -> Whole
 }
 \end{lstlisting}
 
@@ -159,11 +162,11 @@ func get() -> Message? {
     }
 \end{lstlisting}
 
-\subsection{Nachrichten vom Master an Worker}
+\subsection{Nachrichten zum Worker}
 %TODO Evaluieren
 In diesem Abschnitt werden die Strukturen beschrieben, welche vom steuernden Rechner (Master) zu einem der Worker gesendet werden.\\
 
-\texttt{SetupAndConfig}
+\texttt{SetupAndConfig(Extended Message)}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 {
   "status" : "setupConfig",
@@ -175,9 +178,9 @@ In diesem Abschnitt werden die Strukturen beschrieben, welche vom steuernden Rec
 }
 \end{lstlisting}
 Ein im Cluster neu hinzugefügter Worker erhält seine Konfigurationsparameter, damit dieser als Worker im verteilten System genutzt werden kann. 
-Der Wert \textbf{algorithm} übergibt die ID des Hash-Algorithmus, welcher in der aktuellen Passwortberechnung benutzt wird. \textbf{Target} übermittelt den Hash des Zielpasswortes. Anhand des Hashes kann ein Worker bestimmen, ob das Zielpasswort berechnet wurde. Die \textbf{workerID} ist eine vom Master vergebene, fortlaufende Nummer und dient der Identifizierung der Worker.\\
+Der Wert \textbf{algorithm} übergibt die ID des Hash-Algorithmus, welcher in der aktuellen Passwortberechnung benutzt wird. \textbf{Target} übermittelt den Hash des Zielpasswortes. Die \textbf{workerID} ist der vom Master vorgegebene Hostname oder IP, die den Workern mitgeteilt werden muss.\\
 
-\texttt{getWork}
+\texttt{getWork (Extended Message)}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 {
   "status" : "newWorkBlog",
@@ -185,11 +188,22 @@ Der Wert \textbf{algorithm} übergibt die ID des Hash-Algorithmus, welcher in de
     "worker_id" : "#WORKER_ID"
     "hashes" : ["#NEW_HASHES"]
   }
-}\end{lstlisting}
-Diese Nachricht übermittelt dem Worker eine Anzahl neuer Passwörter, von denen dieser die Hashes berechnen wird.\\
+}
+\end{lstlisting}
+Der Worker erhält durch einen neuen WorkBlog, den dieser abarbeiten wird.\\
+
+\texttt{Stop Work (Basic Message)}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+{
+  "status" : "stopWorking",
+  "value" : ""]
+  }
+}
+\end{lstlisting}
+Durch \enquote{stopWork} wird den Workern mitgeteilt, dass diese die Berechnungen stoppen können. Dies ist in der Regel der Fall, wenn das Zielpasswort identifiziert wurde. 
 
 
-\texttt{stillAlive}
+\texttt{stillAlive (Basic Message)}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 {
   "status" : "stillAlive",
@@ -199,19 +213,19 @@ Diese Nachricht übermittelt dem Worker eine Anzahl neuer Passwörter, von denen
 Mit Hilfe dieser Nachricht fragt der Master an, ob die angesprochenen Worker noch verfügbar sind. Wenn diese nicht antworten, werden sie der Liste der verfügbaren Worker (Worker Queue) entfernt. 
 
 
-\subsection{Nachrichten vom Worker an den Master}
+\subsection{Nachrichten zum Master}
 Folgende Nachrichten werden von den Workern an die Master gesendet. \\
 
-\texttt{newClientRegistration}
+\texttt{newClientRegistration (Basic Message)}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 {
   "status" : "newClientRegistration",
   "worker" : "#WORKER_ID"
 }
 \end{lstlisting}
-Der Worker beantragt eine ID, um sich im Cluster identifizieren zu können.\\
+Mit Hilfe dieser Nachricht kann sich ein hinzugefügter Worker beim Master registrieren. Dieser wird dann vom Master in die Liste verfügbarer Worker hinzugefügt.\\
 
-\texttt{hitTargetHash}
+\texttt{hitTargetHash (Extended Message)}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 {
   "status" : "hitTargetHash",
@@ -224,16 +238,16 @@ Der Worker beantragt eine ID, um sich im Cluster identifizieren zu können.\\
 }\end{lstlisting}
 Diese Nachricht wird vom Worker versendet, wenn der berechnete Hash dem Zielhash entspricht und somit das Passwort berechnet wurde. Es werden der berechnete Hash und das zugehörige Passwort übertragen. Zudem wird die Zeit, die der Worker für die Berechnung in Anspruch genommen hat, übertragen. Die Zeit kann für spätere Erweiterungen des Projekts genutzt werden, beispielsweise zum Vergleich verschiedener Hash-Algorithmen. Allerdings gilt es zu beachten, dass sich die Zeit nur auf einen Worker bezieht. Eine globale Betrachtung der Berechnungszeit kann damit ungenau sein. \\
 
-\texttt{finishedWork}
+\texttt{finishedWork (Basic Message)}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 {
   "status" : "finishedWork",
   "value" : "#WORKER_ID"
 }
 \end{lstlisting}
-Mit dieser Nachricht teilt der Worker mit, dass alle möglichen Passworte des aktuellen Arbeitspakets berechnet worden sind. Falls bei der Berechnung der Zielhash bzw. das Zielpasswort berechnet worden ist, wird zusätzlich die Nachricht \enquote{finishedWork} versandt. Ist das Zielpasswort noch nicht ermittelt worden, erhält der Worker ein neues Arbeitspaket, da der Master nach Erhalt der Nachricht \enquote{finished work} den Worker in den \emph{idle}-Zustand versetzt. \\
+Der Worker teilt mit, dass alle möglichen Passworte des aktuellen Arbeitspakets berechnet worden sind. Falls bei der Berechnung der Zielhash bzw. das Zielpasswort berechnet worden ist, wird zusätzlich die Nachricht \enquote{finishedWork} versandt. Ist das Zielpasswort noch nicht ermittelt worden, erhält der Worker ein neues Arbeitspaket, da der Master nach Erhalt der Nachricht \enquote{finished work} den Worker in den \emph{idle}-Zustand versetzt. \\
 
-\texttt{HashesPerTime}
+\texttt{HashesPerTime (Extended Message)}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 {
   "status" : "hashesPerTime"
@@ -244,19 +258,18 @@ Mit dieser Nachricht teilt der Worker mit, dass alle möglichen Passworte des ak
   }
 }
 \end{lstlisting}
-Zum Auswerten der ausgeführten Tätigkeiten übermittelt der Worker zur Identifikation seine ID und zur statistischen Auswertung sowohl die Anzahl der berechneten Hashes, als auch die zu dieser Berechnung benötigten Zeit. \\
+Zum Auswerten der Berechnungen übermittelt der Worker zur Identifikation seine ID und zur Auswertung sowohl die Anzahl der berechneten Hashes, als auch die benötigten Zeit der Berechnung mit. \\
 
-\texttt{replyAlive}
+\texttt{replyAlive (Basic Message)}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
 {
   "status" : "alive",
   "value" : "#WORKER_ID"
 }
 \end{lstlisting}
-Der Worker meldet mit dieser Nachricht, dass er dem verteilten System weiterhin zur Verfügung steht. Zur Identifikation antwortet der Worker auf die Nachricht 
-\emph{stillAlive} mit seiner Worker-ID. Erfolgt auf die genannte Anfrage keine Antwort, dann entfernt der Master den nicht antwortenden Worker aus dem Array verfügbarer Worke.\\
+Der Worker teilt mit, dass dieser weiterhin zur Verfügung steht. Zur Identifikation antwortet der Worker auf die Nachricht 
+\emph{stillAlive} mit seiner Worker-ID. Erfolgt auf die genannte Anfrage keine Antwort, dann entfernt der Master den nicht antwortenden Worker aus dem Array verfügbarer Worker.\\
 
-Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{MD5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.
 
 
 \section{Speichermanagement}
