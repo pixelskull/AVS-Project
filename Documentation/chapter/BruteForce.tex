@@ -9,7 +9,7 @@ Als Kommunikationsplattform wird ein Node-Server benutzt, da dieser für den vor
 Nachfolgend werden die entwickelten Nachrichtenstrukturen und deren Inhalt beschrieben. Zum besseren Verständnis werden die Nachrichten in die Senderichtungen zum Worker oder zum Master strukturiert. \\
 Auf programmatischer Ebene wird zudem zwischen \emph{Basic Messages} und \emph{Extended Messages} unterschieden. Basic Messages beinhalten den Status des sendenden Rechners und maximal einen weiteren Wert, während Extended Messages neben dem Status mehrere Werte beinhalten. Durch diese Strukturierung ist ein effizienteres Messageparsing möglich. 
 
-\subsection{Asynchrone Kommunikation}
+\subsection{Asynchronität}
 Die Kommunikation innerhalb des verteilten Systems wird durch den Master sichergestellt. Konkret werden die Nachrichten durch den NODE-Server an alle Rechner des verteilten Systems (Broadcast) versendet. Dies bedeutet, dass jeder Rechner alle Nachrichten erhält und lokal zur Verfügung stehen. Damit die jeweiligen Rechner die Nachrichten zuordnen können, werden die Funktionen \emph{decideWhatToDoBasicMessage} und \emph{decideWhatToDoExtendedMessage} implementiert. Diese unterscheiden, wie der Name bereits vermuten lässt, zwischen \emph{Basic Messages} und \emph{Extended Messages}. Aber auch bei Master und Worker sind die Funktionen unterschiedlich implementiert, da diese unterschiedlich auf die Nachrichten reagieren. \\
 Die Funktionen treffen ihre Entscheidungen auf Basis des Nachrichtenheaders sowie des Ziels der Nachricht, wie in den folgenden Codefragmenten zu erkennen ist. 
 \newpage
@@ -114,7 +114,6 @@ Des weiteren wird die Parallelisierung weiter ausgebaut, indem die Queues, in de
 
 \begin{figure}[!ht]
 	\centering
-		%[natürliche Breite in Pixeln, natürliche Höhe in Pixeln, Abhängigkeit von der Textbreite]
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=1.0\textwidth]{images/screenshot_cpu.png}
 	\caption{Verlauf der CPU-Auslastung während der Laufzeit, gemessen in Xcode mit zwei Prozessorkernen.}
 	\label{fig:screenshotCPU}
@@ -122,6 +121,43 @@ Des weiteren wird die Parallelisierung weiter ausgebaut, indem die Queues, in de
 
 
 Grafik \ref{fig:screenshotCPU} zeigt, dass die zwei verfügbaren Prozessorkerne (ein Kern entspricht einer Auslastung von 100\%) mit der implementierten Verteilungsstrategie effektiv genutzt werden. Zur Messung wurde die Entwicklungsumgebung \emph{Xcode} genutzt. 
+
+\subsection{Lenses}
+Threadsicherheit bedeutet, dass Softwarekomponenten problemlos von verschiedenen Bereichen genutzt werden können, ohne dass es dabei Nebeneffekte auftreten. Damit ist Threadsicherheit implizit wichtiger Bestandteil eines verteilten Systems. \\
+Die Arbeitspakete (\emph{Work Blogs}) werden in \emph{WorkBlogQueues} gespeichert. Diese Queues beinhalten Arrays. Da Arrays in der Programmiersprache \emph{Swift} standardmäßig nicht threadsicher sind, werden sogenannte \emph{Lenses} eingesetzt. \\
+Eine Lense stellt Getter- und Setter-Methoden zur Verfügung. 
+
+\texttt{Klasse Lens}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+struct Lens<Whole, Part> 
+{
+	let get : Whole -> Part
+    let set: (Part, Whole) -> Whole
+}
+\end{lstlisting}
+
+Die Getter-Methode ruft dabei einen Teil (Part) \enquote{des Ganzen (Whole)} ab, während die Setter-Methode aus einem Part und einem Whole ein \enquote{neues Ganzes (Whole)} erzeugt. \\
+Mit Hilfe dieser Methode kann mit konstanten Arrays gearbeitet werden, um die Threadsicherheit herzustellen. Dabei werden die Daten in konstanten Arrays abgelegt. Muss ein Eintrag bearbeitet werden, wird mit Hilfe der Getter-Methode ein konstantes Array abgerufen. Die Inhalte können nun über die Setter-Methode bearbeitet und in ein neues, konstantes Array geschrieben.\\
+Folgender Programmcode zeigt eine konkrete Implementierung von Lenses:
+
+\texttt{Klasse MessageQueue}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+func get() -> Message? {
+	dispatch_semaphore_wait
+	(semaphore, DISPATCH_TIME_FOREVER)
+	guard let firstElement = messagesLens.
+	get(messages).first else {
+		dispatch_semaphore_signal(semaphore)
+        return nil
+	}
+        
+	messages = messagesLens.set([], 
+	messages.dropFirst().map{ $0 })
+	dispatch_semaphore_signal(semaphore)
+            
+	return firstElement
+    }
+\end{lstlisting}
 
 \subsection{Nachrichten vom Master an Worker}
 %TODO Evaluieren
@@ -224,11 +260,32 @@ Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schlie�
 
 
 \section{Speichermanagement}
-%TODO Lenses und erklären, warum immer genau pakete= worker x 2
+Das verteilte System muss sicherstellen, dass die Speichernutzung fehlerfrei und effektiv geschieht. Ein Beispiel für ein mögliches Problem ist die Erstellung der Arbeitspakete (\emph{Work Packages}). Geschieht die Erstellung zu schnell, würde der Speicherbedarf stark anwachsen. Dies kann bis zu einem vollständig gefüllten Arbeitsspeicher führen. Werden die Arbeitspakete zu langsam erstellt, würden Worker auf die Erstellung warten müssen. Durch die entstehende Wartezeit würde das System verlangsamt werden. \\
+Um diese Probleme auszuschließen, wird das verteilte System immer die doppelte Anzahl an Work Packages bereitstellen, wie aktuelle Worker vorhanden sind. Es gilt also das Verhältnis:
+
+\begin{quotation}
+\begin{math}
+Arbeitspakete = Anzahl Worker \cdot 2 \end{math}
+\end{quotation}
+
+
+\texttt{Funktion generateWorkBlogs}
+\begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
+waitLoop: while(WorkBlogQueue.sharedInstance.
+getWorkBlogQueueCount() > 
+(WorkerQueue.sharedInstance.getWorkerQueueCount()*2))
+	{
+	guard generateLoopRun == true else{ 
+		break waitLoop
+		}
+	}
+\end{lstlisting}
+
+Dadurch wird ein gleichbleibender Speicherbedarfs sichergestellt, wie sich anhand von Abbildung \ref{fig:screenshot_ram} erkennen lässt. Die Messung wurde mit \emph{Xcode} während der Laufzeit des Angriffs durchgeführt. Dabei ist zu erkennen, dass sich der aktuelle Speicherbedarf des verteilten Systems zur Laufzeit bei ca. 73MB einstellt. Dieser Wert ist, wie bereits erwähnt, abhängig von der Anzahl der zur Verfügung stehenden Worker. Aber es wird deutlich, dass sich der Speicherbedarf nach einer gewissen Laufzeit auf einem annähernd gleichbleibendem Niveau hält. 
 
 \begin{figure}[!ht]
 	\centering
-		%[natürliche Breite in Pixeln, natürliche Höhe in Pixeln, Abhängigkeit von der Textbreite]
+
 		\includegraphics[natwidth=1200pt, natheight=349pt, width=1.0\textwidth]{images/screenshot_ram.png}
 	\caption{Verlauf der Arbeitsspeicher-Auslastung während der Laufzeit, gemessen in Xcode.}
 	\label{fig:screenshot_ram}
