@@ -5,7 +5,7 @@ Dieses Kapitel bietet Informationen zur verwendeten Hard- und Software. Damit we
 \section{Hardware}
 \label{Hardware}
 Das verteilte System wird auf einem Mac-Cluster implementiert, das von der Hochschule zur Verfügung gestellt wird. Es kann auf 10 Rechner zugegriffen werden, die mit \emph{pip02} bis \emph{pip11} gekennzeichnet sind. Auf allen Rechnern ist (Stand 09.07.2016) aktuellste Version des Betriebssystems El Capitain und der Entwicklungsumgebung Xcode installiert. Details zu den Softwareversionen sind in Kapitel \ref{softwarebasis} zu finden. \\
-In der folgenden Liste sind die Details zu den einzelnen Rechnern zu finden:
+In der folgenden Liste sind die Details zu den einzelnen Rechnern zu aufgeführt:
 
 \begin{itemize}
 	\item\textbf{pip02-pip05: Mac Pro (Anfang 2008)}
@@ -24,17 +24,17 @@ In der folgenden Liste sind die Details zu den einzelnen Rechnern zu finden:
 	\item[] Xcode 7.3, Swift 2.1.1
 	\end{itemize}
 
-Zur Netzverbindung wird ein Switch des Herstellers \emph{Netgear} eingesetzt. Die Modellbezeichnung lautet \emph{Netgear GS116}. Der Switch hat 16 Ports und unterstützt bis zu 1000 Megabit/s (Gigabit-LAN).
+Zur Netzverbindung wird ein Switch des Herstellers \emph{Netgear} eingesetzt. Die Modellbezeichnung lautet \emph{Netgear GS116}. Der Switch hat 16 Ports und unterstützt bis zu 1024 Megabit/s (Gigabit-LAN).
 
 \section{Software}
 \label{softwarebasis}
 Da Rechner des Herstellers Apple eingesetzt werden, sind die Programmiersprachen \emph{Objective C} oder \emph{Swift} effizient einsetzbar, da Apple diese vorrangig unterstützt. Das eingesetzte Betriebssystem Mac OS X 10.11.2 (El Capitain) und die native Entwicklungsumgebung Xcode 7.2 weisen eine hohe Kompatibilität zu den genannten Programmiersprachen auf. \\
-Da die Programmiersprache \emph{Swift} seit Version 2.0 quelloffen angeboten wird\footnote{\url{https://github.com/apple/swift}} und zudem die aktuellere der beiden genannten Sprachen ist, möchte das Projektteam primär auf Swift zurückgreifen. Da aktuell der Einsatz von Objective C noch Bestandteil von Swift ist, werden beide genannten Programmiersprachen zum Einsatz kommen. \\
+Da die Programmiersprache \emph{Swift} seit Version 2.0 quelloffen angeboten wird\footnote{\url{https://github.com/apple/swift}} und zudem die aktuellere der beiden genannten Sprachen ist, möchte das Projektteam primär auf Swift zurückgreifen. Da aktuell der Einsatz von Objective C noch Bestandteil von Swift ist, werden beide genannten Programmiersprachen zum Einsatz kommen. Ziel ist es aber, möglichst nur auf Swift zurückzugreifen und Objective C da einzusetzen, wenn keine andere Möglichkeit besteht. \\
 \subsection{Versionsverwaltung}
 Zur Versionierung des Programmcodes und zum vereinfachtem dezentralen Entwickeln wird die Programmcode-Plattform \url{www.github.com} eingesetzt. Die auf dem Versions-verwaltungs-System \emph{Git} basierende Plattform ermöglicht ein flexibles und kollaboratives Arbeiten am Projekt sowie der Dokumentation. \\
 \subsection{Frameworks}
 Damit im Projekt weitere Frameworks mit wenig Aufwand eingesetzt werden können, hat das Projektteam sich entschieden \emph{Carthage}\footnote{\url{https://github.com/Carthage/Carthage}} einzusetzen. Carthage ist ein \enquote{einfacher, dezentraler Dependency-Manager} und wird quelloffen zur Verfügung gestellt. Durch die Auflösung von Abhängigkeiten, beispielsweise von bestimmten Frameworks, wird das asynchrone und dezentrale Entwickeln weiter optimiert. \\
-Als alternativer Dependency-Manager hätte sich das Werkzeug \emph{CocoaPods}\footnote{\url{https://github.com/CocoaPods/CocoaPods}} angeboten. Einer der großen Unterschiede in der Arbeitsweise der beiden Werkzeuge liegt in der Verwaltung der Dependencies. Während CocoaPods auf eine zentrale Verwaltung setzt, werden die Abhängigkeiten bei Carthage dezentral verwaltet. Durch die dezentrale Verwaltung wird unser Primärziel, das effektive kollaborative Arbeiten, besser abgedeckt. Zudem wird Carthage nicht so tief in das Entwicklungsprojekt in der Entwicklungsumgebung Xcode verwurzelt, als es bei CocoaPods der Fall wäre. Dadurch entsteht eine weniger starke Abhängigkeit von dem Werkzeug. Aus den genannten Gründen entschied das Projektteam sich gegen die Verwendung von CocoaPods. \\
+Als alternativer Dependency-Manager hätte sich das Werkzeug \emph{CocoaPods}\footnote{\url{https://github.com/CocoaPods/CocoaPods}} angeboten. Einer der großen Unterschiede in der Arbeitsweise der beiden Werkzeuge liegt in der Verwaltung der Dependencies. Während CocoaPods auf eine zentrale Verwaltung setzt, werden die Abhängigkeiten bei Carthage dezentral verwaltet. Durch die dezentrale Verwaltung wird unser Primärziel, das effektive kollaborative Arbeiten, besser abgedeckt. Zudem wird Carthage leichtgewichtiger im Projekt, als es bei CocoaPods der Fall wäre. Dadurch entsteht eine weniger starke Abhängigkeit. Aus den genannten Gründen fiel die Wahl auf die Verwendung von Carthage. \\
 Zudem wird die Plattform \emph{Node.JS} benutzt, um einen Kommunikationsserver zur Verfügung zu stellen. Weitere Informationen dazu sind in Kapitel \ref{Konzeption} zu finden. 
 
 

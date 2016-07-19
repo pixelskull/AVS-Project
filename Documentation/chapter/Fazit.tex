@@ -1,5 +1,5 @@
 \chapter{Fazit und Ausblick}
-Das abschließende Kapitel fasst das Projekt zusammen und gibt somit einen Überblick Über die durchgeführten Tätigkeiten.\\
+Das abschließende Kapitel fasst das Projekt zusammen und gibt somit einen Überblick der durchgeführten Tätigkeiten.\\
  Außerdem wird ein Ausblick gegeben, der Ideen zu möglichen Fortsetzungen dieses Projekts bietet. \\
  Abschließend wird das durchgeführte Projekt kritisch reflektiert. Dadurch soll die Einordnung des Gesamtprojekts verbessert werden.\\
  
@@ -7,21 +7,21 @@ Das verteilte System wird auf der Entwickler-Plattform \emph{Github} zur Verfüg
 
 \section{Zusammenfassung des Projekts}
 Vor der eigentlichen Durchführung des Projekts wurde eine Literaturrecherche durchgeführt. Die Recherche hatte zwei Ziele: Zum einen wurde Fachliteratur ermittelt, um notwendige Kenntnisse zu verteilten Systemen zu gewinnen. Zum anderen brachte die Recherche den Vorteil, dass der Prozess der Ideenfindung verbessert wurde. Bei der Literaturrecherche stellte sich heraus, dass das Buch \citep{tanenbaum} eines der Standardwerke im Bereich der verteilten Systeme darstellt. Aus diesem Grund wurde das buch primäre Wissensquelle für dieses Projekt ausgewählt. \\
-Nach dem Studium von \citep{tanenbaum} wurden in Kapitel \ref{allgemeineAnforderungen} abgeleitet, die das zu implementierende verteilte System erfüllen soll. \\
+Nach dem Studium von \citep{tanenbaum} wurden in Kapitel \ref{allgemeineAnforderungen} die Faktoren abgeleitet, die das zu implementierende verteilte System erfüllen soll. \\
 Nachdem die allgemeinen Anforderungen formuliert worden sind, wurden die Hard- und Softwaregrundlagen in Kapitel \ref{Grundlagen} definiert. In diesem Kapitel wird beispielsweise die zur Verfügung stehende Hardware beschrieben. Damit wird sichergestellt, dass die Reproduzierbarkeit des Projekts gegeben ist. \\
-In Kapitel \ref{Konzeption} wurden die theoretischen Überlegungen für die Implementation beschrieben. Dazu gehört die Planung der Architektur oder der Kommunikation. Bei der Konzeption wurde besonderer Wert darauf gelegt, dass die in Kapitel \ref{allgemeineAnforderungen} zusammengefassten Aspekte in der Implementation beachtet werden. \\
-Danach werden in Kapitel \ref{implementation} Details zur Implementation beschrieben. Der Fokus lag dabei nicht auf einer vollständigen Beschreibung des Programmcodes, sondern auf Beschreibung einiger Merkmale der Implementation. Auf die vollständige Beschreibung wurde verzichtet, da diese den Rahmen dieser Dokumentation sprengen würde. Stattdessen wurde der Programmcode kommentiert. Dies hat den Vorteil, dass eine semantische Trennung zwischen Implementationsdetails und Programmcodebeschreibung geschaffen wird. Dadurch wird das Leseverständnis dieser Dokumentation weiter erhöht. 
+In Kapitel \ref{Konzeption} wurden die theoretischen Überlegungen für die Implementation beschrieben. Dazu gehört die Planung der Architektur oder der Kommunikation. Bei der Konzeption wurde besonderer Wert darauf gelegt, dass die in Kapitel \ref{allgemeineAnforderungen} zusammengefassten Aspekte bei der Implementation beachtet werden. \\
+Danach werden in Kapitel \ref{implementation} Details zur Implementation beschrieben. Der Fokus lag dabei nicht auf einer vollständigen Beschreibung des Programmcodes, sondern auf der Verdeutlichung einiger Besonderheiten der Implementation. Auf die vollständige Beschreibung wurde verzichtet, da diese den Rahmen dieser Dokumentation sprengen würde. Stattdessen wurde der Programmcode kommentiert. Dies hat den Vorteil, dass eine semantische Trennung zwischen Implementationsdetails und Programmcodebeschreibung geschaffen wird. Dadurch wird das Leseverständnis dieser Dokumentation weiter erhöht. 
 
 \section{Ausblick}
 \label{ausblick}
 Verteilte Systeme unterliegen dank ständiger Weiterentwicklung von Konzepten und Techniken einem gewissen Alterungsprozess. Aus diesem Grund bietet auch die implementierte BruteForce-Attacke einige Ansatzpunkte zur Weiterentwicklung. \\
-Eine mögliche Optimierung ist die Anpassung an neue Features der genutzten Programmiersprache \emph{Swift}. \emph{Swift} ist quelloffen verfügbar und besitzt somit implizit eine große Gruppe an Entwicklern. Die Weiterentwicklung der Programmiersprache kann damit auch Optimierungspotenzial für den Quellcode dieses Projekts bieten. \\
+Eine mögliche Optimierung ist die Anpassung an neue Features der genutzten Programmiersprache \emph{Swift}. Swift ist quelloffen verfügbar und besitzt somit implizit eine große Gruppe an Entwicklern. Die Weiterentwicklung der Programmiersprache kann damit auch Optimierungspotenzial für den Quellcode dieses Projekts bieten. \\
 Ein weiterer Aspekt für eine Fortsetzung des Projekts ist die Nutzung von maschinenbasiertem Lernen. Mit Hilfe von maschinenbasiertem Lernen kann beispielsweise das benutzte Wörterbuch der Dictionary Attack mit weiteren häufig genutzten Passwörtern erweitert werden. Ergänzend könnten Passwörter entfernt werden, welche aktuell seltener eingesetzt werden.\\
 
  Aber auch der BruteForce-Angriff könnte von maschinenbasiertem Lernen profitieren. Durch eine Analyse, welche der erzeugten Passwörter besonders häufig zum Erfolg führen, kann der Algorithmus diese Passwörter priorisiert einsetzen. Dadurch würde eine Effektivitätssteigerung des Algorithmus erzielt werden. \\
  
-Eine hybride Lösung wäre auch möglich. Der Angriff könnte optimiert werden, indem ein Wörterbuch mit den Passwörtern erstellt werden, die bei einem BruteForce-Angriff häufigen Erfolg erzielen. Damit würde sich der Angriff durch maschinenbasiertes Lernen ständig an aktuelle \enquote{Trends} im Bezug auf häufig gewählte Passwörter anpassen können. \\
-Zudem könnte eine automatisierte Auswertung Informationen zur Untersuchung der Angriffsperformance bieten. Dabei könnte beispielsweise untersucht werden, wie stark sich die genutzten Hash-Algorithmen in der Geschwindigkeit unterscheiden. Mit einer Auswertung könnten auch indirekte Schlüsse auf die Sicherheit bestimmter Passwörter gezogen werden. 
+Auch eine hybride Lösung wäre denkbar. Der Angriff könnte optimiert werden, indem ein Wörterbuch mit den Passwörtern erstellt werden, die bei einem BruteForce-Angriff häufigen Erfolg erzielen. Damit würde sich der Angriff durch maschinenbasiertes Lernen ständig an aktuelle \enquote{Trends} im Bezug auf häufig gewählte Passwörter anpassen können. \\
+Zudem könnte eine automatisierte Auswertung Informationen zur Untersuchung der Angriffsperformance bieten. Dabei könnte beispielsweise untersucht werden, wie stark sich die genutzten Hash-Algorithmen in der Geschwindigkeit unterscheiden. Mit einer Auswertung könnten indirekte Schlüsse auf die Sicherheit bestimmter Passwörter gezogen werden. 
 
 \section{Kritische Würdigung}
 \label{kritik}

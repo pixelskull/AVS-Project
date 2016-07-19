@@ -2,15 +2,15 @@
 \label{implementation}
 In diesem Kapitel wird die Implementation des Projekts beschrieben. Auf Basis der beschriebenen Konzeption wird im Anschluss die Implementation erfolgen. 
 \section{Kommunikation}
-Da die Implementation auf einer nachrichtenbasierten Kommunikation basieren wird, ist der Entwurf eigener Nachrichtenstrukturen notwendig. Die Nachrichtenstrukturen übertragen stellen die zwischen dem Master und den Workern bereit. Konkret handelt es sich bei der gewählten Architektur nach \citep{tanenbaum} um eine \emph{Message-Queue-Architektur}. \\
+Da die Implementation auf einer nachrichtenbasierten Kommunikation basieren wird, ist der Entwurf eigener Nachrichtenstrukturen notwendig. Die Nachrichtenstrukturen übertragen stellen die zwischen dem Master und den Workern bereit. Konkret handelt es sich nach \citep{tanenbaum} um eine \emph{Message-Queue-Architektur}. \\
 Zur Strukturierung fiel die Wahl auf das Nachrichtenaustauschformat \enquote{JavaScript Object Notation} oder kurz \emph{JSON}, da dieses Format sehr leichtgewichtig und vollständig anpassbar ist. \\
-Als Kommunikationsplattform wird ein Node-Server benutzt, da dieser für den vorgesehenen Bereich schnell einsetzbar und mit dem JSON-Format kompatibel ist. Der Node-Server ist für die Verteilung der Nachrichten zwischen den Rechnern des verteilten Systems verantwortlich. \\
+Als Kommunikationsplattform wird ein Node-Server benutzt, da dieser für den vorgesehenen Bereich schnell einsetzbar und mit dem JSON-Format kompatibel ist. Der Webserver basiert auf dem Javascript-Framework Node.js und ist für die Verteilung der Nachrichten zwischen den Rechnern des verteilten Systems verantwortlich. \\
 
 Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{MD5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.\\
 
 
 Nachfolgend werden die entwickelten Nachrichtenstrukturen und deren Inhalt beschrieben. Zum besseren Verständnis werden die Nachrichten in die Senderichtungen zum Worker oder zum Master strukturiert. \\
-Auf programmatischer Ebene wird zudem zwischen \emph{Basic Messages} und \emph{Extended Messages} unterschieden. Basic Messages beinhalten den Status des sendenden Rechners und maximal einen weiteren Wert, während Extended Messages neben dem Status mehrere Werte beinhalten. Durch diese Strukturierung ist ein effizienteres Messageparsing möglich. 
+Auf programmatischer Ebene wird zudem zwischen \emph{Basic Messages} und \emph{Extended Messages} unterschieden. Basic Messages beinhalten den Status des sendenden Rechners und maximal einen weiteren Wert, während Extended Messages neben dem Status mehrere Werte beinhalten. Durch diese Strukturierung ist ein effektives Messageparsing möglich. 
 
 \subsection{Asynchronität}
 Die Kommunikation innerhalb des verteilten Systems wird durch den Master sichergestellt. Konkret werden die Nachrichten durch den NODE-Server an alle Rechner des verteilten Systems (Broadcast) versendet. Dies bedeutet, dass jeder Rechner alle Nachrichten erhält und lokal zur Verfügung stehen. Damit die jeweiligen Rechner die Nachrichten zuordnen können, werden die Funktionen \emph{decideWhatToDoBasicMessage} und \emph{decideWhatToDoExtendedMessage} implementiert. Diese unterscheiden, wie der Name bereits vermuten lässt, zwischen \emph{Basic Messages} und \emph{Extended Messages}. Aber auch bei Master und Worker sind die Funktionen unterschiedlich implementiert, da diese unterschiedlich auf die Nachrichten reagieren. \\
@@ -88,8 +88,8 @@ func decideWhatToDoExtendedMessage(message:ExtendedMessage){
 }
 \end{lstlisting}
 
-Dieses Vorgehen hat den Vorteil, dass die Verarbeitung der Nachrichten asynchron geschehen kann. Durch das asynchrone Vorgehen kann die Performance des verteilten Systems deutlich gesteigert werden, da die Rechner unabhängig voneinander reagieren können. \\
-Die Nachrichten werden in Warteschlangen (Queues) gespeichert. Durch den Einsatz von \emph{GrandCentralDispatch (GCD)}\footnote{\url{https://developer.apple.com/library/ios/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html}} wird die Verteilung von Threads auf verschiedene Prozessorkerne vom Betriebssystem übernommen. Durch diese Abstraktion ist für den Entwickler eine effektivere Verteilung von Threads möglich. Da die Erstellung von Queues von Grand Central Dispatch übernommen wird, ist die Verteilung im verteilten System effizient möglich. Das GCD legt die Queues in Threads ab und übernimmt die Verteilung. \\
+Dieses Vorgehen hat den Vorteil, dass die Verarbeitung der Nachrichten asynchron geschehen kann. Durch die asynchrone Verarbeitung kann die Performance des verteilten Systems deutlich gesteigert werden, da die Rechner unabhängig voneinander arbeiten können. \\
+Die Nachrichten werden in Warteschlangen (Queues) gespeichert. Durch den Einsatz von \emph{GrandCentralDispatch (GCD)}\footnote{\url{https://developer.apple.com/library/ios/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html}} wird die Verteilung von Threads auf verschiedene Prozessorkerne vom Betriebssystem übernommen. Durch diese Abstraktion ist für den Entwickler eine effektivere Verteilung von Threads möglich. Da die Erstellung von Queues durch das Grand Central Dispatch realisiert wird, ist die Verteilung im verteilten System effizient möglich. Das GCD legt die Queues in Threads ab und übernimmt die Verteilung. \\
 Um die Performance weiter zu steigen, sollen die erstellten Threads eine hohe Priorität erhalten, um vom Betriebssystem bevorzugt bearbeitet zu werden. Die Zuweisung einer hohen Priorität unter GCD ist allerdings nur über einen Umweg möglich, da hohe Prioritäten nur für bestimmte Systemdienste vorgesehen sind. Mit folgendem Programmcode können die Nachrichten-Warteschlangen dennoch mit einer hohen Priorität versehen werden:
 
 
@@ -126,7 +126,7 @@ Des weiteren wird die Parallelisierung weiter ausgebaut, indem die Queues, in de
 Grafik \ref{fig:screenshotCPU} zeigt, dass die zwei verfügbaren Prozessorkerne (ein Kern entspricht einer Auslastung von 100\%) mit der implementierten Verteilungsstrategie effektiv genutzt werden. Zur Messung wurde die Entwicklungsumgebung \emph{Xcode} genutzt. 
 
 \subsection{Lenses}
-Threadsicherheit bedeutet, dass Softwarekomponenten problemlos von verschiedenen Bereichen genutzt werden können, ohne dass es dabei Nebeneffekte auftreten. Damit ist Threadsicherheit implizit wichtiger Bestandteil eines verteilten Systems. \\
+Threadsicherheit bedeutet, dass Softwarekomponenten problemlos von verschiedenen Bereichen genutzt werden können, ohne dass dabei Nebeneffekte auftreten. Damit ist Threadsicherheit implizit wichtiger Bestandteil eines verteilten Systems. \\
 Die Arbeitspakete (\emph{Work Blogs}) werden in \emph{WorkBlogQueues} gespeichert. Diese Queues beinhalten Arrays. Da Arrays in der Programmiersprache \emph{Swift} standardmäßig nicht threadsicher sind, werden sogenannte \emph{Lenses} eingesetzt. \\
 Lenses stellen Getter- und Setter-Methoden zur Verfügung. 
 
@@ -140,7 +140,7 @@ struct Lens<Whole, Part>
 \end{lstlisting}
 
 Die Getter-Methode ruft dabei einen Teil (Part) \enquote{des Ganzen (Whole)} ab, während die Setter-Methode aus einem Part und einem Whole ein \enquote{neues Ganzes (Whole)} erzeugt. \\
-Mit Hilfe dieser Methode kann mit konstanten Arrays gearbeitet werden, um die Threadsicherheit herzustellen. Dabei werden die Daten in konstanten Arrays abgelegt. Muss ein Eintrag bearbeitet werden, wird mit Hilfe der Getter-Methode ein konstantes Array abgerufen. Die Inhalte können nun über die Setter-Methode bearbeitet und in ein neues, konstantes Array geschrieben.\\
+Mit Hilfe dieser Methode kann mit konstanten Arrays gearbeitet werden, um die Threadsicherheit herzustellen. Dabei werden die Daten in konstanten Arrays abgelegt. Muss ein Eintrag bearbeitet werden, wird mit Hilfe der Getter-Methode ein konstantes Array aufgerufen. Die Inhalte können nun über die Setter-Methode bearbeitet und in ein neues, konstantes Array geschrieben.\\
 Folgender Programmcode zeigt eine konkrete Implementierung von Lenses:
 
 \texttt{Klasse MessageQueue}
@@ -177,7 +177,7 @@ In diesem Abschnitt werden die Strukturen beschrieben, welche vom steuernden Rec
 }
 \end{lstlisting}
 Ein im Cluster neu hinzugefügter Worker erhält seine Konfigurationsparameter, damit dieser als Worker im verteilten System genutzt werden kann. 
-Der Wert \textbf{algorithm} übergibt die ID des Hash-Algorithmus, welcher in der aktuellen Passwortberechnung benutzt wird. \textbf{Target} übermittelt den Hash des Zielpasswortes. Die \textbf{workerID} ist der vom Master vorgegebene Hostname oder IP, die den Workern mitgeteilt werden muss.\\
+Der Wert \textbf{algorithm} übergibt die ID des Hash-Algorithmus, welcher in der aktuellen Passwortberechnung benutzt wird. \textbf{Target} übermittelt den Hash des Zielpasswortes. Die \textbf{workerID} ist der vom Master vorgegebene Hostname oder die IP-Adresse, die den Workern mitgeteilt werden muss.\\
 
 \texttt{getWork (Extended Message)}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
@@ -199,7 +199,7 @@ Der Worker erhält durch einen neuen WorkBlog, den dieser abarbeiten wird.\\
   }
 }
 \end{lstlisting}
-Durch \enquote{stopWork} wird den Workern mitgeteilt, dass diese die Berechnungen stoppen können. Dies ist in der Regel der Fall, wenn das Zielpasswort identifiziert wurde. 
+Durch \enquote{stopWork} wird den Workern mitgeteilt, dass diese die Berechnungen stoppen können. Dies ist in der Regel der Fall, wenn das Zielpasswort identifiziert wurde. \\
 
 
 \texttt{stillAlive (Basic Message)}
@@ -273,7 +273,7 @@ Der Worker teilt mit, dass dieser weiterhin zur Verfügung steht. Zur Identifika
 
 
 \section{Speichermanagement}
-Das verteilte System muss sicherstellen, dass die Speichernutzung fehlerfrei und effektiv geschieht. Ein Beispiel für ein mögliches Problem ist die Erstellung der Arbeitspakete (\emph{Work Packages}). Geschieht die Erstellung zu schnell, würde der Speicherbedarf stark anwachsen. Dies kann bis zu einem vollständig gefüllten Arbeitsspeicher führen. Werden die Arbeitspakete zu langsam erstellt, würden Worker auf die Erstellung warten müssen. Durch die entstehende Wartezeit würde das System verlangsamt werden. \\
+Das verteilte System muss sicherstellen, dass die Speichernutzung fehlerfrei und effektiv geschieht. Ein Beispiel für ein mögliches Problem ist die Erstellung der Arbeitspakete (\emph{Work Packages}). Geschieht die Erstellung zu schnell, würde der Speicherbedarf stark anwachsen. Dies kann zu einem Speicherüberlauf führen. Werden die Arbeitspakete zu langsam erstellt, würden Worker auf die Erstellung warten müssen. Durch die entstehende Wartezeit würde das System verlangsamt werden. \\
 Um diese Probleme auszuschließen, wird das verteilte System immer die doppelte Anzahl an Work Packages bereitstellen, wie aktuelle Worker vorhanden sind. Es gilt also das Verhältnis:
 
 \begin{quotation}
@@ -294,7 +294,8 @@ getWorkBlogQueueCount() >
 	}
 \end{lstlisting}
 
-Dadurch wird ein gleichbleibender Speicherbedarfs sichergestellt, wie sich anhand von Abbildung \ref{fig:screenshot_ram} erkennen lässt. Die Messung wurde mit \emph{Xcode} während der Laufzeit des Angriffs durchgeführt. Dabei ist zu erkennen, dass sich der aktuelle Speicherbedarf des verteilten Systems zur Laufzeit bei ca. 73MB einstellt. Dieser Wert ist, wie bereits erwähnt, abhängig von der Anzahl der zur Verfügung stehenden Worker. Aber es wird deutlich, dass sich der Speicherbedarf nach einer gewissen Laufzeit auf einem annähernd gleichbleibendem Niveau hält. 
+Dadurch wird ein gleichbleibender Speicherbedarfs sichergestellt, wie sich anhand von Abbildung \ref{fig:screenshot_ram} erkennen lässt. Die Messung wurde mit \emph{Xcode} während der Laufzeit des Angriffs durchgeführt. Dabei ist zu erkennen, dass sich der aktuelle Speicherbedarf des verteilten Systems zur Laufzeit bei ca. 73 MB einstellt. Dieser Wert ist, wie sich aus dem genannten Verhältnis ableiten lässt, abhängig von der Anzahl der zur Verfügung stehenden Worker. \\
+Durch die Messung wird verdeutlicht, dass sich der Speicherbedarf nach einer gewissen Laufzeit einem gleichbleibendem Niveau annähert und dieses hält. 
 
 \begin{figure}[!ht]
 	\centering
@@ -306,8 +307,8 @@ Dadurch wird ein gleichbleibender Speicherbedarfs sichergestellt, wie sich anhan
 
 
 \section{Benutzeroberfläche}
-Nachfolgend wird die Benutzeroberfläche sowie die Interaktion mit dem verteilten System beschrieben. Da primär die Funktionalität der Anwendung im Fokus des Projekts steht, besteht die Benutzeroberfläche aus nur wenigen Interaktionselementen. \\
-Die Anwendung wird auf allen Rechnern gestartet, die zum verteilten System zusammengefasst werden müssen. Je nachdem, ob der Rechner als Master oder Worker verwendet werden soll, unterscheidet sich die weitere Interaktion. Die unterschiedlichen Interaktionsmöglichkeiten werden in den folgenden Abschnitten beschrieben. 
+Nachfolgend wird die Benutzeroberfläche sowie die Interaktion mit dem verteilten System beschrieben. Da primär die Funktionalität der Anwendung im Fokus des Projekts steht, werden nur wenig Interaktionselemente eingesetzt. \\
+Die Anwendung wird auf allen Rechnern gestartet, die zum verteilten System zusammengefasst werden. Je nachdem, ob der Rechner als Master oder Worker verwendet werden soll, unterscheidet sich die weitere Interaktion. Die unterschiedlichen Interaktionsmöglichkeiten werden in den folgenden Abschnitten beschrieben. 
 
 \subsection{Master}
 Durch Aktivierung des Feldes \enquote{this Mac} im Bereich \emph{Communication Manager} delegiert man den aktuellen Rechner als Master des verteilten Systems. Es gilt zu beachten, dass nur ein Master im verteilten System bestimmt wird. Nachdem diese Option gewählt wurde, wird im Feld \emph{Server Adress} die Adresse des aktuellen Rechners angezeigt. Diese Adresse wird den Workern mitgeteilt (siehe Abschnitt \ref{WorkerGUI}). Auf Abbildung \ref{fig:WindowMaster} lautet die Adresse beispielsweise \emph{127.0.0.1}, da auf dem Rechner kein Domain-Name hinterlegt worden ist. \\
