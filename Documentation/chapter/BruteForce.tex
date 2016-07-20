@@ -2,8 +2,8 @@
 \label{implementation}
 In diesem Kapitel wird die Implementation des Projekts beschrieben. Auf Basis der beschriebenen Konzeption wird im Anschluss die Implementation erfolgen. 
 \section{Kommunikation}
-Da die Implementation auf einer nachrichtenbasierten Kommunikation basieren wird, ist der Entwurf eigener Nachrichtenstrukturen notwendig. Die Kommunikation zwischen dem Master den Workern findet mit Hilfe der Nachrichten statt. Konkret handelt es sich nach \citep{tanenbaum} bei der gewählten Architektur um eine \emph{Message-Queue-Architektur}. \\
-Zur Strukturierung fiel die Wahl auf das Nachrichtenaustauschformat \enquote{JavaScript Object Notation} oder kurz \emph{JSON}, da dieses Format sehr leichtgewichtig und vollständig anpassbar ist. \\
+Da die Kommunikation des verteilten Systems nachrichtenbasiert geschieht, ist der Entwurf eigener Nachrichtenstrukturen notwendig. Die Kommunikation zwischen dem Master den Workern findet mit Hilfe der Nachrichten statt. Konkret handelt es sich nach \citep{tanenbaum} bei der gewählten Architektur um eine \emph{Message-Queue-Architektur}. \\
+Zur Strukturierung fiel die Wahl auf das Nachrichtenaustauschformat \enquote{JavaScript Object Notation} oder kurz \emph{JSON}, da dieses Format sehr leichtgewichtig und vollständig anpassbar ist. Zudem ist die Maschinenlesbarkeit im Vergleich zu XML einfacher umzusetzen, da zur Interpretation von XML eigene Schemata entwickelt werden müssten. \\
 Als Kommunikationsplattform wird ein Node-Server benutzt, da dieser für den vorgesehenen Bereich schnell einsetzbar und mit dem JSON-Format kompatibel ist. Der Webserver basiert auf dem Javascript-Framework Node.js und ist für die Verteilung der Nachrichten zwischen den Rechnern des verteilten Systems verantwortlich. \\
 
 Um Rückschlüsse auf die Geschwindigkeit verschiedener Hash-Algorithmen schließen zu können, kann bei Start der Applikation zwischen verschiedenen Hash-Algorithmen gewählt werden. Zur Auswahl stehen die Hash-Algorithmen \emph{MD5}, \emph{SHA 128} sowie \emph{SHA 256}. Die Geschwindigkeitsunterschiede beruhen primär auf der unterschiedlichen Schlüssellänge der jeweiligen Algorithmen.\\
@@ -89,7 +89,7 @@ func decideWhatToDoExtendedMessage(message:ExtendedMessage){
 \end{lstlisting}
 
 Dieses Vorgehen hat den Vorteil, dass die Verarbeitung der Nachrichten asynchron geschehen kann. Durch die asynchrone Verarbeitung kann die Performance des verteilten Systems deutlich gesteigert werden, da die Rechner unabhängig voneinander arbeiten können. \\
-Die Nachrichten werden in Warteschlangen (Queues) gespeichert. Durch den Einsatz von \emph{GrandCentralDispatch (GCD)}\footnote{\url{https://developer.apple.com/library/ios/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html}} wird die Verteilung von Threads auf verschiedene Prozessorkerne vom Betriebssystem übernommen. Durch diese Abstraktion ist für den Entwickler eine effektivere Verteilung von Threads möglich. Da die Erstellung von Queues durch das Grand Central Dispatch realisiert wird, ist die Verteilung im verteilten System effizient möglich. Das GCD legt die Queues in Threads ab und übernimmt die Verteilung. \\
+Die Nachrichten werden in Warteschlangen (Queues) gespeichert. Durch den Einsatz von \emph{GrandCentralDispatch (GCD)}\footnote{\url{https://developer.apple.com/library/ios/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html}} wird die Verteilung von Threads auf verschiedene Prozessorkerne vom Betriebssystem übernommen. Durch diese Abstraktion ist für den Entwickler eine effektivere Verteilung von Threads möglich. Da die Erstellung von Queues durch das Grand Central Dispatch realisiert wird, ist die Verteilung im verteilten System effizient möglich. Das GCD legt die Queues in Threads ab und übernimmt deren Verteilung. Zudem unterstützt GCD die Prozessverteilung auf Ebene des Betriebssystems.\\
 Um die Performance weiter zu steigen, sollen die erstellten Threads eine hohe Priorität erhalten, um vom Betriebssystem bevorzugt bearbeitet zu werden. Die Zuweisung einer hohen Priorität unter GCD ist allerdings nur über einen Umweg möglich, da hohe Prioritäten nur für bestimmte Systemdienste vorgesehen sind. Mit folgendem Programmcode können die Nachrichten-Warteschlangen dennoch mit einer hohen Priorität versehen werden:
 
 
@@ -318,7 +318,7 @@ Durch Aktivierung des Feldes \enquote{this Mac} im Bereich \emph{Communication M
 		\caption{Benutzeroberfläche der implementierten Anwendung als Master der verteilten Anwendung}
 	\label{fig:WindowMaster}
 \end{figure}
-Nach der Konfiguration als Master wird das Passwort festgelegt, welches entschlüsselt werden soll. Dazu wird im Feld \emph{Password to Crack} das gewünschte Passwort eingetragen werden. Abschließend kann der Hash-Algorithmus ausgewählt werden, mit dem die Hashes erzeugt werden. Die Vorgehensweise zur Entschlüsselung ändert sich dadurch nicht, die Option zur Wahl verschiedener Hash-Algorithmen dient primär zur Messung von Geschwindigkeitsunterschieden. \\
+Nach der Konfiguration als Master wird das Passwort festgelegt, welches entschlüsselt werden soll. Dazu wird im Feld \emph{Password to Crack} das gewünschte Passwort eingetragen. Abschließend kann der Hash-Algorithmus ausgewählt werden, mit dem die Hashes erzeugt werden. Die Vorgehensweise zur Entschlüsselung ändert sich dadurch nicht, die Option zur Wahl verschiedener Hash-Algorithmen dient primär zur Messung von Geschwindigkeitsunterschieden. \\
 
 Nach Aktivierung des Start-Buttons steht der Master dem verteilten System zur Verfügung.   
 
