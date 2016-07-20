@@ -2,7 +2,7 @@
 \label{implementation}
 In diesem Kapitel wird die Implementation des Projekts beschrieben. Auf Basis der beschriebenen Konzeption wird im Anschluss die Implementation erfolgen. 
 \section{Kommunikation}
-Da die Implementation auf einer nachrichtenbasierten Kommunikation basieren wird, ist der Entwurf eigener Nachrichtenstrukturen notwendig. Die Nachrichtenstrukturen übertragen stellen die zwischen dem Master und den Workern bereit. Konkret handelt es sich nach \citep{tanenbaum} um eine \emph{Message-Queue-Architektur}. \\
+Da die Implementation auf einer nachrichtenbasierten Kommunikation basieren wird, ist der Entwurf eigener Nachrichtenstrukturen notwendig. Die Kommunikation zwischen dem Master den Workern findet mit Hilfe der Nachrichten statt. Konkret handelt es sich nach \citep{tanenbaum} bei der gewählten Architektur um eine \emph{Message-Queue-Architektur}. \\
 Zur Strukturierung fiel die Wahl auf das Nachrichtenaustauschformat \enquote{JavaScript Object Notation} oder kurz \emph{JSON}, da dieses Format sehr leichtgewichtig und vollständig anpassbar ist. \\
 Als Kommunikationsplattform wird ein Node-Server benutzt, da dieser für den vorgesehenen Bereich schnell einsetzbar und mit dem JSON-Format kompatibel ist. Der Webserver basiert auf dem Javascript-Framework Node.js und ist für die Verteilung der Nachrichten zwischen den Rechnern des verteilten Systems verantwortlich. \\
 
@@ -113,7 +113,7 @@ Um die Performance weiter zu steigen, sollen die erstellten Threads eine hohe Pr
      \(password)", nil)
 \end{lstlisting}
 
-Des weiteren wird die Parallelisierung weiter ausgebaut, indem die Queues, in denen sich die Passwortblöcke befinden, auf den Workern aufgeteilt werden. Ein Beispiel dazu lässt sich ebenfalls aus dem Programmcode entnehmen. \\
+Des weiteren wird die Parallelisierung weiter ausgebaut, indem die Queues, in denen sich die Passwortblöcke befinden, auf den einzelnen Workern weiter  aufgeteilt werden. Ein Beispiel dazu lässt sich ebenfalls aus dem Programmcode entnehmen. \\
 
 \begin{figure}[!ht]
 	\centering
@@ -258,7 +258,7 @@ Der Worker teilt mit, dass alle möglichen Passworte des aktuellen Arbeitspakets
   }
 }
 \end{lstlisting}
-Zum Auswerten der Berechnungen übermittelt der Worker zur Identifikation seine ID und zur Auswertung sowohl die Anzahl der berechneten Hashes, als auch die benötigten Zeit der Berechnung mit. \\
+Zum Auswerten der Berechnungen übermittelt der Worker zur Identifikation seine ID und zur Auswertung sowohl die Anzahl der berechneten Hashes, als auch die Berechnungszeit mit. \\
 
 \texttt{replyAlive (Basic Message)}
 \begin{lstlisting}[basicstyle=\ttfamily,numbers=left,numberstyle=\footnotesize\ttfamily,backgroundcolor=\color{sourcegray}]
