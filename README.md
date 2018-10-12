@@ -1,17 +1,17 @@
-#Distributed HashCracker
+# Distributed HashCracker
 This projcets aims a proof-of-concept of using a distributed system to crack an user-entered password. The Distributed HashCracker is developed with Swift 2.2 on Xcode 7.3 and uses an asynchronous message-oriented communication with a Node-Server and Grand Central Dispatch (GCD).  
 To realise the pasword cracking, the Hash of the user-given password is being computed. The Hash is the reference value to find the given password. The distributed system will compute all possible password combinations (Brute Force-Attack) and the belonging hashes. If a computed hash will match the target hash, the target password is identified. 
 
-##Function
+## Function
 To use the Distributed HashCracker, you need at least a cluster of two or more Mac computers which are located in one network. After starting the application, the user can identify a MasterComputer with help of the user interface. The MasterComputer will provide the communication and working delegation in the distributed system. In detail, it provides an Node-Server to realise the message-oriented communication. Also the MasterComputer produces the WorkerQueue. The WorkerQueue contains WorkingBlocks with possible password patterns, for example a[xxx]-A[xxx]. 
 
 The other computers in the distributed system are the WorkerComputers. After setting the name of the MasterComputer, the WorkerComputers pulling their work from the WorkerQueue. The WorkerComputers compute all passwords and hashes from their actual WorkBlog. 
 
-###Cracking strategy
+### Cracking strategy
 For an efficient password cracking, a dictionary attack is carried out before execute the Brute Force-attack. The dictionary concatins about 50.000 of the most choosen passwords.  
 
 
-##Usage
+## Usage
 To use the Distributed HashCracker, the application just needs to be compiled with Xcode.  
 After starting the application on the participating computers the GUI provides the following options:  
 
